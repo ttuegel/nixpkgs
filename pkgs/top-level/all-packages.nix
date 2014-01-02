@@ -273,6 +273,16 @@ let
     inherit less buildEnv;
   };
 
+  buildLSBChrootEnv = import ../build-support/build-lsb-chrootenv {
+    inherit stdenv buildEnv;
+    inherit alsaLib atk bashInteractive bc bzip2 cairo coreutils cups dbus;
+    inherit dbus_glib diffutils ed file findutils fontconfig freetype gawk;
+    inherit gcc gdk_pixbuf gettext glib glibc glibcLocales gnugrep gnumake;
+    inherit gnupatch gnused gnutar gtk2 gzip less libjpeg libpng12 libxml2;
+    inherit m4 man mesa ncurses nettools nspr nss pango perl psmisc python27;
+    inherit qt4 shadow xlibs xz zlib;
+  };
+
   dotnetenv = import ../build-support/dotnetenv {
     inherit stdenv;
     dotnetfx = dotnetfx40;

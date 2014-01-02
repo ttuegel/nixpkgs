@@ -1,0 +1,12 @@
+#! @shell@
+
+cd @chrootEnv@/sw
+
+for fs in dev etc home nix opt proc root run sys tmp var
+do
+  grep "@chrootEnv@/sw/${fs}" /proc/mounts >/dev/null
+  [[ $? == 0 ]] || mount --bind "/${fs}" "@chrootEnv@/sw/${fs}"
+done
+
+exec chroot . /usr/bin/env LD_LIBRARY_PATH="/lib:${LD_LIBRARY_PATH}" \
+                           PATH="/bin:/sbin:${PATH}" /bin/bash
