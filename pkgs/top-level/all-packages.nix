@@ -9907,6 +9907,7 @@ let
   openblas = callPackage ../development/libraries/science/math/openblas { };
 
   mathematica = callPackage ../applications/science/math/mathematica { };
+  mathematica_9_0_1 = callPackage ../applications/science/math/mathematica/9.0.1.nix { };
 
   ### SCIENCE/MOLECULAR-DYNAMICS
 
