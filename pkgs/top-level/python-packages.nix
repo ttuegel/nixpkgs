@@ -4243,7 +4243,7 @@ pythonPackages = modules // import ./python-packages-generated.nix {
     '';
 
     preBuild = ''
-      export BLAS=${pkgs.blas} LAPACK=${pkgs.liblapack}
+      export BLAS=${pkgs.openblas} LAPACK=${pkgs.openblas}
     '';
 
     setupPyBuildFlags = ["--fcompiler='gnu95'"];
@@ -4252,7 +4252,7 @@ pythonPackages = modules // import ./python-packages-generated.nix {
     doCheck = false;
 
     buildInputs = [ pkgs.gfortran ];
-    propagatedBuildInputs = [ pkgs.liblapack pkgs.blas ];
+    propagatedBuildInputs = [ pkgs.openblas ];
 
     meta = {
       description = "Scientific tools for Python";
