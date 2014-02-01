@@ -1212,6 +1212,8 @@ let result = let callPackage = x : y : modifyPrio (newScope result.finalReturn x
     libc = pkgs.stdenv.gcc.libc;
   };
 
+  gtkTraymanager = callPackage ../development/libraries/haskell/gtk-traymanager {};
+
   graphviz = callPackage ../development/libraries/haskell/graphviz {};
 
   groups = callPackage ../development/libraries/haskell/groups {};
@@ -2237,6 +2239,8 @@ let result = let callPackage = x : y : modifyPrio (newScope result.finalReturn x
   TableAlgebra = callPackage ../development/libraries/haskell/TableAlgebra {};
 
   tabular = callPackage ../development/libraries/haskell/tabular {};
+
+  taffybar = callPackage ../applications/misc/taffybar {};
 
   tagged = callPackage ../development/libraries/haskell/tagged {};
 
