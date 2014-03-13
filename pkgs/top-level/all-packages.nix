@@ -8398,6 +8398,10 @@ let
 
   liferea = callPackage ../applications/networking/newsreaders/liferea { };
 
+  lilyterm = callPackage ../applications/misc/lilyterm {
+    inherit (gnome) gtk vte;
+  };
+
   lingot = callPackage ../applications/audio/lingot {
     inherit (gnome) libglade;
   };
