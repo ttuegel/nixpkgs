@@ -26,6 +26,7 @@ stdenv.mkDerivation rec {
       url = "https://launchpadlibrarian.net/161796033/07_fix-NULL-username.patch";
       sha256 = "1sqkhsz1z10k6vlmlrqrfx452lznv30885fmnzc73p2zxdlw9q1a";
     })
+    ./lightdm-gtk-greeter-1.8.3-getenv-conf.patch
   ];
   patchFlags = "-p1";
 
