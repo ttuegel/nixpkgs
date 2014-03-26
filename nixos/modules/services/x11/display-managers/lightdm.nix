@@ -25,30 +25,36 @@ let
     name = "lightdm-gtk-greeter";
     buildInputs = [ pkgs.makeWrapper ];
 
-    buildCommand = ''
-      ensureDir $out/gtk-3.0/
+    buildCommand =
+      let xdgDataDirs = with pkgs; makeSearchPath "share"
+            [ gnome3.gnome_icon_theme gnome3.gnome_themes_standard ];
+      in ''
+        ensureDir $out/gtk-3.0/
 
-      # This wrapper ensures that we actually get fonts
-      makeWrapper ${pkgs.lightdm_gtk_greeter}/sbin/lightdm-gtk-greeter \
-        $out/greeter \
-        --set XDG_DATA_DIRS ${pkgs.gnome2.gnome_icon_theme}/share \
-        --set FONTCONFIG_FILE /etc/fonts/fonts.conf \
-        --set XDG_CONFIG_HOME $out/
+        # This wrapper ensures that we actually get fonts
+        makeWrapper ${pkgs.lightdm_gtk_greeter}/sbin/lightdm-gtk-greeter \
+          $out/greeter \
+          --set XDG_DATA_DIRS ${xdgDataDirs} \
+          --set FONTCONFIG_FILE /etc/fonts/fonts.conf \
+          --set XDG_CONFIG_HOME $out/
 
-      # We need this to ensure that it actually tries to find icons from gnome-icon-theme
-      cat - > $out/gtk-3.0/settings.ini << EOF
-      [Settings]
-      gtk-icon-theme-name=gnome
-      EOF
+        # We need this to ensure that it actually tries to find icons
+        # from gnome-icon-theme
+        cat - > $out/gtk-3.0/settings.ini << EOF
+        [Settings]
+        gtk-theme-name=Adwaita
+        gtk-icon-theme-name=Adwaita
+        gtk-fallback-icon-theme=gnome
+        EOF
 
-      cat - > $out/lightdm-gtk-greeter.desktop << EOF
-      [Desktop Entry]
-      Name=LightDM Greeter
-      Comment=This runs the LightDM Greeter
-      Exec=$out/greeter
-      Type=Application
-      EOF
-    '';
+        cat - > $out/lightdm-gtk-greeter.desktop << EOF
+        [Desktop Entry]
+        Name=LightDM Greeter
+        Comment=This runs the LightDM Greeter
+        Exec=$out/greeter
+        Type=Application
+        EOF
+      '';
   };
 
   lightdmConf = writeText "lightdm.conf"
