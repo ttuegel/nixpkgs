@@ -26,21 +26,31 @@ stdenv.mkDerivation rec {
       url = "https://launchpadlibrarian.net/161796033/07_fix-NULL-username.patch";
       sha256 = "1sqkhsz1z10k6vlmlrqrfx452lznv30885fmnzc73p2zxdlw9q1a";
     })
-    ./lightdm-gtk-greeter-1.8.3-getenv-conf.patch
   ];
   patchFlags = "-p1";
 
-  buildInputs = [ pkgconfig lightdm intltool ]
-    ++ (if useGTK2 then [ gtk2 makeWrapper ] else [ gtk3 ]);
+  buildInputs = [ pkgconfig lightdm intltool makeWrapper ]
+    ++ (if useGTK2 then [ gtk2 ] else [ gtk3 ]);
 
   configureFlags = stdenv.lib.optional useGTK2 "--with-gtk2";
 
-  postInstall = ''
+  postInstall =
+    let
+      inherit (stdenv.lib) concatStringsSep optional;
+      xdgDataDirs = optional useGTK2 ''--prefix XDG_DATA_DIRS ":" "${hicolor_icon_theme}/share"'';
+      wraps = concatStringsSep " "
+        ([ ''--prefix PATH ":" "${stdenv.glibc}/bin"''] ++ xdgDataDirs);
+    in ''
+      cat - > $out/etc/lightdm/lightdm-gtk-greeter.conf << EOF
+      [greeter]
+      theme-name=Adwaita
+      icon-theme-name=Adwaita
+      EOF
+
       substituteInPlace "$out/share/xgreeters/lightdm-gtk-greeter.desktop" \
         --replace "Exec=lightdm-gtk-greeter" "Exec=$out/sbin/lightdm-gtk-greeter"
-    '' + stdenv.lib.optionalString useGTK2 ''
-      wrapProgram "$out/sbin/lightdm-gtk-greeter" \
-        --prefix XDG_DATA_DIRS ":" "${hicolor_icon_theme}/share"
+
+      wrapProgram "$out/sbin/lightdm-gtk-greeter" ${wraps}
     '';
 
   meta = {

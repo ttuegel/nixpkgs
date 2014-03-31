@@ -55,6 +55,7 @@ let
         Type=Application
         EOF
       '';
+
   };
 
   lightdmConf = writeText "lightdm.conf"
