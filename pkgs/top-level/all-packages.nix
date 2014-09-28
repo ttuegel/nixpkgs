@@ -11127,10 +11127,7 @@ let
       libcanberra = libcanberra_kde;
     }) ../desktops/kde-4.12;
 
-  kde414 = kdePackagesFor (pkgs.kde414 // {
-      libusb = libusb1;
-      libcanberra = libcanberra_kde;
-    }) ../desktops/kde-4.14;
+  kde414 = callPackage ../desktops/kde-4.14 {};
 
   kdePackagesFor = self: dir:
     let callPackageOrig = callPackage; in
