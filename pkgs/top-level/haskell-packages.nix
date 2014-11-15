@@ -218,6 +218,10 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
 
   authenticateOauth = callPackage ../development/libraries/haskell/authenticate-oauth {};
 
+  autonixDeps = callPackage ../development/libraries/haskell/autonix-deps {};
+
+  autonixDepsKf5 = callPackage ../development/libraries/haskell/autonix-deps-kf5 {};
+
   base16Bytestring = callPackage ../development/libraries/haskell/base16-bytestring {};
 
   base32Bytestring = callPackage ../development/libraries/haskell/base32-bytestring {};
@@ -1496,6 +1500,10 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
   lenses = callPackage ../development/libraries/haskell/lenses {};
 
   leveldbHaskell = callPackage ../development/libraries/haskell/leveldb-haskell {};
+
+  libarchiveConduit = callPackage ../development/libraries/haskell/libarchive-conduit {
+    archive = pkgs.libarchive;
+  };
 
   libffi = callPackage ../development/libraries/haskell/libffi {
     libffi = pkgs.libffi;
