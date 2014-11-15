@@ -5671,6 +5671,7 @@ let
   };
 
   libdbusmenu_qt = callPackage ../development/libraries/libdbusmenu-qt { };
+  libdbusmenu_qt5 = callPackage ../development/libraries/libdbusmenu-qt/qt5.nix {};
 
   libdc1394 = callPackage ../development/libraries/libdc1394 { };
 
@@ -6524,11 +6525,29 @@ let
 
   pdf2xml = callPackage ../development/libraries/pdf2xml {} ;
 
-  phonon = callPackage ../development/libraries/phonon { };
+  phonon = callPackage ../development/libraries/phonon { inherit qt4; };
 
-  phonon_backend_gstreamer = callPackage ../development/libraries/phonon-backend-gstreamer { };
+  phonon_backend_gstreamer = callPackage ../development/libraries/phonon-backend-gstreamer { inherit qt4; };
 
-  phonon_backend_vlc = callPackage ../development/libraries/phonon-backend-vlc { };
+  phonon_backend_vlc = callPackage ../development/libraries/phonon-backend-vlc { inherit qt4; };
+
+  phonon_qt5 = phonon.override {
+    withQt5 = true;
+    inherit qt5;
+    qt4 = null;
+  };
+
+  phonon_qt5_backend_gstreamer = phonon_backend_gstreamer.override {
+    withQt5 = true;
+    inherit qt5;
+    qt4 = null;
+  };
+
+  phonon_qt5_backend_vlc = phonon_backend_vlc.override {
+    withQt5 = true;
+    qt5 = qt53;
+    qt4 = null;
+  };
 
   physfs = callPackage ../development/libraries/physfs { };
 
@@ -9902,6 +9921,8 @@ let
     boost = boost155;
   };
 
+  kdeApplications1412 = callPackage ../applications/kde-applications-14.12 {};
+
   keepnote = callPackage ../applications/office/keepnote {
     pygtk = pyGtkGlade;
   };
@@ -10901,6 +10922,8 @@ let
     ffmpeg = ffmpeg_2_3;
   };
 
+  libvlc = vlc.override { onlyLibVLC = true; };
+
   vmpk = callPackage ../applications/audio/vmpk { };
 
   vnstat = callPackage ../applications/networking/vnstat { };
@@ -11869,6 +11892,9 @@ let
   mate-icon-theme = callPackage ../misc/themes/mate-icon-theme { };
 
   mate-themes = callPackage ../misc/themes/mate-themes { };
+
+  plasma5_latest = plasma51;
+  plasma51 = recurseIntoAttrs (callPackage ../desktops/plasma-5.1 {});
 
   xfce = xfce4_10;
   xfce4_10 = recurseIntoAttrs (import ../desktops/xfce { inherit config pkgs newScope; });
