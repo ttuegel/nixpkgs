@@ -18,7 +18,7 @@ with stdenv.lib;
 
 let
   v_maj = "5.3";
-  v_min = "1";
+  v_min = "2";
   ver = "${v_maj}.${v_min}";
 in
 
@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
   src = fetchurl {
     url = "http://download.qt-project.org/official_releases/qt/"
       + "${v_maj}/${ver}/single/qt-everywhere-opensource-src-${ver}.tar.gz";
-    sha256 = "189mgfqxjg0jp0vkfrj55p9brl018wzf7lir8yjr0pajp8jqd2ds";
+    sha256 = "0b98n2jl62dyqxwn1gdj9xmk8wrrdxnazr65fdk5qw1hmlpgvly8";
   };
 
   # The version property must be kept because it will be included into the QtSDK package name
