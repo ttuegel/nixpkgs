@@ -12,4 +12,6 @@ result-*
 
 .DS_Store
 
+/pkgs/applications/kde-applications-*/tmp/
+/pkgs/development/libraries/kde-frameworks-*/tmp/
 /pkgs/desktops/plasma-*/tmp/
