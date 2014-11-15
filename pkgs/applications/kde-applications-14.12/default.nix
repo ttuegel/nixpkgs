@@ -7,7 +7,7 @@ let
   kf5 = kf54;
   inherit (kf5) qt5;
 
-  manifest = import ./manifest.nix { mirror = "mirror://kde"; };
+  manifest = manifestWithNames (import ./manifest.nix { mirror = "mirror://kde"; });
 
   dependencies = import ./dependencies.nix {};
 
