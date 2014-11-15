@@ -1,0 +1,131 @@
+diff --git a/startkde/startkde.cmake b/startkde/startkde.cmake
+index 91c8a3c..8b6436c 100644
+--- a/startkde/startkde.cmake
++++ b/startkde/startkde.cmake
+@@ -1,6 +1,6 @@
+ #!/bin/sh
+ #
+-#  DEFAULT KDE STARTUP SCRIPT ( @PROJECT_VERSION@ )
++#  NIXOS KDE STARTUP SCRIPT ( @PROJECT_VERSION@ )
+ #
+ 
+ if test "x$1" = x--failsafe; then
+@@ -16,19 +16,6 @@ trap 'echo GOT SIGHUP' HUP
+ # we have to unset this for Darwin since it will screw up KDE's dynamic-loading
+ unset DYLD_FORCE_FLAT_NAMESPACE
+ 
+-# in case we have been started with full pathname spec without being in PATH
+-bindir=`echo "$0" | sed -n 's,^\(/.*\)/[^/][^/]*$,\1,p'`
+-if [ -n "$bindir" ]; then
+-  qbindir=`qtpaths --binaries-dir`
+-  qdbus=$qbindir/qdbus
+-  case $PATH in
+-    $bindir|$bindir:*|*:$bindir|*:$bindir:*) ;;
+-    *) PATH=$bindir:$PATH; export PATH;;
+-  esac
+-else
+-  qdbus=qdbus
+-fi
+-
+ # Check if a KDE session already is running and whether it's possible to connect to X
+ kcheckrunning
+ kcheckrunning_result=$?
+@@ -107,37 +94,7 @@ toolBarFont=Oxygen-Sans,9,-1,5,50,0,0,0,0,0
+ EOF
+ }
+ 
+-# Make sure the Oxygen font is installed
+-# This is necessary for setups where CMAKE_INSTALL_PREFIX
+-# is not in /usr. fontconfig looks in /usr, ~/.fonts and
+-# $XDG_DATA_HOME for fonts. In this case, we symlink the
+-# Oxygen font under ${XDG_DATA_HOME} and make it known to
+-# fontconfig
+-
+-usr_share="/usr/share"
+-install_share="@CMAKE_INSTALL_PREFIX@/@SHARE_INSTALL_PREFIX@"
+-
+-if [ ! $install_share = $usr_share ]; then
+-
+-    if [ ${XDG_DATA_HOME} ]; then
+-        fontsDir="${XDG_DATA_HOME}/fonts"
+-    else
+-        fontsDir="${HOME}/.fonts"
+-    fi
+-
+-    test -d $fontsDir || {
+-        mkdir -p $fontsDir
+-    }
+-
+-    oxygenDir=$fontsDir/oxygen
+-    prefixDir="@CMAKE_INSTALL_PREFIX@/@SHARE_INSTALL_PREFIX@/fonts/oxygen"
+-
+-    # if the oxygen dir doesn't exist, create a symlink to be sure that the
+-    # Oxygen font is available to the user
+-    test -d $oxygenDir || test -d $prefixDir && {
+-        test -h $oxygenDir || ln -s $prefixDir $oxygenDir && fc-cache $oxygenDir
+-    }
+-fi
++# Installation of the Oxygen fonts is handled by a NixOS module.
+ 
+ kstartupconfig5
+ returncode=$?
+@@ -281,23 +238,12 @@ fi
+ 
+ echo 'startkde: Starting up...'  1>&2
+ 
+-# Make sure that the KDE prefix is first in XDG_DATA_DIRS and that it's set at all.
+-# The spec allows XDG_DATA_DIRS to be not set, but X session startup scripts tend
+-# to set it to a list of paths *not* including the KDE prefix if it's not /usr or
+-# /usr/local.
+-if test -z "$XDG_DATA_DIRS"; then
+-    XDG_DATA_DIRS="@CMAKE_INSTALL_PREFIX@/@SHARE_INSTALL_PREFIX@:/usr/share:/usr/local/share"
+-else
+-    XDG_DATA_DIRS="@CMAKE_INSTALL_PREFIX@/@SHARE_INSTALL_PREFIX@:$XDG_DATA_DIRS"
+-fi
+-export XDG_DATA_DIRS
+-
+ # Make sure that D-Bus is running
+ # D-Bus autolaunch is broken
+ if test -z "$DBUS_SESSION_BUS_ADDRESS" ; then
+     eval `dbus-launch --sh-syntax --exit-with-session`
+ fi
+-if $qdbus >/dev/null 2>/dev/null; then
++if qdbus >/dev/null 2>/dev/null; then
+     : # ok
+ else
+     echo 'startkde: Could not start D-Bus. Can you call qdbus?'  1>&2
+@@ -349,7 +295,7 @@ if test -n "$PAM_KWALLET_LOGIN" ; then
+ fi
+ 
+ # At this point all environment variables are set, let's send it to the DBus session server to update the activation environment
+-@CMAKE_INSTALL_FULL_LIBEXECDIR@/ksyncdbusenv
++ksyncdbusenv
+ if test $? -ne 0; then
+   # Startup error
+   echo 'startkde: Could not sync environment to dbus.'  1>&2
+@@ -360,7 +306,7 @@ fi
+ 
+ # We set LD_BIND_NOW to increase the efficiency of kdeinit.
+ # kdeinit unsets this variable before loading applications.
+-LD_BIND_NOW=true @CMAKE_INSTALL_FULL_LIBEXECDIR_KF5@/start_kdeinit_wrapper --kded +kcminit_startup
++LD_BIND_NOW=true start_kdeinit_wrapper --kded +kcminit_startup
+ if test $? -ne 0; then
+   # Startup error
+   echo 'startkde: Could not start kdeinit5. Check your installation.'  1>&2
+@@ -398,13 +344,13 @@ if test x"$wait_drkonqi"x = x"true"x ; then
+     # wait for remaining drkonqi instances with timeout (in seconds)
+     wait_drkonqi_timeout=`kreadconfig5 --file startkderc --group WaitForDrKonqi --key Timeout --default 900`
+     wait_drkonqi_counter=0
+-    while $qdbus | grep "^[^w]*org.kde.drkonqi" > /dev/null ; do
++    while qdbus | grep "^[^w]*org.kde.drkonqi" > /dev/null ; do
+         sleep 5
+         wait_drkonqi_counter=$((wait_drkonqi_counter+5))
+         if test "$wait_drkonqi_counter" -ge "$wait_drkonqi_timeout" ; then
+             # ask remaining drkonqis to die in a graceful way
+-            $qdbus | grep 'org.kde.drkonqi-' | while read address ; do
+-                $qdbus "$address" "/MainApplication" "quit"
++            qdbus | grep 'org.kde.drkonqi-' | while read address ; do
++                qdbus "$address" "/MainApplication" "quit"
+             done
+             break
+         fi
