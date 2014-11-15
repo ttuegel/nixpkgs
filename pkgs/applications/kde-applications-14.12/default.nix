@@ -1,4 +1,4 @@
-{ autonix, stdenv, kf54 }:
+{ autonix, stdenv, kde4, kf54 }:
 
 with stdenv.lib; with autonix;
 
@@ -14,7 +14,7 @@ let
   extraInputs = kf5;
 
   names = with pkgs; with kf5; kf5.dev.names // {
-    KDE4 = kdelibs4support;
+    KDE4 = kde4.kdelibs;
   };
 
   overrides = with pkgs; with kf5; {
