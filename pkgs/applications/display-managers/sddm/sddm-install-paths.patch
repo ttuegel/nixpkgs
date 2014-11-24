@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4d6e0a9..1e4fea5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -123,7 +123,7 @@ endif()
+ 
+ # Set constants
+ set(DATA_INSTALL_DIR            "${CMAKE_INSTALL_FULL_DATADIR}/sddm"                CACHE PATH      "System application data install directory")
+-set(DBUS_CONFIG_DIR             "${CMAKE_INSTALL_SYSCONFDIR}/dbus-1/system.d"       CACHE PATH      "DBus config files directory")
++set(DBUS_CONFIG_DIR             "${CMAKE_INSTALL_PREFIX}/etc/dbus-1/system.d"       CACHE PATH      "DBus config files directory")
+ set(STATE_DIR                   "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/sddm"      CACHE PATH      "State directory")
+ set(RUNTIME_DIR                 "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/run/sddm"      CACHE PATH      "Runtime data storage directory")
+ 
+diff --git a/components/CMakeLists.txt b/components/CMakeLists.txt
+index bf95f4c..267da83 100644
+--- a/components/CMakeLists.txt
++++ b/components/CMakeLists.txt
+@@ -1,8 +1,8 @@
+ configure_file("${COMPONENTS_VERSION}/LayoutBox.qml" "${COMPONENTS_VERSION}/LayoutBox.qml")
+ configure_file("common/qmldir" "common/qmldir")
+ 
+-install(DIRECTORY "${COMPONENTS_VERSION}/" DESTINATION "${QT_IMPORTS_DIR}/SddmComponents")
+-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${COMPONENTS_VERSION}/" DESTINATION "${QT_IMPORTS_DIR}/SddmComponents")
++install(DIRECTORY "${COMPONENTS_VERSION}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/qml/SddmComponents")
++install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${COMPONENTS_VERSION}/" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/qml/SddmComponents")
+ 
+-install(DIRECTORY "common/" DESTINATION "${QT_IMPORTS_DIR}/SddmComponents")
+-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/common/" DESTINATION "${QT_IMPORTS_DIR}/SddmComponents")
++install(DIRECTORY "common/" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/qml/SddmComponents")
++install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/common/" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/qml/SddmComponents")
+diff --git a/services/CMakeLists.txt b/services/CMakeLists.txt
+index e77e0e6..016048f 100644
+--- a/services/CMakeLists.txt
++++ b/services/CMakeLists.txt
+@@ -1,8 +1,8 @@
+ if(SYSTEMD_FOUND)
+     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/sddm.service.in" "${CMAKE_CURRENT_BINARY_DIR}/sddm.service")
+-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sddm.service" DESTINATION "${SYSTEMD_SYSTEM_UNIT_DIR}")
++    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/sddm.service" DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/systemd/system")
+ endif()
+ 
+-install(FILES sddm.pam DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/pam.d RENAME sddm)
+-install(FILES sddm-autologin.pam DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/pam.d RENAME sddm-autologin)
+-install(FILES sddm-greeter.pam DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/pam.d RENAME sddm-greeter)
++install(FILES sddm.pam DESTINATION ${CMAKE_INSTALL_PREFIX}/etc/pam.d RENAME sddm)
++install(FILES sddm-autologin.pam DESTINATION ${CMAKE_INSTALL_PREFIX}/etc/pam.d RENAME sddm-autologin)
++install(FILES sddm-greeter.pam DESTINATION ${CMAKE_INSTALL_PREFIX}/etc/pam.d RENAME sddm-greeter)

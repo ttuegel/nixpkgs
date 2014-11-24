@@ -159,6 +159,7 @@
       prosody = 149;
       i2pd = 150;
       dnscrypt-proxy = 151;
+      sddm = 152;
 
       # When adding a uid, make sure it doesn't match an existing gid. And don't use uids above 399!
 
