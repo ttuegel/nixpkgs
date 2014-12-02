@@ -177,7 +177,7 @@ let
 
   inherit lib config stdenvAdapters;
 
-  inherit (lib) lowPrio hiPrio appendToName makeOverridable;
+  inherit (lib) lowPrio lowPrioSet hiPrio appendToName makeOverridable;
   inherit (misc) versionedDerivation;
 
   # Applying this to an attribute set will cause nix-env to look
@@ -11733,12 +11733,12 @@ let
 
   kakasi = callPackage ../tools/text/kakasi { };
 
-  kde4 = recurseIntoAttrs pkgs.kde414;
+  kde4 = lowPrioSet (recurseIntoAttrs pkgs.kde414);
 
-  kde414 = kdePackagesFor (pkgs.kde414 // {
+  kde414 = lowPrioSet (kdePackagesFor (pkgs.kde414 // {
       libusb = libusb1;
       libcanberra = libcanberra_kde;
-    }) ../desktops/kde-4.14;
+    }) ../desktops/kde-4.14);
 
   kdePackagesFor = self: dir:
     let callPackageOrig = callPackage; in
