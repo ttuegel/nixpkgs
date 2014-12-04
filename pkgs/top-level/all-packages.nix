@@ -11846,7 +11846,7 @@ let
       libusb = libusb1;
       libcanberra = libcanberra_kde;
       boost = boost156;
-    }) ../desktops/kde-4.14;
+    }) ../desktops/kde-4.14);
 
   kdePackagesFor = self: dir:
     let callPackageOrig = callPackage; in
