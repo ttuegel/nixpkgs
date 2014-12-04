@@ -5369,7 +5369,7 @@ let
 
   qt_gstreamer = callPackage ../development/libraries/gstreamer/legacy/qt-gstreamer {};
 
-  qt_gstreamer1 = callPackage ../development/libraries/gstreamer/qt-gstreamer {};
+  qt_gstreamer1 = callPackage ../development/libraries/gstreamer/qt-gstreamer { boost = boost156;};
 
   gnet = callPackage ../development/libraries/gnet { };
 
@@ -11429,7 +11429,10 @@ let
     pygtk = pyGtkGlade;
   };
 
-  zotero = callPackage ../applications/office/zotero { };
+  zotero = callPackage ../applications/office/zotero {
+    inherit (gnome) libIDL;
+    inherit (pythonPackages) pysqlite;
+  };
 
   zynaddsubfx = callPackage ../applications/audio/zynaddsubfx { };
 
