@@ -402,6 +402,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
   ChartDiagrams = callPackage ../development/libraries/haskell/Chart-diagrams {};
   ChartGtk = callPackage ../development/libraries/haskell/Chart-gtk {};
 
+  chaselevDeque = callPackage ../development/libraries/haskell/chaselev-deque {};
+
   ChasingBottoms = callPackage ../development/libraries/haskell/ChasingBottoms {};
 
   cheapskate = callPackage ../development/libraries/haskell/cheapskate {};
@@ -559,6 +561,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
   curl = callPackage ../development/libraries/haskell/curl { curl = pkgs.curl; };
 
   cpu = callPackage ../development/libraries/haskell/cpu {};
+
+  daemons = callPackage ../development/libraries/haskell/daemons { };
 
   dataAccessor = callPackage ../development/libraries/haskell/data-accessor/data-accessor.nix {};
 
@@ -858,6 +862,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
 
   final = callPackage ../development/libraries/haskell/final {};
 
+  fixed = callPackage ../development/libraries/haskell/fixed {};
+
   fgl = callPackage ../development/libraries/haskell/fgl {};
 
   fglVisualize = callPackage ../development/libraries/haskell/fgl-visualize {};
@@ -958,6 +964,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
 
   gitlibTest = callPackage ../development/libraries/haskell/gitlib-test {};
 
+  gl = callPackage ../development/libraries/haskell/gl {};
+
   glade = callPackage ../development/libraries/haskell/glade {
     inherit (pkgs.gnome) libglade;
     gtkC = pkgs.gtk;
@@ -1035,6 +1043,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
 
   graphWrapper = callPackage ../development/libraries/haskell/graph-wrapper {};
 
+  grid = callPackage ../development/libraries/haskell/grid {};
+
   groom = callPackage ../development/libraries/haskell/groom {};
 
   groups = callPackage ../development/libraries/haskell/groups {};
@@ -1042,6 +1052,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
   groupoids = callPackage ../development/libraries/haskell/groupoids {};
 
   hakyll = callPackage ../development/libraries/haskell/hakyll {};
+
+  half = callPackage ../development/libraries/haskell/half {};
 
   hamlet = callPackage ../development/libraries/haskell/hamlet {};
 
@@ -1060,6 +1072,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
   hashedStorage = callPackage ../development/libraries/haskell/hashed-storage {};
 
   hashtables = callPackage ../development/libraries/haskell/hashtables {};
+
+  hask = callPackage ../development/libraries/haskell/hask {};
 
   haskelldb = callPackage ../development/libraries/haskell/haskelldb {};
 
@@ -1239,6 +1253,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
   hoogle = self.hoogle_4_2_36;
 
   hoogleLocal = callPackage ../development/libraries/haskell/hoogle/local.nix {};
+
+  hoopl = callPackage ../development/libraries/haskell/hoopl {};
 
   hopenssl = callPackage ../development/libraries/haskell/hopenssl {};
 
@@ -1511,6 +1527,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
   lambdacubeEngine = callPackage ../development/libraries/haskell/lambdacube-engine {};
 
   largeword = callPackage ../development/libraries/haskell/largeword {};
+
+  lattices = callPackage ../development/libraries/haskell/lattices {};
 
   lazysmallcheck = callPackage ../development/libraries/haskell/lazysmallcheck {};
 
@@ -1832,6 +1850,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
 
   oeis = callPackage ../development/libraries/haskell/oeis {};
 
+  opaleye = callPackage ../development/libraries/haskell/opaleye {};
+
   OpenAL = callPackage ../development/libraries/haskell/OpenAL {};
 
   OpenGL = callPackage ../development/libraries/haskell/OpenGL {};
@@ -1984,6 +2004,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
 
   process_1_2_0_0 = callPackage ../development/libraries/haskell/process/1.2.0.0.nix {};
   process = null;      # core package since forever
+
+  productProfunctors = callPackage ../development/libraries/haskell/product-profunctors {};
 
   profiteur = callPackage ../development/tools/haskell/profiteur {};
 
@@ -2561,6 +2583,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
 
   threads = callPackage ../development/libraries/haskell/threads {};
 
+  threadLocalStorage = callPackage ../development/libraries/haskell/thread-local-storage {};
+
   thReifyMany = callPackage ../development/libraries/haskell/th-reify-many {};
 
   Thrift = callPackage ../development/libraries/haskell/Thrift {};
@@ -2638,6 +2662,8 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
   unbound = callPackage ../development/libraries/haskell/unbound {};
 
   unboundedDelays = callPackage ../development/libraries/haskell/unbounded-delays {};
+
+  unboundGenerics = callPackage ../development/libraries/haskell/unbound-generics {};
 
   unificationFd = callPackage ../development/libraries/haskell/unification-fd {};
 
