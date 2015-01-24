@@ -12413,6 +12413,8 @@ let
     stdenv = overrideGCC stdenv gccStdInc;
   });
 
+  kde5 = kf55 // plasma51 // kdeApps_14_12;
+
   xfce = xfce4_10;
   xfce4_10 = recurseIntoAttrs (import ../desktops/xfce { inherit config pkgs newScope; });
 
