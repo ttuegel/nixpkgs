@@ -6914,10 +6914,16 @@ let
 
   phonon_backend_vlc = callPackage ../development/libraries/phonon-backend-vlc/qt4 {};
 
-  phonon_qt5 = callPackage ../development/libraries/phonon/qt5 {};
+  phonon_qt5 = callPackage ../development/libraries/phonon/qt5 {
+    qt5 = qt5split;
+  };
 
-  phonon_qt5_backend_gstreamer = callPackage ../development/libraries/phonon-backend-gstreamer/qt5 {};
-  phonon_qt5_backend_vlc = callPackage ../development/libraries/phonon-backend-vlc/qt5 {};
+  phonon_qt5_backend_gstreamer = callPackage ../development/libraries/phonon-backend-gstreamer/qt5 {
+    qt5 = qt5split;
+  };
+  phonon_qt5_backend_vlc = callPackage ../development/libraries/phonon-backend-vlc/qt5 {
+    qt5 = qt5split;
+  };
 
   physfs = callPackage ../development/libraries/physfs { };
 
@@ -11575,6 +11581,12 @@ let
 
   vlc = callPackage ../applications/video/vlc {
     ffmpeg = ffmpeg_2_2;
+  };
+
+  vlc_qt5 = vlc.override {
+    qt4 = null;
+    qt5 = qt5split;
+    withQt5 = true;
   };
 
   vmpk = callPackage ../applications/audio/vmpk { };
