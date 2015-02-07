@@ -7030,7 +7030,10 @@ let
     bison = bison2; # error: too few arguments to function 'int yylex(...
   };
 
-  qt5split = callPackage ../development/libraries/qt-5/5.3-submodules {};
+  qt53split = callPackage ../development/libraries/qt-5/5.3-submodules {};
+  qt5split = qt53split;
+
+  qtModules = callPackage ../development/libraries/qt-5/qt-modules.nix {};
 
   qt5Full = appendToName "full" (qt5.override {
     buildDocs = true;

@@ -30,6 +30,8 @@ let
   self =
     {
 
+      qmakeWith = (callPackage ../qt-modules.nix {}) self.base;
+
       activeqt = callPackage
         (
           { qtSubmodule, base }:
