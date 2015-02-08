@@ -6950,8 +6950,8 @@ let
   };
 
   polkit_qt5 = callPackage ../development/libraries/polkit-qt-1 {
-    inherit qt5;
     withQt5 = true;
+    qt5 = qt5split;
   };
 
   policykit = callPackage ../development/libraries/policykit { };
