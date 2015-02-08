@@ -7,14 +7,11 @@ runCommand "qt-modules-${base.version}"
   ''
     mkdir -p "$out"
 
-    ${lndir}/bin/lndir "$base" "$out"
+    ${lndir}/bin/lndir -silent "$base" "$out"
 
     for input in $inputs; do
-      ${lndir}/bin/lndir "$input" "$out"
+      ${lndir}/bin/lndir -silent "$input" "$out"
     done
-
-    # Only this package's nix-support files go in $out
-    rm -fr $out/nix-support
 
     # Override hardcoded paths in qmake
     rm -f $out/bin/qmake
