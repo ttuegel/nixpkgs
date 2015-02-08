@@ -19,7 +19,7 @@ mkDerivation (args // {
     mkdir -p "$out"
 
     for qtInput in ${concatStringsSep " " args.qtInputs}; do
-      lndir "$qtInput" "$out"
+      ${lndir}/bin/lndir -silent "$qtInput" "$out"
     done
 
     # Only this package's nix-support files go in $out
@@ -45,8 +45,6 @@ EOF
   '';
 
   propagatedBuildInputs = args.qtInputs ++ (args.propagatedBuildInputs or []);
-
-  nativeBuildInputs = [ lndir ] ++ (args.nativeBuildInputs or []);
 
   enableParallelBuilding =
     args.enableParallelBuilding or true; # often fails on Hydra, as well as qt4
