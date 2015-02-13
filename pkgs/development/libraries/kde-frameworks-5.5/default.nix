@@ -111,9 +111,10 @@ let
             name = "frameworkintegration";
             buildInputs =
               [
-                kconfig kconfigwidgets kiconthemes kio knotifications libxcb
-                (qt5.qmakeWith (with qt5; [ x11extras ]))
+                kconfig kconfigwidgets kio knotifications libxcb
+                (qt5.qmake (with qt5; [ x11extras ]))
               ];
+            propagatedBuildInputs = [ kiconthemes ];
           }
         )
         {};
@@ -127,7 +128,7 @@ let
             buildInputs =
               [
                 boost kcmutils kconfig kcoreaddons kdbusaddons kdeclarative kio
-                (qt5.qmakeWith (with qt5; [ declarative ]))
+                (qt5.qmake (with qt5; [ declarative ]))
               ];
           }
         )
@@ -180,10 +181,8 @@ let
 
           kdePackage {
             name = "kcmutils";
-            buildInputs =
-              [
-                kconfigwidgets kiconthemes kitemviews kservice kxmlgui qt5.base
-              ];
+            buildInputs = [ kiconthemes kitemviews qt5.base ];
+            propagatedBuildInputs = [ kconfigwidgets kservice kxmlgui ];
             patches =
               [./kcmutils/kcmutils-pluginselector-follow-symlinks.patch];
           }
@@ -266,7 +265,7 @@ let
             name = "kcrash";
             buildInputs = [
               kcoreaddons
-              (qt5.qmakeWith (with qt5; [ tools x11extras ]))
+              (qt5.qmake (with qt5; [ tools x11extras ]))
             ];
             propagatedBuildInputs = [ kwindowsystem ];
           }
@@ -280,7 +279,7 @@ let
           kdePackage {
             name = "kdbusaddons";
             buildInputs = [
-              (qt5.qmakeWith (with qt5; [ tools x11extras ]))
+              (qt5.qmake (with qt5; [ tools x11extras ]))
             ];
             propagatedBuildInputs = [ ki18n ];
           }
@@ -294,11 +293,12 @@ let
 
           kdePackage {
             name = "kdeclarative";
+            preConfigure = ''echo "nativeBuildInputs=$nativeBuildInputs"'';
             buildInputs =
               [
                 kconfig kglobalaccel kguiaddons ki18n kiconthemes
                 kwidgetsaddons kwindowsystem
-                (qt5.qmakeWith (with qt5; [ declarative ]))
+                (qt5.qmake (with qt5; [ declarative ]))
               ];
             propagatedBuildInputs = [ kio ];
           }
@@ -324,18 +324,22 @@ let
       kdelibs4support = callPackage
         (
           { kdePackage, docbook_xml_dtd_45, kcompletion, kconfigwidgets, kcrash
-          , kdesignerplugin, kdoctools, kglobalaccel, kiconthemes, kio
-          , knotifications, kparts, kunitconversion, libSM, libxslt
-          , networkmanager, qt5 }:
+          , kdesignerplugin, kdoctools, kemoticons, kglobalaccel, kiconthemes
+          , kio, kinit, kitemmodels, knotifications, kparts, kunitconversion
+          , libSM, libxslt, networkmanager, qt5 }:
 
           kdePackage {
             name = "kdelibs4support";
             buildInputs =
               [
-                kcompletion kconfigwidgets kcrash kdesignerplugin kdoctools
-                kglobalaccel kiconthemes kio knotifications kparts
-                kunitconversion libSM libxslt networkmanager
-                (qt5.qmakeWith (with qt5; [ svg tools x11extras ]))
+                kcompletion kconfigwidgets kglobalaccel kiconthemes kio
+                libSM libxslt networkmanager
+                (qt5.qmake (with qt5; [ svg tools x11extras ]))
+              ];
+            propagatedBuildInputs =
+              [
+                kcrash kdesignerplugin kdoctools kemoticons kinit kitemmodels
+                knotifications kparts kunitconversion
               ];
             cmakeFlags =
               [
@@ -359,7 +363,7 @@ let
                 kcompletion kconfig kconfigwidgets kcoreaddons kdewebkit
                 kdoctools kiconthemes kio kitemviews kplotting ktextwidgets
                 kwidgetsaddons kxmlgui sonnet
-                (qt5.qmakeWith (with qt5; [ tools ]))
+                (qt5.qmake (with qt5; [ tools ]))
               ];
           }
         )
@@ -371,7 +375,8 @@ let
 
           kdePackage {
             name = "kdesu";
-            buildInputs = [ kcoreaddons kpty kservice libX11 qt5.base ];
+            buildInputs = [ kcoreaddons kservice libX11 qt5.base ];
+            propagatedBuildInputs = [ kpty ];
           }
         )
         {};
@@ -384,7 +389,7 @@ let
             name = "kdewebkit";
             buildInputs = [
               kconfig kcoreaddons kio kparts kwallet
-              (qt5.qmakeWith (with qt5; [ webkit ]))
+              (qt5.qmake (with qt5; [ webkit ]))
             ];
           }
         )
@@ -440,7 +445,7 @@ let
             name = "kglobalaccel";
             buildInputs = [
               libX11
-              (qt5.qmakeWith (with qt5; [ tools x11extras ]))
+              (qt5.qmake (with qt5; [ tools x11extras ]))
             ];
           }
         )
@@ -454,7 +459,7 @@ let
             name = "kguiaddons";
             buildInputs = [
               libX11 libxcb
-              (qt5.qmakeWith (with qt5; [ x11extras ]))
+              (qt5.qmake (with qt5; [ x11extras ]))
             ];
           }
         )
@@ -470,12 +475,13 @@ let
             name = "khtml";
             buildInputs =
               [
-                giflib karchive kcodecs kglobalaccel ki18n kiconthemes kio kjs
-                knotifications kparts kwallet
+                giflib karchive kcodecs kglobalaccel ki18n kiconthemes kio
+                knotifications kparts
                 (phonon_qt5.override { inherit qt5; })
-                (qt5.qmakeWith (with qt5; [ x11extras ]))
+                (qt5.qmake (with qt5; [ x11extras ]))
               ];
             nativeBuildInputs = [ perl ];
+            propagatedBuildInputs = [ kjs kwallet ];
           }
         )
         {};
@@ -486,7 +492,7 @@ let
 
           kdePackage {
             name = "ki18n";
-            buildInputs = [ (qt5.qmakeWith [ qt5.script ]) ];
+            buildInputs = [ (qt5.qmake [ qt5.script ]) ];
             propagatedNativeBuildInputs = [ gettext python ];
           }
         )
@@ -499,7 +505,7 @@ let
           kdePackage {
             name = "kiconthemes";
             buildInputs =
-              [ ki18n (qt5.qmakeWith (with qt5; [ svg ])) ];
+              [ ki18n (qt5.qmake (with qt5; [ svg ])) ];
             propagatedBuildInputs = [ kconfigwidgets kitemviews ];
           }
         )
@@ -514,7 +520,7 @@ let
             buildInputs =
               [
                 libX11 libXext libxcb
-                (qt5.qmakeWith (with qt5; [ x11extras ]))
+                (qt5.qmake (with qt5; [ x11extras ]))
               ];
           }
         )
@@ -577,7 +583,7 @@ let
               [
                 acl karchive kdoctools knotifications
                 kwallet libX11 libxml2 libxslt
-                (qt5.qmakeWith (with qt5; [ x11extras ])) solid
+                (qt5.qmake (with qt5; [ x11extras ])) solid
               ];
             propagatedBuildInputs = [ kbookmarks kjobwidgets solid ];
           }
@@ -593,7 +599,7 @@ let
             buildInputs =
               [
                 kcoreaddons kwidgetsaddons
-                (qt5.qmakeWith (with qt5; [ tools x11extras ]))
+                (qt5.qmake (with qt5; [ tools x11extras ]))
               ];
           }
         )
@@ -619,9 +625,10 @@ let
             name = "kjsembed";
             buildInputs =
               [
-                kdoctools ki18n kjs
-                (qt5.qmakeWith (with qt5; [ tools ]))
+                kdoctools ki18n
+                (qt5.qmake (with qt5; [ tools ]))
               ];
+            propagatedBuildInputs = [ kjs ];
           }
         )
         {};
@@ -663,8 +670,24 @@ let
               kiconthemes kservice kwindowsystem
               (libdbusmenu_qt5.override { inherit qt5; }) libX11
               (phonon_qt5.override { inherit qt5; })
-              (qt5.qmakeWith (with qt5; [ tools x11extras ]))
+              (qt5.qmake (with qt5; [ tools x11extras ]))
             ];
+          }
+        )
+        {};
+
+      knotifyconfig = callPackage
+        (
+          { kdePackage, kcompletion, ki18n, kio, phonon_qt5, qt5 }:
+
+          kdePackage {
+            name = "knotifyconfig";
+            buildInputs =
+              [
+                kcompletion ki18n kio
+                (phonon_qt5.override { inherit qt5; })
+                qt5.base
+              ];
           }
         )
         {};
@@ -714,7 +737,7 @@ let
             buildInputs =
               [
                 kcompletion kcoreaddons kdoctools ki18n kiconthemes kio kparts
-                (qt5.qmakeWith (with qt5; [ script ]))
+                (qt5.qmake (with qt5; [ script ]))
               ];
           }
         )
@@ -730,7 +753,7 @@ let
             buildInputs =
               [
                 kconfig kcoreaddons ki18n kio plasma-framework threadweaver
-                (qt5.qmakeWith (with qt5; [ declarative ]))
+                (qt5.qmake (with qt5; [ declarative ]))
               ];
           }
         )
@@ -764,7 +787,7 @@ let
             buildInputs =
               [
                 karchive kconfig kguiaddons ki18n kio kparts
-                (qt5.qmakeWith (with qt5; [ script ]))
+                (qt5.qmake (with qt5; [ script ]))
               ];
             nativeBuildInputs = [ perl ];
           }
@@ -819,7 +842,7 @@ let
 
           kdePackage {
             name = "kwidgetsaddons";
-            buildInputs = [ (qt5.qmakeWith (with qt5; [ tools ])) ];
+            buildInputs = [ (qt5.qmake (with qt5; [ tools ])) ];
           }
         )
         {};
@@ -833,7 +856,7 @@ let
             name = "kwindowsystem";
             buildInputs = [
               libXfixes libXrender libxcb
-              (qt5.qmakeWith (with qt5; [ tools x11extras ]))
+              (qt5.qmake (with qt5; [ tools x11extras ]))
               xcbutilkeysyms
             ];
             propagatedBuildInput = [ libX11 ];
@@ -868,7 +891,7 @@ let
               [
                 kactivities karchive kconfig kconfigwidgets kdbusaddons
                 kdeclarative kdoctools knotifications
-                (qt5.qmakeWith (with qt5; [ declarative script x11extras ]))
+                (qt5.qmake (with qt5; [ declarative script x11extras ]))
               ];
             patches =
               [ ./plasma-framework/plasma-framework-external-paths.patch ];
@@ -905,7 +928,7 @@ let
 
           kdePackage {
             name = "threadweaver";
-            buildInputs = [ (qt5.qmakeWith (with qt5; [ declarative ])) ];
+            buildInputs = [ (qt5.qmake (with qt5; [ declarative ])) ];
           }
         )
         {};

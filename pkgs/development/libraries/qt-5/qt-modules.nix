@@ -1,24 +1,18 @@
-{ runCommand, lndir }:
+{ runCommand, lndir, base }:
 
-base: inputs:
+inputs:
 
 runCommand "qt-modules-${base.version}"
-  { inherit base inputs; propagatedBuildInputs = [base] ++ inputs; }
+  { inherit inputs; }
   ''
     mkdir -p "$out"
-
-    ${lndir}/bin/lndir -silent "$base" "$out"
 
     for input in $inputs; do
       ${lndir}/bin/lndir -silent "$input" "$out"
     done
 
-    # Override hardcoded paths in qmake
-    rm -f $out/bin/qmake
-    cp "${base}/bin/qmake" "$out/bin/qmake"
-    rm -f $out/bin/qt.conf
-    cat <<EOF >$out/bin/qt.conf
-[Paths]
-Prefix = $out
-EOF
+    # Write propagated-build-inputs
+    rm -fr "$out/nix-support"
+    mkdir -p "$out/nix-support"
+    echo "${toString inputs}" > "$out/nix-support/propagated-build-inputs"
   ''

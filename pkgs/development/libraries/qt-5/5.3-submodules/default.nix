@@ -30,7 +30,7 @@ let
   self =
     {
 
-      qmakeWith = (callPackage ../qt-modules.nix {}) self.base;
+      qmake = callPackage ../qmake.nix { inherit (self) base; };
 
       activeqt = callPackage
         (

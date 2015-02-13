@@ -6959,7 +6959,7 @@ let
 
   poppler = callPackage ../development/libraries/poppler { lcms = lcms2; };
   popplerQt4 = poppler.poppler_qt4;
-  popplerQt5 = poppler.poppler_qt5;
+  poppler_qt5 = poppler.poppler_qt5;
 
   popt = callPackage ../development/libraries/popt { };
 
@@ -10476,12 +10476,14 @@ let
     boost = boost155;
   };
 
+  /*
   kdeApps_14_12 = recurseIntoAttrs (callPackage ../applications/kde-apps-14.12 {
     kf5 = kf55;
     stdenv = overrideCC stdenv gccStdInc;
   });
   kdeApps_latest = kdeApps_14_12;
   kdeApps_stable = kdeApps_14_12;
+  */
 
   keepnote = callPackage ../applications/office/keepnote {
     pygtk = pyGtkGlade;
@@ -12611,13 +12613,13 @@ let
   mate-themes = callPackage ../misc/themes/mate-themes { };
 
   plasma51 = recurseIntoAttrs (callPackage ../desktops/plasma-5.1 {
-    stdenv = overrideCC stdenv gccStdInc;
+    qt5 = qt5split;
   });
   plasma52 = recurseIntoAttrs (callPackage ../desktops/plasma-5.2 {});
   plasma5_latest = plasma52;
   plasma5_stable = plasma51;
 
-  kde5 = kf55 // plasma51 // kdeApps_14_12;
+  #kde5 = kf55 // plasma51 // kdeApps_14_12;
 
   xfce = xfce4_10;
   xfce4_10 = recurseIntoAttrs (import ../desktops/xfce { inherit config pkgs newScope; });

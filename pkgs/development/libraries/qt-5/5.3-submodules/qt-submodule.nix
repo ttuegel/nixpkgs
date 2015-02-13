@@ -16,9 +16,9 @@ mkDerivation (args // {
   srcs = args.srcs or [srcs."${args.name}-opensource-src"];
 
   preConfigure = ''
-    mkdir -p "$out"
+    mkdir -p "$out/bin" "$out/mkspecs"
 
-    for qtInput in ${concatStringsSep " " args.qtInputs}; do
+    for qtInput in ${toString args.qtInputs}; do
       ${lndir}/bin/lndir -silent "$qtInput" "$out"
     done
 
@@ -26,9 +26,8 @@ mkDerivation (args // {
     rm -fr $out/nix-support
 
     # Override hardcoded paths in qmake
-    rm -f $out/bin/qmake
+    rm -f "$out/bin/qmake" "$out/bin/qt.conf"
     cp "${base}/bin/qmake" "$out/bin/qmake"
-    rm -f $out/bin/qt.conf
     cat <<EOF >$out/bin/qt.conf
 [Paths]
 Prefix = $out

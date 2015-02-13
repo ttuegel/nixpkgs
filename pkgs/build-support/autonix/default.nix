@@ -163,6 +163,7 @@ in
   inherit importManifest;
   inherit isDepAttr;
   inherit manifest;
+  inherit pkgNameVersion;
   inherit removePkgDeps;
   inherit resolveDeps;
   inherit userEnvPkg;
