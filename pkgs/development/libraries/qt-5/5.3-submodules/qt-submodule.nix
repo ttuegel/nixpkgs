@@ -16,10 +16,14 @@ mkDerivation (args // {
   srcs = args.srcs or [srcs."${args.name}-opensource-src"];
 
   preConfigure = ''
-    mkdir -p "$out/bin" "$out/mkspecs"
+    mkdir -p "$out/bin" "$out/include" "$out/lib" "$out/mkspecs" "$out/nix-support"
 
     for qtInput in ${toString args.qtInputs}; do
-      ${lndir}/bin/lndir -silent "$qtInput" "$out"
+      find "$qtInput/bin" "$qtInput/include" "$qtInput/lib" "$qtInput/mkspecs" -print '%P' >> "$out/nix-support/qt-inputs"
+      ${lndir}/bin/lndir -silent "$qtInput/bin" "$out/bin"
+      ${lndir}/bin/lndir -silent "$qtInput/include" "$out/include"
+      ${lndir}/bin/lndir -silent "$qtInput/lib" "$out/lib"
+      ${lndir}/bin/lndir -silent "$qtInput/mkspecs" "$out/mkspecs"
     done
 
     # Only this package's nix-support files go in $out
@@ -32,8 +36,6 @@ mkDerivation (args // {
     export PATH=$out/bin:$PATH
   '' + (args.preConfigure or "");
 
-  NIX_DEBUG = 1;
-
   dontAddPrefix = args.dontAddPrefix or true;
   dontFixLibtool = args.dontFixLibtool or true;
   configureScript = args.configureScript or "qmake";
@@ -45,10 +47,19 @@ mkDerivation (args // {
   postInstall = ''
     rm "$out/bin/qmake" "$out/bin/qt.conf"
 
-    # Delete symlinks to files outside this package
-    find "$out" -type l -a \( -not -lname "$out/\*" \) -a -lname "/\*" -delete
-    # Remove leftover empty directories created by lndir
-    find "$out" -type d -a -empty -delete
+    cat "$out/nix-support/qt-inputs" | while read file; do
+      if [[ -h "$out/$file" ]]; then
+        rm "$out/$file"
+      fi
+    done
+
+    cat "$out/nix-support/qt-inputs" | while read file; do
+      if [[ -d "$out/$file" ]]; then
+        rmdir "$out/$file"
+      fi
+    done
+
+    rm "$out/nix-support/qt-inputs"
 
     # Install the setup-hook
     mkdir -p "$out/nix-support"
