@@ -28,19 +28,31 @@ mkDerivation (args // {
     # Override hardcoded paths in qmake
     rm -f "$out/bin/qmake" "$out/bin/qt.conf"
     cp "${base}/bin/qmake" "$out/bin/qmake"
-    cat <<EOF >$out/bin/qt.conf
-[Paths]
-Prefix = $out
-EOF
+    substitute "${../qt.conf}" "$out/bin/qt.conf" --subst-var-by prefix $out
     export PATH=$out/bin:$PATH
   '' + (args.preConfigure or "");
+
+  NIX_DEBUG = 1;
 
   dontAddPrefix = args.dontAddPrefix or true;
   dontFixLibtool = args.dontFixLibtool or true;
   configureScript = args.configureScript or "qmake";
 
+  inherit lndir;
+  qtbase = base;
+  qtconf = ../qt.conf;
+  qtmodule = args.name;
   postInstall = ''
     rm "$out/bin/qmake" "$out/bin/qt.conf"
+
+    # Delete symlinks to files outside this package
+    find "$out" -type l -a \( -not -lname "$out/\*" \) -a -lname "/\*" -delete
+    # Remove leftover empty directories created by lndir
+    find "$out" -type d -a -empty -delete
+
+    # Install the setup-hook
+    mkdir -p "$out/nix-support"
+    substituteAll "${../setup-hook.sh}" "$out/nix-support/setup-hook"
   '';
 
   propagatedBuildInputs = args.qtInputs ++ (args.propagatedBuildInputs or []);

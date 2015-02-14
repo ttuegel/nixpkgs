@@ -6,7 +6,7 @@
 , fontconfig, freetype, openssl, dbus, glib, udev, libxml2, libxslt, pcre
 , zlib, libjpeg, libpng, libtiff, sqlite, icu
 
-, coreutils, bison, flex, gdb, gperf, ruby
+, coreutils, bison, flex, gdb, gperf, lndir, ruby
 , python, perl, pkgconfig
 
 # optional dependencies
@@ -151,6 +151,10 @@ stdenv.mkDerivation {
   # freetype-2.5.4 changed signedness of some struct fields
   NIX_CFLAGS_COMPILE = "-Wno-error=sign-compare";
 
+
+  inherit lndir;
+  qtconf = ../qt.conf;
+  qtmodule = "qtbase";
   postInstall =
     ''
       ${optionalString buildDocs ''
@@ -159,6 +163,10 @@ stdenv.mkDerivation {
 
       # Don't retain build-time dependencies like gdb and ruby.
       sed '/QMAKE_DEFAULT_.*DIRS/ d' -i $out/mkspecs/qconfig.pri
+
+      mkdir -p "$out/nix-support"
+      qtbase=$out
+      substituteAll "${../setup-hook.sh}" "$out/nix-support/setup-hook"
     '';
 
   enableParallelBuilding = true; # often fails on Hydra, as well as qt4
