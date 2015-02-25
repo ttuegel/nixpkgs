@@ -94,11 +94,25 @@ stdenv.mkDerivation {
 
   doCheck = true;
 
+  inherit shared threads withLapack;
+
   postInstall = ''
     # Avoid name collision with the real lapack (ATLAS only builds a partial
     # lapack unless withLapack = true).
     if ${if withLapack then "false" else "true"}; then
       mv $out/lib/liblapack.a $out/lib/liblapack_atlas.a
+    fi
+
+    [[ -e "$out/lib/libatlas.a" ]] || exit 1;
+    [[ -e "$out/lib/libcblas.a" ]] || exit 1;
+    [[ -e "$out/lib/libf77blas.a" ]] || exit 1;
+    [[ -z "$withLapack" ]] || [[ -e "$out/lib/liblapack.a" ]] || exit 1;
+    [[ -z "$shared" ]] || [[ -e "$out/lib/libsatlas.so" ]] || exit 1;
+
+    if [[ "$threads" -gt 0 ]]; then
+      [[ -e "$out/lib/libptcblas.a" ]] || exit 1;
+      [[ -e "$out/lib/libptf77blas.a" ]] || exit 1;
+      [[ -z "$shared" ]] || [[ -e "$out/lib/libtatlas.so" ]] || exit 1;
     fi
   '';
 
