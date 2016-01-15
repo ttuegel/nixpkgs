@@ -16,52 +16,12 @@ To update the list of packages from MELPA Stable,
 
 { lib }:
 
-let
-
-  inherit (lib) makeScope mapAttrs;
-
-  json = builtins.readFile ./melpa-stable-packages.json;
-  manifest = builtins.fromJSON json;
-
-  mkPackage = self: name: recipe:
-    let drv =
-          { melpaBuild, stdenv, fetchbzr, fetchcvs, fetchFromGitHub, fetchFromGitLab
-          , fetchgit, fetchhg, fetchsvn, fetchurl }:
-          let
-            unknownFetcher =
-              abort "emacs-${name}: unknown fetcher '${recipe.fetch.tag}'";
-            fetch =
-              {
-                inherit fetchbzr fetchcvs fetchFromGitHub fetchFromGitLab fetchgit fetchhg
-                        fetchsvn fetchurl;
-              }."${recipe.fetch.tag}"
-              or unknownFetcher;
-            args = builtins.removeAttrs recipe.fetch [ "tag" ];
-            src = fetch args;
-            recipeFile = fetchurl {
-              url = "https://raw.githubusercontent.com/milkypostman/melpa/${recipe.recipe.commit}/recipes/${name}";
-              inherit (recipe.recipe) sha256;
-            };
-          in melpaBuild {
-            pname = name;
-            inherit (recipe) version;
-            inherit recipeFile src;
-            packageRequires =
-              let lookupDep = d: self."${d}" or null;
-              in map lookupDep recipe.deps;
-            meta = {
-              homepage = "http://stable.melpa.org/#/${name}";
-              license = stdenv.lib.licenses.free;
-            };
-          };
-    in self.callPackage drv {};
-
-in
-
 self:
 
   let
-    super = mapAttrs (mkPackage self) manifest;
+    imported = import ./melpa-stable { inherit (self) callPackage; };
+
+    super = imported;
 
     markBroken = pkg: pkg.override {
       melpaBuild = args: self.melpaBuild (args // {
@@ -69,9 +29,11 @@ self:
       });
     };
 
-    melpaStablePackages = super // {
+    overrides = {
       # broken upstream
       ack-menu = markBroken super.ack-menu;
     };
+
+    melpaStablePackages = super // overrides;
   in
     melpaStablePackages // { inherit melpaStablePackages; }
