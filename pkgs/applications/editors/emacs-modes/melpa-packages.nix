@@ -17,7 +17,7 @@ To update the list of packages from MELPA,
 self:
 
   let
-    imported = import ./melpa { inherit (self) callPackage; };
+    imported = import ./melpa-generated.nix { inherit (self) callPackage; };
     super = builtins.removeAttrs imported [
       "swbuff-x" # required dependency swbuff is missing
     ];
