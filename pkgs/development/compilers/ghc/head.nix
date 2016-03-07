@@ -1,4 +1,5 @@
-{ stdenv, fetchgit, bootPkgs, perl, gmp, ncurses, libiconv, binutils, coreutils
+{ stdenv, fetchgit, fetchurl
+, bootPkgs, perl, gmp, ncurses, libiconv, binutils, coreutils
 , autoconf, automake, happy, alex
 }:
 
@@ -6,18 +7,22 @@ let
   inherit (bootPkgs) ghc;
 
 in stdenv.mkDerivation rec {
-  version = "7.11.20151216";
+  version = "8.0.1.20160302";
   name = "ghc-${version}";
-  rev = "28638dfe79e915f33d75a1b22c5adce9e2b62b97";
+  rev = "ff3f7d003d4860a36a8f2b1198a74422fa138e7c";
 
   src = fetchgit {
     url = "git://git.haskell.org/ghc.git";
     inherit rev;
-    sha256 = "0rjzkzn0hz1vdnjikcbwfs5ggs8r3y4gqxfdn4jzfp45gx94wiwv";
+    sha256 = "146pr78inzs48afds2cnwm336v6z5vydhjcssy0dl5ykmigyflpd";
   };
 
   patches = [
     ./dont-pass-linker-flags-via-response-files.patch   # https://github.com/NixOS/nixpkgs/issues/10752
+    (fetchurl {
+      url = "https://ghc.haskell.org/trac/ghc/raw-attachment/ticket/11401/T11401.patch";
+      sha256 = "02ypr4aq2zi2qg92s2scj865dgnk07486xw3923rcf8gszfkay31";
+    })
   ];
 
   postUnpack = ''
