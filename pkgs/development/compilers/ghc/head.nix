@@ -19,10 +19,6 @@ in stdenv.mkDerivation rec {
 
   patches = [
     ./dont-pass-linker-flags-via-response-files.patch   # https://github.com/NixOS/nixpkgs/issues/10752
-    (fetchurl {
-      url = "https://ghc.haskell.org/trac/ghc/raw-attachment/ticket/11401/T11401.patch";
-      sha256 = "02ypr4aq2zi2qg92s2scj865dgnk07486xw3923rcf8gszfkay31";
-    })
   ];
 
   postUnpack = ''
