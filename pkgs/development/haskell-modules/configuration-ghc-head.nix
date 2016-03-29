@@ -85,4 +85,28 @@ self: super: {
   # Won't work with LLVM 3.5.
   llvm-general = markBrokenVersion "3.4.5.3" super.llvm-general;
 
+  # Broken tests
+  hspec-core = dontCheck super.hspec-core;
+  HUnit = dontCheck super.HUnit;
+  bifunctors = dontCheck (doJailbreak super.bifunctors);
+  comonad = doJailbreak (dontCheck (self.callPackage ./comonad-5.nix {}));
+  distributive = dontCheck super.distributive;
+  foldl = doJailbreak super.foldl;
+  kan-extensions = doJailbreak (self.callPackage ./kan-extensions-5.0.1.nix {});
+  #lens = doJailbreak super.lens;
+  lens = dontCheck (self.callPackage ./lens-4.13.2.1.nix {});
+  pointed = doJailbreak (self.callPackage ./pointed-5.nix {});
+  semigroupoids = dontCheck super.semigroupoids;
+
+  # Patches
+  generic-deriving = overrideCabal super.generic-deriving (drv: {
+    patches = [ ./generic-deriving-no-splices.patch ];
+  });
+  hmatrix = overrideCabal super.hmatrix (drv: {
+    patches = [ ./hmatrix-constrained-class-methods.patch ];
+  });
+
+  # Newer version
+  transformers-compat = self.callPackage ./transformers-compat-0.5.1.4.nix {};
+
 }

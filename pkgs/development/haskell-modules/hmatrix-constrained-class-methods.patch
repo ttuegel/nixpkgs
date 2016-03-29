@@ -1,0 +1,22 @@
+diff --git a/src/Internal/Matrix.hs b/src/Internal/Matrix.hs
+index 3082e8d..414d394 100644
+--- a/src/Internal/Matrix.hs
++++ b/src/Internal/Matrix.hs
+@@ -1,3 +1,4 @@
++{-# LANGUAGE ConstrainedClassMethods  #-}
+ {-# LANGUAGE ForeignFunctionInterface #-}
+ {-# LANGUAGE FlexibleContexts         #-}
+ {-# LANGUAGE FlexibleInstances        #-}
+diff --git a/src/Internal/Modular.hs b/src/Internal/Modular.hs
+index 239c742..a4071b2 100644
+--- a/src/Internal/Modular.hs
++++ b/src/Internal/Modular.hs
+@@ -72,7 +72,7 @@ instance (Ord t, KnownNat m) => Ord (Mod m t)
+   where
+     compare a b = compare (unMod a) (unMod b)
+ 
+-instance (Real t, KnownNat m, Integral (Mod m t)) => Real (Mod m t)
++instance (Real t, KnownNat m, Integral (Mod m t), Integral t) => Real (Mod m t)
+   where
+     toRational x = toInteger x % 1
+ 
