@@ -150,6 +150,7 @@ stdenv.mkDerivation {
     -optimized-qmake
     -strip
     -reduce-relocations
+    -separate-debug-info
     -system-proxies
     -pkg-config
 
