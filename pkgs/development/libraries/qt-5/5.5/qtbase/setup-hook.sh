@@ -28,7 +28,6 @@ _qtPropagateRuntimeDependencies() {
     for dir in "lib/qt5/plugins" "lib/qt5/qml" "lib/qt5/imports"; do
         if [ -d "$1/$dir" ]; then
             propagateOnce propagatedBuildInputs "$1"
-            propagateOnce propagatedUserEnvPkgs "$1"
             break
         fi
     done
