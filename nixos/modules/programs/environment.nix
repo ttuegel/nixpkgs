@@ -38,7 +38,6 @@ in
         PERL5LIB = [ "/lib/perl5/site_perl" ];
         KDEDIRS = [ "" ];
         STRIGI_PLUGIN_PATH = [ "/lib/strigi/" ];
-        QT_PLUGIN_PATH = [ "/lib/qt4/plugins" "/lib/kde4/plugins" ];
         QTWEBKIT_PLUGIN_PATH = [ "/lib/mozilla/plugins/" ];
         GTK_PATH = [ "/lib/gtk-2.0" "/lib/gtk-3.0" ];
         XDG_CONFIG_DIRS = [ "/etc/xdg" ];
