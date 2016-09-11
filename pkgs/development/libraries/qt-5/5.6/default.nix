@@ -75,7 +75,7 @@ let
       /* qtandroidextras = not packaged */
       /* qtcanvas3d = not packaged */
       qtconnectivity = callPackage ./qtconnectivity.nix {};
-      qtdeclarative = callPackage ./qtdeclarative {};
+      qtdeclarative = callPackage ./qtdeclarative.nix {};
       qtdoc = callPackage ./qtdoc.nix {};
       qtenginio = callPackage ./qtenginio.nix {};
       qtgraphicaleffects = callPackage ./qtgraphicaleffects.nix {};

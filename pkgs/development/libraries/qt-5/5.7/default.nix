@@ -73,7 +73,7 @@ let
       };
 
       qtconnectivity = callPackage ./qtconnectivity.nix {};
-      qtdeclarative = callPackage ./qtdeclarative {};
+      qtdeclarative = callPackage ./qtdeclarative.nix {};
       qtdoc = callPackage ./qtdoc.nix {};
       qtgraphicaleffects = callPackage ./qtgraphicaleffects.nix {};
       qtimageformats = callPackage ./qtimageformats.nix {};

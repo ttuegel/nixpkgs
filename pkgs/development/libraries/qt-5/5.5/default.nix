@@ -76,7 +76,7 @@ let
       /* qtandroidextras = not packaged */
       /* qtcanvas3d = not packaged */
       qtconnectivity = callPackage ./qtconnectivity.nix {};
-      qtdeclarative = callPackage ./qtdeclarative {};
+      qtdeclarative = callPackage ./qtdeclarative.nix {};
       qtdoc = callPackage ./qtdoc.nix {};
       qtenginio = callPackage ./qtenginio.nix {};
       qtgraphicaleffects = callPackage ./qtgraphicaleffects.nix {};
@@ -86,7 +86,7 @@ let
       qtmultimedia = callPackage ./qtmultimedia.nix {
         inherit (pkgs.gst_all_1) gstreamer gst-plugins-base;
       };
-      qtquick1 = callPackage ./qtquick1 {};
+      qtquick1 = callPackage ./qtquick1.nix {};
       qtquickcontrols = callPackage ./qtquickcontrols.nix {};
       qtscript = callPackage ./qtscript {};
       qtsensors = callPackage ./qtsensors.nix {};
