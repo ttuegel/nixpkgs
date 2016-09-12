@@ -37,7 +37,7 @@ selected in case of incompatibility. For example, to build with Qt
 applications to function correctly, including:</para>
 
 <itemizedlist>
-  <listitem><para><envar>QT_PLUGIN_PATH</envar></para></listitem>
+  <listitem><para><envar>QT5_PLUGIN_PATH</envar></para></listitem>
   <listitem><para><envar>QML_IMPORT_PATH</envar></para></listitem>
   <listitem><para><envar>QML2_IMPORT_PATH</envar></para></listitem>
   <listitem><para><envar>XDG_DATA_DIRS</envar></para></listitem>

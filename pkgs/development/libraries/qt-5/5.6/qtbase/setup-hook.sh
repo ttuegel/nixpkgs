@@ -31,7 +31,7 @@ _qtPropagate() {
             break
         fi
     done
-    addToSearchPathOnce QT_PLUGIN_PATH "$1/lib/qt5/plugins"
+    addToSearchPathOnce QT5_PLUGIN_PATH "$1/lib/qt5/plugins"
     addToSearchPathOnce QML_IMPORT_PATH "$1/lib/qt5/imports"
     addToSearchPathOnce QML2_IMPORT_PATH "$1/lib/qt5/qml"
 }
@@ -46,7 +46,7 @@ _qtPropagateNative() {
         fi
     done
     if [ -z "$crossConfig" ]; then
-        addToSearchPathOnce QT_PLUGIN_PATH "$1/lib/qt5/plugins"
+        addToSearchPathOnce QT5_PLUGIN_PATH "$1/lib/qt5/plugins"
         addToSearchPathOnce QML_IMPORT_PATH "$1/lib/qt5/imports"
         addToSearchPathOnce QML2_IMPORT_PATH "$1/lib/qt5/qml"
     fi

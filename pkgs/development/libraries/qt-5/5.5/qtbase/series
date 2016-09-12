@@ -7,3 +7,4 @@ xdg-config-dirs.patch
 compose-search-path.patch
 libressl.patch
 cmake-paths.patch
+qt5-plugin-path.patch

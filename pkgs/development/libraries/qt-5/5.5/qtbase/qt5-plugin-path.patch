@@ -1,0 +1,22 @@
+Index: qt-everywhere-opensource-src-5.5.1/qtbase/src/corelib/kernel/qcoreapplication.cpp
+===================================================================
+--- qt-everywhere-opensource-src-5.5.1.orig/qtbase/src/corelib/kernel/qcoreapplication.cpp
++++ qt-everywhere-opensource-src-5.5.1/qtbase/src/corelib/kernel/qcoreapplication.cpp
+@@ -2452,7 +2452,7 @@ Q_GLOBAL_STATIC_WITH_ARGS(QMutex, librar
+     The list will include the installation directory for plugins if
+     it exists (the default installation directory for plugins is \c
+     INSTALL/plugins, where \c INSTALL is the directory where Qt was
+-    installed). The colon separated entries of the \c QT_PLUGIN_PATH
++    installed). The colon separated entries of the \c QT5_PLUGIN_PATH
+     environment variable are always added. The plugin installation
+     directory (and its existence) may change when the directory of
+     the application executable becomes known.
+@@ -2482,7 +2482,7 @@ QStringList QCoreApplication::libraryPat
+         // make sure we add the application path when we construct the QCoreApplication
+         if (self) self->d_func()->appendApplicationPathToLibraryPaths();
+ 
+-        const QByteArray libPathEnv = qgetenv("QT_PLUGIN_PATH");
++        const QByteArray libPathEnv = qgetenv("QT5_PLUGIN_PATH");
+         if (!libPathEnv.isEmpty()) {
+ #if defined(Q_OS_WIN)
+             QLatin1Char pathSep(';');

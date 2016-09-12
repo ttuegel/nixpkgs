@@ -91,7 +91,7 @@ stdenv.mkDerivation rec {
       wrapProgram $out/bin/ts3client \
         --set LD_LIBRARY_PATH "${quazip}/lib" \
         --set LD_PRELOAD "${libredirect}/lib/libredirect.so" \
-        --set QT_PLUGIN_PATH "$out/lib/teamspeak/platforms" \
+        --set QT5_PLUGIN_PATH "$out/lib/teamspeak/platforms" \
         --set NIX_REDIRECTS /usr/share/X11/xkb=${xkeyboard_config}/share/X11/xkb
     '';
 
