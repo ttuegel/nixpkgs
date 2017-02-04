@@ -208,7 +208,8 @@ in
         {
           # Enable GTK applications to load SVG icons
           GST_PLUGIN_SYSTEM_PATH_1_0 =
-            lib.makeSearchPath "/lib/gstreamer-1.0"
+            lib.splitString ":"
+            (lib.makeSearchPath "lib/gstreamer-1.0"
             (builtins.map (pkg: pkg.out) (with pkgs.gst_all_1; [
               gstreamer
               gst-plugins-base
@@ -216,7 +217,7 @@ in
               gst-plugins-ugly
               gst-plugins-bad
               gst-libav # for mp3 playback
-            ]));
+            ])));
         }
         // (if (lib.hasAttr "breeze-icons" kde5)
             then { GDK_PIXBUF_MODULE_FILE = "${pkgs.librsvg.out}/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"; }
