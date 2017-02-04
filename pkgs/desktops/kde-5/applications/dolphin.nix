@@ -1,6 +1,6 @@
 {
   kdeApp, lib, kdeWrapper,
-  ecm, kdoctools, makeQtWrapper,
+  ecm, kdoctools,
   baloo, baloo-widgets, dolphin-plugins, kactivities, kbookmarks, kcmutils,
   kcompletion, kconfig, kcoreaddons, kdelibs4support, kdbusaddons,
   kfilemetadata, ki18n, kiconthemes, kinit, kio, knewstuff, knotifications,
@@ -15,7 +15,7 @@ let
         license = with lib.licenses; [ gpl2 fdl12 ];
         maintainers = [ lib.maintainers.ttuegel ];
       };
-      nativeBuildInputs = [ ecm kdoctools makeQtWrapper ];
+      nativeBuildInputs = [ ecm kdoctools ];
       propagatedBuildInputs = [
         baloo baloo-widgets kactivities kbookmarks kcmutils kcompletion kconfig
         kcoreaddons kdelibs4support kdbusaddons kfilemetadata ki18n kiconthemes
