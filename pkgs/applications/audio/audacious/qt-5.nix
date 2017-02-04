@@ -72,6 +72,7 @@ stdenv.mkDerivation {
     source $stdenv/setup
     wrapQtProgram $out/bin/audacious
     wrapQtProgram $out/bin/audtool
+    qtWriteSupportFiles
   '';
 
   enableParallelBuilding = true;
