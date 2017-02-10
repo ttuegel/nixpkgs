@@ -2,20 +2,38 @@ Index: qt-everywhere-opensource-src-5.5.1/qtbase/src/corelib/kernel/qcoreapplica
 ===================================================================
 --- qt-everywhere-opensource-src-5.5.1.orig/qtbase/src/corelib/kernel/qcoreapplication.cpp
 +++ qt-everywhere-opensource-src-5.5.1/qtbase/src/corelib/kernel/qcoreapplication.cpp
-@@ -2498,6 +2498,16 @@ QStringList QCoreApplication::libraryPat
-                 }
-             }
-         }
-+        qunsetenv("QT_PLUGIN_PATH"); // do not propagate to child processes
+@@ -572,6 +572,34 @@ void QCoreApplicationPrivate::appendAppl
+     app_location = QDir(app_location).canonicalPath();
+     if (QFile::exists(app_location) && !app_libpaths->contains(app_location))
+         app_libpaths->append(app_location);
 +
-+        // Add library paths derived from NIX_PROFILES.
-+        const QByteArrayList profiles = qgetenv("NIX_PROFILES").split(' ');
-+        const QString plugindir = QString::fromLatin1("/lib/qt5/plugins");
-+        Q_FOREACH (const QByteArray &profile, profiles) {
-+            if (!profile.isEmpty()) {
-+                app_libpaths->append(QFile::decodeName(profile) + plugindir);
++    // Add library paths deduced from nix-support/qt-runtime-packages
++    QDir dir(app_location);
++    while (dir.cdUp()) {
++        // Go up the directory tree looking for nix-support
++        if (dir.cd(QString::fromLatin1("nix-support"))) {
++            QFile file(dir.filePath(QString::fromLatin1("qt-plugin-path")));
++            // If qt-plugin-path does not exist in the first nix-support
++            // directory, then we're done
++            if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) break;
++            QTextStream inp(&file);
++            while (!inp.atEnd()) {
++                QString p = inp.readLine();
++                p = QDir(p).canonicalPath();
++                if (!p.isEmpty()) app_libpaths->append(p);
 +            }
++            break;
 +        }
-     }
-     return *(coreappdata()->app_libpaths);
++    }
++
++    // Add library paths derived from NIX_PROFILES.
++    const QByteArrayList profiles = qgetenv("NIX_PROFILES").split(' ');
++    const QString plugindir = QString::fromLatin1("/lib/qt5/plugins");
++    Q_FOREACH (const QByteArray &profile, profiles) {
++        if (!profile.isEmpty()) {
++            app_libpaths->append(QFile::decodeName(profile) + plugindir);
++        }
++    }
+ #endif
  }
+ 
