@@ -179,3 +179,26 @@ if [ -n "$NIX_QT_SUBMODULE" ]; then
     postInstallHooks+=(_qtFixCMakePaths)
 fi
 
+qtWritePathFile() {
+    local file="${!outputBin}/nix-support/$1"
+    local searchPath=$2
+
+    IFS=: read -a supports <<< $searchPath
+    if [ ! ${#supports[@]} -eq 0 ]; then
+        mkdir -p $(dirname $file)
+    fi
+    for support in ${supports[@]}; do
+        if [ -n $support ]; then
+            echo $support >> $file
+        fi
+    done
+}
+
+_qtbaseWriteSupportFiles() {
+    addToSearchPath QT_PLUGIN_PATH "${!outputLib}/lib/qt5/plugins"
+    qtWritePathFile "qt-plugin-path" $QT_PLUGIN_PATH
+}
+
+if [ -z "$NIX_QT_SUBMODULE" ]; then
+    postFixupPhases+=(_qtbaseWriteSupportFiles)
+fi
