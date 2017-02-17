@@ -376,25 +376,6 @@ modules=[
   ];
 }
 {
-  module="kdeutils";
-  split=true;
-  pkgs=[
-    { name="ark";  }
-    { name="filelight";  }
-    { name="kcalc";  }
-    { name="kcharselect";  }
-    { name="kdf";  }
-    { name="kfloppy";  }
-    { name="kgpg";  }
-    { name="kremotecontrol";  }
-    { name="ktimer";  }
-    { name="kwalletmanager";  }
-    { name="print-manager"; sane="print_manager"; }
-    { name="superkaramba";  }
-    { name="sweeper";  }
-  ];
-}
-{
   module="applications";
   split=true;
   pkgs=[
