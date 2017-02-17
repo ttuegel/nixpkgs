@@ -16656,8 +16656,6 @@ with pkgs;
 
           kmplayer = callPackage ../applications/video/kmplayer { };
 
-          kmymoney = callPackage ../applications/office/kmymoney { };
-
           ktikz = callPackage ../applications/graphics/ktikz { };
 
           kvirc = callPackage ../applications/networking/irc/kvirc { };
