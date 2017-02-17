@@ -1,8 +1,6 @@
 { stdenv, fetchurl, automoc4, cmake, gettext, perl, pkgconfig
 , kde4, shared_desktop_ontologies, qca2, qoauth }:
 
-assert builtins.compareVersions "4.8.3" kde4.release != 1; # https://bugs.kde.org/show_bug.cgi?id=306077
-
 stdenv.mkDerivation rec {
   name = "rekonq-2.4.2"; # >=1.80 need kde >=4.9.0
 
