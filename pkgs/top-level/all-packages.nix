@@ -16631,8 +16631,6 @@ with pkgs;
 
         kvirc = callPackage ../applications/networking/irc/kvirc { };
 
-        kuickshow = callPackage ../applications/graphics/kuickshow { };
-
       };
 
     in lib.makeScope deps.newScope make;
