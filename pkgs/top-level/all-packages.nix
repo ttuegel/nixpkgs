@@ -16666,8 +16666,6 @@ with pkgs;
 
           kmymoney = callPackage ../applications/office/kmymoney { };
 
-          kipi_plugins = callPackage ../applications/graphics/kipi-plugins { };
-
           konversation = callPackage ../applications/networking/irc/konversation { };
 
           ktikz = callPackage ../applications/graphics/ktikz { };
