@@ -2435,7 +2435,7 @@ with pkgs;
 
   kronometer = qt5.callPackage ../tools/misc/kronometer { };
 
-  kdiff3-qt5 = qt5.callPackage ../tools/text/kdiff3/kde5.nix { };
+  kdiff3 = qt5.callPackage ../tools/text/kdiff3 { };
 
   peruse = qt5.callPackage ../tools/misc/peruse { };
 
@@ -16623,8 +16623,6 @@ with pkgs;
         kdevplatform = callPackage ../development/libraries/kdevplatform {
           boost = boost155;
         };
-
-        kdiff3 = callPackage ../tools/text/kdiff3 { };
 
         kgraphviewer = callPackage ../applications/graphics/kgraphviewer { };
 
