@@ -400,6 +400,5 @@ sane="kde_baseapps";  split=true;
 { module="kdepim";  split=false;}
 { module="kdepimlibs";  split=false;}
 { module="kdepim-runtime"; sane="kdepim_runtime"; split=false;}
-{ module="kde-workspace"; sane="kde_workspace"; split=false;}
 ];
 }

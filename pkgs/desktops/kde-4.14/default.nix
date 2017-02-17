@@ -33,8 +33,6 @@ kde.modules // kde.individual //
 
   qt4 = qt48;
 
-  kdebase_workspace = kde.modules.kde_workspace;
-
   inherit release;
 
   full = stdenv.lib.attrValues kde.modules;
