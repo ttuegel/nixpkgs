@@ -14765,7 +14765,7 @@ with pkgs;
 
   qtscrobbler = callPackage ../applications/audio/qtscrobbler { };
 
-  quassel = qt5.callPackage ../applications/networking/irc/quassel/qt-5.nix {
+  quassel = qt5.callPackage ../applications/networking/irc/quassel {
     monolithic = true;
     daemon = false;
     client = false;
@@ -16665,49 +16665,6 @@ with pkgs;
           massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
 
           psi = callPackage ../applications/networking/instant-messengers/psi { };
-
-          quassel = callPackage ../applications/networking/irc/quassel rec {
-            monolithic = true;
-            daemon = false;
-            client = false;
-            withKDE = stdenv.isLinux;
-            qt = if withKDE then qt4 else qt5; # KDE supported quassel cannot build with qt5 yet (maybe in 0.12.0)
-            dconf = gnome3.dconf;
-          };
-
-          quasselWithoutKDE = (quassel.override {
-            monolithic = true;
-            daemon = false;
-            client = false;
-            withKDE = false;
-            #qt = qt5;
-            tag = "-without-kde";
-          });
-
-          quasselDaemon = (quassel.override {
-            monolithic = false;
-            daemon = true;
-            client = false;
-            withKDE = false;
-            #qt = qt5;
-            tag = "-daemon";
-          });
-
-          quasselClient = (quassel.override {
-            monolithic = false;
-            daemon = false;
-            client = true;
-            tag = "-client";
-          });
-
-          quasselClientWithoutKDE = (quasselClient.override {
-            monolithic = false;
-            daemon = false;
-            client = true;
-            withKDE = false;
-            #qt = qt5;
-            tag = "-client-without-kde";
-          });
 
           rekonq-unwrapped = callPackage ../applications/networking/browsers/rekonq { };
           rekonq = wrapFirefox rekonq-unwrapped { };
