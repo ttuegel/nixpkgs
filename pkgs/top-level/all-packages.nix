@@ -739,7 +739,7 @@ with pkgs;
 
   clib = callPackage ../tools/package-management/clib { };
 
-  colord-kde = qt5.callPackage ../tools/misc/colord-kde/0.5.nix {};
+  colord-kde = qt5.callPackage ../tools/misc/colord-kde {};
 
   consul = callPackage ../servers/consul { };
 
@@ -16615,8 +16615,6 @@ with pkgs;
         ffmpeg = ffmpeg_2; # ffmpegthumb doesn't build otherwise
 
         wrapper = callPackage ../build-support/kdewrapper {};
-
-        colord-kde = callPackage ../tools/misc/colord-kde { };
 
         kadu = callPackage ../applications/networking/instant-messengers/kadu { };
 
