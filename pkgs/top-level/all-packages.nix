@@ -14372,6 +14372,8 @@ with pkgs;
 
   polybar = callPackage ../applications/misc/polybar { };
 
+  psi = callPackage ../applications/networking/instant-messengers/psi { };
+
   scudcloud = callPackage ../applications/networking/instant-messengers/scudcloud { };
 
   shotcut = qt5.callPackage ../applications/video/shotcut { };
@@ -16649,8 +16651,6 @@ with pkgs;
         kuickshow = callPackage ../applications/graphics/kuickshow { };
 
         massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
-
-        psi = callPackage ../applications/networking/instant-messengers/psi { };
 
         semnotes = callPackage ../applications/misc/semnotes { };
       };
