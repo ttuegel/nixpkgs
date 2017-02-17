@@ -16837,7 +16837,6 @@ with pkgs;
           plasma = plasma self;
           frameworks = qt5.kdeFrameworks;
           applications = applications self;
-          kipi-plugins = self.callPackage ../applications/graphics/kipi-plugins/5.x.nix {};
         }
         // qt5.kdeFrameworks
         // plasma self
