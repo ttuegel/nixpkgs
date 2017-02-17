@@ -11627,9 +11627,7 @@ with pkgs;
 
   gocode = callPackage ../development/tools/gocode { };
 
-  kgocode = callPackage ../applications/misc/kgocode {
-    inherit (pkgs.kde4) kdelibs;
-  };
+  kgocode = kde4.callPackage ../applications/misc/kgocode { };
 
   gotags = callPackage ../development/tools/gotags { };
 
