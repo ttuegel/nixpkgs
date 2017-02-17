@@ -16618,8 +16618,6 @@ with pkgs;
 
         kbibtex = callPackage ../applications/office/kbibtex { };
 
-        kdeconnect = callPackage ../applications/misc/kdeconnect/0.7.nix { };
-
         kdesvn = callPackage ../applications/version-management/kdesvn { };
 
         kdevplatform = callPackage ../development/libraries/kdevplatform {
