@@ -353,13 +353,6 @@ modules=[
   ];
 }
 {
-  module="applications";
-  split=true;
-  pkgs=[
-    { name="konsole";  }
-  ];
-}
-{
   module="kdeedu";
   split=true;
   pkgs=[
