@@ -16666,9 +16666,6 @@ with pkgs;
 
           psi = callPackage ../applications/networking/instant-messengers/psi { };
 
-          rekonq-unwrapped = callPackage ../applications/networking/browsers/rekonq { };
-          rekonq = wrapFirefox rekonq-unwrapped { };
-
           kwebkitpart = callPackage ../applications/networking/browsers/kwebkitpart { };
 
           semnotes = callPackage ../applications/misc/semnotes { };
@@ -17793,8 +17790,6 @@ with pkgs;
     webkit = webkitgtk2;
   };
   vimprobable2 = wrapFirefox vimprobable2-unwrapped { };
-
-  inherit (kde4) rekonq;
 
   vimb-unwrapped = callPackage ../applications/networking/browsers/vimb {
     webkit = webkitgtk2;
