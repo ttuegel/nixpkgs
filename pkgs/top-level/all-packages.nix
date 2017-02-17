@@ -16748,6 +16748,7 @@ with pkgs;
           self =
             extraPackages callPackage
             // {
+              inherit callPackage;
               inherit (extra) kdelibs;
               qt4 = qt48;
               wrapper = callPackage ../build-support/kdewrapper {};
