@@ -13929,7 +13929,7 @@ with pkgs;
     qt = qt4;
   };
 
-  kile = kde5.callPackage ../applications/editors/kile/frameworks.nix { };
+  kile = kde5.callPackage ../applications/editors/kile { };
 
   kino = callPackage ../applications/video/kino {
     inherit (gnome2) libglade;
@@ -16627,8 +16627,6 @@ with pkgs;
         kdiff3 = callPackage ../tools/text/kdiff3 { };
 
         kgraphviewer = callPackage ../applications/graphics/kgraphviewer { };
-
-        kile = callPackage ../applications/editors/kile { };
 
         kmplayer = callPackage ../applications/video/kmplayer { };
 

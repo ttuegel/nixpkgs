@@ -1,28 +1,68 @@
-{ stdenv, fetchurl, automoc4, cmake, gettext, perl, pkgconfig
-, shared_mime_info, kdelibs
+{ kdeDerivation
+, lib
+, fetchgit
+, ecm
+, kdoctools
+, kdeWrapper
+, qtscript
+, kconfig
+, kcrash
+, kdbusaddons
+, kdelibs4support
+, kguiaddons
+, kiconthemes
+, kinit
+, khtml
+, konsole
+, kparts
+, ktexteditor
+, kwindowsystem
+, poppler
 }:
 
-stdenv.mkDerivation rec {
-  name = "kile-2.1.3";
+let
+  unwrapped =
+    kdeDerivation rec {
+      name = "kile-${version}";
+      version = "2016-10-24";
 
-  src = fetchurl {
-    url = "mirror://sourceforge/kile/${name}.tar.bz2";
-    sha256 = "18nfi37s46v9xav7vyki3phasddgcy4m7nywzxis198vr97yqqx0";
-  };
+      src = fetchgit {
+        url = git://anongit.kde.org/kile.git;
+        rev = "e005e2ac140881aa7610bd363d181cf306f91f80";
+        sha256 = "1labv8jagsfk0k7nvxh90in9464avzdabgs215y1h658zjh1wpy4";
 
-  nativeBuildInputs = [
-    automoc4 cmake gettext perl pkgconfig shared_mime_info
-  ];
-  buildInputs = [ kdelibs ];
+      };
 
-  # for KDE 4.7 the nl translations fail since kile-2.1.2
-  preConfigure = "rm -r translations/nl";
+      nativeBuildInputs = [ ecm kdoctools ];
 
-  meta = {
-    description = "An integrated LaTeX editor for KDE";
-    homepage = http://kile.sourceforge.net;
-    maintainers = [ stdenv.lib.maintainers.urkud ];
-    license = stdenv.lib.licenses.gpl2Plus;
-    inherit (kdelibs.meta) platforms;
-  };
+      buildInputs = [
+        kconfig
+        kcrash
+        kdbusaddons
+        kdelibs4support
+        kdoctools
+        kguiaddons
+        kiconthemes
+        kinit
+        khtml
+        kparts
+        ktexteditor
+        kwindowsystem
+        poppler
+        qtscript
+      ];
+
+      meta = {
+        description = "Kile is a user friendly TeX/LaTeX authoring tool for the KDE desktop environment";
+        homepage = https://www.kde.org/applications/office/kile/;
+        maintainers = with lib.maintainers; [ fridh ];
+        license = lib.licenses.gpl2Plus;
+      };
+    };
+in
+kdeWrapper
+{
+  inherit unwrapped;
+  targets = [ "bin/kile" ];
+  paths = [ konsole.unwrapped ];
 }
