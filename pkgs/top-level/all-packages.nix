@@ -16642,10 +16642,6 @@ with pkgs;
 
           eventlist = callPackage ../applications/office/eventlist {};
 
-          k3b-original = lowPrio (callPackage ../applications/misc/k3b { });
-
-          k3b = callPackage ../applications/misc/k3b/wrapper.nix { };
-
           kadu = callPackage ../applications/networking/instant-messengers/kadu { };
 
           kbibtex = callPackage ../applications/office/kbibtex { };
