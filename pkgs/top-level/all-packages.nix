@@ -16704,8 +16704,6 @@ with pkgs;
 
           psi = callPackage ../applications/networking/instant-messengers/psi { };
 
-          qtcurve = callPackage ../misc/themes/qtcurve { };
-
           quassel = callPackage ../applications/networking/irc/quassel rec {
             monolithic = true;
             daemon = false;
