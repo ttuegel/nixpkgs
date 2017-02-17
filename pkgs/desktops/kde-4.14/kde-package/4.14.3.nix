@@ -414,15 +414,6 @@ modules=[
   ];
 }
 {
-  module="kdeadmin";
-  split=true;
-  pkgs=[
-    { name="kcron";  }
-    { name="ksystemlog";  }
-    { name="kuser";  }
-  ];
-}
-{
   module="kdebindings";
   split=true;
   pkgs=[
