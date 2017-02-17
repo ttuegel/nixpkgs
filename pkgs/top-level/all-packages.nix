@@ -16633,8 +16633,6 @@ with pkgs;
 
         kuickshow = callPackage ../applications/graphics/kuickshow { };
 
-        semnotes = callPackage ../applications/misc/semnotes { };
-
       };
 
     in lib.makeScope deps.newScope make;
