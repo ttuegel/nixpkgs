@@ -16614,8 +16614,6 @@ with pkgs;
         ruby = ruby_2_2; # see https://github.com/NixOS/nixpkgs/pull/12610#issuecomment-188666473
         ffmpeg = ffmpeg_2; # ffmpegthumb doesn't build otherwise
 
-        wrapper = callPackage ../build-support/kdewrapper {};
-
         kadu = callPackage ../applications/networking/instant-messengers/kadu { };
 
         kbibtex = callPackage ../applications/office/kbibtex { };
