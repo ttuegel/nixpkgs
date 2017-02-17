@@ -342,21 +342,6 @@ versions=builtins.listToAttrs[
 ];
 modules=[
 {
-  module="kdemultimedia";
-  split=true;
-  pkgs=[
-    { name="audiocd-kio"; sane="audiocd_kio"; }
-    { name="dragon";  }
-    { name="ffmpegthumbs";  }
-    { name="juk";  }
-    { name="kmix";  }
-    { name="kscd";  }
-    { name="libkcddb";  }
-    { name="libkcompactdisc";  }
-    { name="mplayerthumbs";  }
-  ];
-}
-{
   module="kdegraphics";
   split=true;
   pkgs=[
