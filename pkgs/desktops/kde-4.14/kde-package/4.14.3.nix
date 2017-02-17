@@ -513,7 +513,6 @@ sane="kde_baseapps";  split=true;
   ];
 
 }
-{ module="kde-base-artwork"; sane="kde_base_artwork"; split=false;}
 { module="kdepim";  split=false;}
 { module="kdepimlibs";  split=false;}
 { module="kdepim-runtime"; sane="kdepim_runtime"; split=false;}
