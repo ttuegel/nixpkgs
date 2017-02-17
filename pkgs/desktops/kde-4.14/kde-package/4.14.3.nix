@@ -379,7 +379,6 @@ modules=[
   module="applications";
   split=true;
   pkgs=[
-    { name="kate";  }
     { name="konsole";  }
   ];
 }
