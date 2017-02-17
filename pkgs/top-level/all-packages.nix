@@ -16694,8 +16694,6 @@ with pkgs;
 
           massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
 
-          partitionManager = callPackage ../tools/misc/partition-manager { };
-
           plasma-nm = callPackage ../tools/networking/plasma-nm { };
 
           polkit_kde_agent = callPackage ../tools/security/polkit-kde-agent { };
