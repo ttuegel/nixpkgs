@@ -16739,8 +16739,6 @@ with pkgs;
           kwebkitpart = callPackage ../applications/networking/browsers/kwebkitpart { };
 
           semnotes = callPackage ../applications/misc/semnotes { };
-
-          zanshin = callPackage ../applications/office/zanshin { };
         };
 
       callPackageOrig = newScope extra;
