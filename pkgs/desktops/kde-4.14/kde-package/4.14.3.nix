@@ -384,27 +384,6 @@ modules=[
   ];
 }
 {
-  module="kdesdk";
-  split=true;
-  pkgs=[
-    { name="cervisia";  }
-    { name="dolphin-plugins"; sane="dolphin_plugins"; }
-    { name="kapptemplate";  }
-    { name="kcachegrind";  }
-    { name="kde-dev-scripts"; sane="kde_dev_scripts"; }
-    { name="kde-dev-utils"; sane="kde_dev_utils"; }
-    { name="kdesdk-kioslaves"; sane="kdesdk_kioslaves"; }
-    { name="kdesdk-strigi-analyzers"; sane="kdesdk_strigi_analyzers"; }
-    { name="kdesdk-thumbnailers"; sane="kdesdk_thumbnailers"; }
-    { name="kompare";  }
-    { name="libkomparediff2";  }
-    { name="lokalize";  }
-    { name="okteta";  }
-    { name="poxml";  }
-    { name="umbrello";  }
-  ];
-}
-{
   module="kdeedu";
   split=true;
   pkgs=[
