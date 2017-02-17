@@ -7,8 +7,6 @@ in
 {
   inherit kdelibs;
 
-  akonadi = callPackage ./support/akonadi { };
-
   qt4 = qt48;
 
   inherit release;
