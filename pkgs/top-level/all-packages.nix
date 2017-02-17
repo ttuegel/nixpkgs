@@ -16666,8 +16666,6 @@ with pkgs;
 
           psi = callPackage ../applications/networking/instant-messengers/psi { };
 
-          kwebkitpart = callPackage ../applications/networking/browsers/kwebkitpart { };
-
           semnotes = callPackage ../applications/misc/semnotes { };
         };
 
