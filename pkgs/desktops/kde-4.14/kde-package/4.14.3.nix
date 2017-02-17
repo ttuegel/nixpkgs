@@ -403,15 +403,6 @@ modules=[
   ];
 }
 {
-  module="kdetoys";
-  split=true;
-  pkgs=[
-    { name="amor";  }
-    { name="kteatime";  }
-    { name="ktux";  }
-  ];
-}
-{
   module="kdesdk";
   split=true;
   pkgs=[
