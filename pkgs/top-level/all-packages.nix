@@ -13899,6 +13899,8 @@ with pkgs;
 
   k9copy = qt5.callPackage ../applications/video/k9copy {};
 
+  kadu = kde4.callPackage ../applications/networking/instant-messengers/kadu { };
+
   kbibtex = kde4.callPackage ../applications/office/kbibtex { };
 
   kdeconnect = qt5.callPackage ../applications/misc/kdeconnect { };
@@ -16624,8 +16626,6 @@ with pkgs;
       make = self: let inherit (self) callPackage; in {
 
         kdelibs = kde5.kdelibs;
-
-        kadu = callPackage ../applications/networking/instant-messengers/kadu { };
 
         kmplayer = callPackage ../applications/video/kmplayer { };
 
