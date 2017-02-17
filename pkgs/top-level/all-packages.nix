@@ -13899,6 +13899,8 @@ with pkgs;
 
   k9copy = qt5.callPackage ../applications/video/k9copy {};
 
+  kbibtex = kde4.callPackage ../applications/office/kbibtex { };
+
   kdeconnect = qt5.callPackage ../applications/misc/kdeconnect { };
 
   kdecoration-viewer = kde5.callPackage ../tools/misc/kdecoration-viewer {};
@@ -16624,8 +16626,6 @@ with pkgs;
         kdelibs = kde5.kdelibs;
 
         kadu = callPackage ../applications/networking/instant-messengers/kadu { };
-
-        kbibtex = callPackage ../applications/office/kbibtex { };
 
         kmplayer = callPackage ../applications/video/kmplayer { };
 
