@@ -13940,7 +13940,7 @@ with pkgs;
     stdenv = overrideCC stdenv gcc49;
   };
 
-  konversation = qt5.callPackage ../applications/networking/irc/konversation/1.6.nix { };
+  konversation = qt5.callPackage ../applications/networking/irc/konversation { };
 
   krita = qt5.callPackage ../applications/graphics/krita {
     vc = vc_0_7;
@@ -16659,8 +16659,6 @@ with pkgs;
           kmplayer = callPackage ../applications/video/kmplayer { };
 
           kmymoney = callPackage ../applications/office/kmymoney { };
-
-          konversation = callPackage ../applications/networking/irc/konversation { };
 
           ktikz = callPackage ../applications/graphics/ktikz { };
 
