@@ -16632,10 +16632,6 @@ with pkgs;
 
           bluedevil = callPackage ../tools/bluetooth/bluedevil { };
 
-          calligra = callPackage ../applications/office/calligra {
-            vc = vc_0_7;
-          };
-
           choqok = callPackage ../applications/networking/instant-messengers/choqok { };
 
           colord-kde = callPackage ../tools/misc/colord-kde { };
