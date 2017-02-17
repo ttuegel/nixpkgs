@@ -16660,8 +16660,6 @@ with pkgs;
             taglib = taglib_1_9;
           };
 
-          ksshaskpass = callPackage ../tools/security/ksshaskpass {};
-
           kuickshow = callPackage ../applications/graphics/kuickshow { };
 
           libalkimia = callPackage ../development/libraries/libalkimia { };
