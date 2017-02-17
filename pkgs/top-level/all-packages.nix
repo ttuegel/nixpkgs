@@ -16623,10 +16623,6 @@ with pkgs;
 
         kbibtex = callPackage ../applications/office/kbibtex { };
 
-        kdevplatform = callPackage ../development/libraries/kdevplatform {
-          boost = boost155;
-        };
-
         kgraphviewer = callPackage ../applications/graphics/kgraphviewer { };
 
         kmplayer = callPackage ../applications/video/kmplayer { };
