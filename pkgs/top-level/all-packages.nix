@@ -9202,7 +9202,7 @@ with pkgs;
     libpng = libpng12;
   };
 
-  qt4 = pkgs.kde4.qt4;
+  qt4 = qt48;
 
   qt48 = callPackage ../development/libraries/qt-4.x/4.8 {
     # GNOME dependencies are not used unless gtkStyle == true
@@ -16600,92 +16600,67 @@ with pkgs;
 
   kakasi = callPackage ../tools/text/kakasi { };
 
-  kde4 = recurseIntoAttrs pkgs.kde414;
-
-  kde414 =
-    kdePackagesFor
-      {
+  kde4 =
+    let
+      make = self: let inherit (self) callPackage; in {
         libusb = libusb1;
         python2Packages = python2Packages;
         inherit (python2Packages) python;
         libcanberra = libcanberra_kde;
         boost = boost155;
         kdelibs = kde5.kdelibs;
-        subversionClient = pkgs.subversion18.override {
+        subversionClient = subversion18.override {
           bdbSupport = false;
           perlBindings = true;
           pythonBindings = true;
         };
         ruby = ruby_2_2; # see https://github.com/NixOS/nixpkgs/pull/12610#issuecomment-188666473
         ffmpeg = ffmpeg_2; # ffmpegthumb doesn't build otherwise
-      };
 
+        wrapper = callPackage ../build-support/kdewrapper {};
 
-  kdePackagesFor = extra:
-    let
-      # list of extra packages not included in KDE
-      # the real work in this function is done below this list
-      extraPackages = callPackage:
-        rec {
+        bluedevil = callPackage ../tools/bluetooth/bluedevil { };
 
-          bluedevil = callPackage ../tools/bluetooth/bluedevil { };
+        colord-kde = callPackage ../tools/misc/colord-kde { };
 
-          colord-kde = callPackage ../tools/misc/colord-kde { };
+        kadu = callPackage ../applications/networking/instant-messengers/kadu { };
 
-          kadu = callPackage ../applications/networking/instant-messengers/kadu { };
+        kbibtex = callPackage ../applications/office/kbibtex { };
 
-          kbibtex = callPackage ../applications/office/kbibtex { };
+        kdeconnect = callPackage ../applications/misc/kdeconnect/0.7.nix { };
 
-          kdeconnect = callPackage ../applications/misc/kdeconnect/0.7.nix { };
+        kdesvn = callPackage ../applications/version-management/kdesvn { };
 
-          kdesvn = callPackage ../applications/version-management/kdesvn { };
-
-          kdevplatform = callPackage ../development/libraries/kdevplatform {
-            boost = boost155;
-          };
-
-          kdiff3 = callPackage ../tools/text/kdiff3 { };
-
-          kgraphviewer = callPackage ../applications/graphics/kgraphviewer { };
-
-          kile = callPackage ../applications/editors/kile { };
-
-          kmplayer = callPackage ../applications/video/kmplayer { };
-
-          ktikz = callPackage ../applications/graphics/ktikz { };
-
-          kvirc = callPackage ../applications/networking/irc/kvirc { };
-
-          krename = callPackage ../applications/misc/krename/kde4.nix {
-            taglib = taglib_1_9;
-          };
-
-          kuickshow = callPackage ../applications/graphics/kuickshow { };
-
-          massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
-
-          psi = callPackage ../applications/networking/instant-messengers/psi { };
-
-          semnotes = callPackage ../applications/misc/semnotes { };
+        kdevplatform = callPackage ../development/libraries/kdevplatform {
+          boost = boost155;
         };
 
-      callPackageOrig = newScope extra;
+        kdiff3 = callPackage ../tools/text/kdiff3 { };
 
-      makePackages = extra:
-        let
-          callPackage = newScope (extra // self);
-          self =
-            extraPackages callPackage
-            // {
-              inherit callPackage;
-              inherit (extra) kdelibs;
-              qt4 = qt48;
-              wrapper = callPackage ../build-support/kdewrapper {};
-              recurseForRelease = true;
-            };
-        in self;
+        kgraphviewer = callPackage ../applications/graphics/kgraphviewer { };
 
-    in makeOverridable makePackages extra;
+        kile = callPackage ../applications/editors/kile { };
+
+        kmplayer = callPackage ../applications/video/kmplayer { };
+
+        ktikz = callPackage ../applications/graphics/ktikz { };
+
+        kvirc = callPackage ../applications/networking/irc/kvirc { };
+
+        krename = callPackage ../applications/misc/krename/kde4.nix {
+          taglib = taglib_1_9;
+        };
+
+        kuickshow = callPackage ../applications/graphics/kuickshow { };
+
+        massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
+
+        psi = callPackage ../applications/networking/instant-messengers/psi { };
+
+        semnotes = callPackage ../applications/misc/semnotes { };
+      };
+
+    in lib.makeScope newScope make;
 
   lumina = callPackage ../desktops/lumina { };
 
