@@ -13965,6 +13965,8 @@ with pkgs;
     go = go_1_6;
   };
 
+  kvirc = kde4.callPackage ../applications/networking/irc/kvirc { };
+
   lame = callPackage ../development/libraries/lame { };
 
   larswm = callPackage ../applications/window-managers/larswm { };
@@ -16629,7 +16631,7 @@ with pkgs;
 
         kdelibs = kde5.kdelibs;
 
-        kvirc = callPackage ../applications/networking/irc/kvirc { };
+        massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
 
       };
 
