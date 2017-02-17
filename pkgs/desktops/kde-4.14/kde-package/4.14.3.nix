@@ -498,21 +498,6 @@ sane="kde_baseapps";  split=true;
   ];
 }
 { module="kactivities";  split=false;}
-{ module="kdeartwork";  split=false;
-  pkgs=[
-    { name="ColorSchemes"; }
-    { name="IconThemes"; }
-    { name="emoticons"; }
-    { name="kscreensaver"; }
-    { name="kwin-styles"; sane="kwin_styles";}
-    { name="styles"; }
-    { name="wallpapers"; }
-    { name="HighResolutionWallpapers"; }
-    { name="WeatherWallpapers"; }
-    { name="desktopthemes"; }
-  ];
-
-}
 { module="kdepim";  split=false;}
 { module="kdepimlibs";  split=false;}
 { module="kdepim-runtime"; sane="kdepim_runtime"; split=false;}
