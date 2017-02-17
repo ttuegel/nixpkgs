@@ -16668,8 +16668,6 @@ with pkgs;
 
           massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
 
-          polkit_kde_agent = callPackage ../tools/security/polkit-kde-agent { };
-
           psi = callPackage ../applications/networking/instant-messengers/psi { };
 
           quassel = callPackage ../applications/networking/irc/quassel rec {
