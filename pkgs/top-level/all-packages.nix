@@ -16636,8 +16636,6 @@ with pkgs;
 
           kbibtex = callPackage ../applications/office/kbibtex { };
 
-          kde_wacomtablet = callPackage ../applications/misc/kde-wacomtablet { };
-
           kdeconnect = callPackage ../applications/misc/kdeconnect/0.7.nix { };
 
           kdesvn = callPackage ../applications/version-management/kdesvn { };
