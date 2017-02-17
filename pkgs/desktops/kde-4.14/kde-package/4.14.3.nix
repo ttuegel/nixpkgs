@@ -342,29 +342,6 @@ versions=builtins.listToAttrs[
 ];
 modules=[
 {
-  module="kdegraphics";
-  split=true;
-  pkgs=[
-    { name="gwenview";  }
-    { name="kamera";  }
-    { name="kcolorchooser";  }
-    { name="kdegraphics-mobipocket"; sane="kdegraphics_mobipocket"; }
-    { name="kdegraphics-strigi-analyzer"; sane="kdegraphics_strigi_analyzer"; }
-    { name="kdegraphics-thumbnailers"; sane="kdegraphics_thumbnailers"; }
-    { name="kgamma";  }
-    { name="kolourpaint";  }
-    { name="kruler";  }
-    { name="ksaneplugin";  }
-    { name="ksnapshot";  }
-    { name="libkdcraw";  }
-    { name="libkexiv2";  }
-    { name="libkipi";  }
-    { name="libksane";  }
-    { name="okular";  }
-    { name="svgpart";  }
-  ];
-}
-{
   module="kdelibs";
   split=true;
   pkgs=[
