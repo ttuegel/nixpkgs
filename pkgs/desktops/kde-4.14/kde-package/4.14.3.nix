@@ -352,36 +352,6 @@ modules=[
     { name="nepomuk-widgets"; sane="nepomuk_widgets"; }
   ];
 }
-{
-  module="kdeedu";
-  split=true;
-  pkgs=[
-    { name="analitza";  }
-    { name="artikulate";  }
-    { name="blinken";  }
-    { name="cantor";  }
-    { name="kalgebra";  }
-    { name="kalzium";  }
-    { name="kanagram";  }
-    { name="kbruch";  }
-    { name="kgeography";  }
-    { name="khangman";  }
-    { name="kig";  }
-    { name="kiten";  }
-    { name="klettres";  }
-    { name="kmplot";  }
-    { name="kqtquickcharts";  }
-    { name="ktouch";  }
-    { name="kturtle";  }
-    { name="kwordquiz";  }
-    { name="libkdeedu";  }
-    { name="marble";  }
-    { name="pairs";  }
-    { name="parley";  }
-    { name="rocs";  }
-    { name="step";  }
-  ];
-}
 { module="kactivities";  split=false;}
 { module="kdepim";  split=false;}
 { module="kdepimlibs";  split=false;}
