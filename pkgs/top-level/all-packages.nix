@@ -16678,8 +16678,6 @@ with pkgs;
 
           ksshaskpass = callPackage ../tools/security/ksshaskpass {};
 
-          ktorrent = callPackage ../applications/networking/p2p/ktorrent { };
-
           kuickshow = callPackage ../applications/graphics/kuickshow { };
 
           libalkimia = callPackage ../development/libraries/libalkimia { };
