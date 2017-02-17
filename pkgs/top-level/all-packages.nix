@@ -16599,13 +16599,13 @@ with pkgs;
 
   kde4 =
     let
-      make = self: let inherit (self) callPackage; in {
+
+      deps = lib.makeScope newScope (self: {
         libusb = libusb1;
         python2Packages = python2Packages;
         inherit (python2Packages) python;
         libcanberra = libcanberra_kde;
         boost = boost155;
-        kdelibs = kde5.kdelibs;
         subversionClient = subversion18.override {
           bdbSupport = false;
           perlBindings = true;
@@ -16613,6 +16613,11 @@ with pkgs;
         };
         ruby = ruby_2_2; # see https://github.com/NixOS/nixpkgs/pull/12610#issuecomment-188666473
         ffmpeg = ffmpeg_2; # ffmpegthumb doesn't build otherwise
+      });
+
+      make = self: let inherit (self) callPackage; in {
+
+        kdelibs = kde5.kdelibs;
 
         kadu = callPackage ../applications/networking/instant-messengers/kadu { };
 
@@ -16635,9 +16640,10 @@ with pkgs;
         kuickshow = callPackage ../applications/graphics/kuickshow { };
 
         semnotes = callPackage ../applications/misc/semnotes { };
+
       };
 
-    in lib.makeScope newScope make;
+    in lib.makeScope deps.newScope make;
 
   lumina = callPackage ../desktops/lumina { };
 
