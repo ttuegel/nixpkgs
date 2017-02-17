@@ -16623,8 +16623,6 @@ with pkgs;
 
         kbibtex = callPackage ../applications/office/kbibtex { };
 
-        kdesvn = callPackage ../applications/version-management/kdesvn { };
-
         kdevplatform = callPackage ../development/libraries/kdevplatform {
           boost = boost155;
         };
