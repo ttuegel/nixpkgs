@@ -16628,8 +16628,6 @@ with pkgs;
             ffmpeg = ffmpeg_2;
           };
 
-          basket = callPackage ../applications/office/basket { };
-
           bluedevil = callPackage ../tools/bluetooth/bluedevil { };
 
           colord-kde = callPackage ../tools/misc/colord-kde { };
