@@ -516,15 +516,6 @@ sane="kde_baseapps";  split=true;
 { module="kdepim";  split=false;}
 { module="kdepimlibs";  split=false;}
 { module="kdepim-runtime"; sane="kdepim_runtime"; split=false;}
-{ module="kdewebdev";  split=false;
-  pkgs=[
-    { name="klinkstatus"; }
-    { name="kfilereplace"; }
-    { name="kimagemapeditor"; }
-    { name="kommander"; }
-  ];
-
-}
 { module="kde-workspace"; sane="kde_workspace"; split=false;}
 { module="oxygen-icons"; sane="oxygen_icons"; split=false;}
 ];
