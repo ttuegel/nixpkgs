@@ -6510,6 +6510,8 @@ with pkgs;
 
   go-md2man = callPackage ../development/tools/misc/md2man {};
 
+  massif-visualizer = kde4.callPackage ../development/tools/analysis/massif-visualizer { };
+
   minify = callPackage ../development/web/minify { };
 
   minizinc = callPackage ../development/tools/minizinc { };
@@ -16630,8 +16632,6 @@ with pkgs;
       make = self: let inherit (self) callPackage; in {
 
         kdelibs = kde5.kdelibs;
-
-        massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
 
       };
 
