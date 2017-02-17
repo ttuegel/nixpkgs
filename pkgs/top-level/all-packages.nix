@@ -16662,10 +16662,6 @@ with pkgs;
 
           kuickshow = callPackage ../applications/graphics/kuickshow { };
 
-          libktorrent = callPackage ../development/libraries/libktorrent {
-            boost = boost155;
-          };
-
           libkvkontakte = callPackage ../development/libraries/libkvkontakte { };
 
           liblikeback = callPackage ../development/libraries/liblikeback { };
