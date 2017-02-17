@@ -16634,8 +16634,6 @@ with pkgs;
 
         kuickshow = callPackage ../applications/graphics/kuickshow { };
 
-        massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
-
         semnotes = callPackage ../applications/misc/semnotes { };
       };
 
