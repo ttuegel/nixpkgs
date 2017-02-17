@@ -16674,8 +16674,6 @@ with pkgs;
             taglib = taglib_1_9;
           };
 
-          krusader = callPackage ../applications/misc/krusader { };
-
           ksshaskpass = callPackage ../tools/security/ksshaskpass {};
 
           kuickshow = callPackage ../applications/graphics/kuickshow { };
