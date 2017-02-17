@@ -16632,8 +16632,6 @@ with pkgs;
 
           colord-kde = callPackage ../tools/misc/colord-kde { };
 
-          eventlist = callPackage ../applications/office/eventlist {};
-
           kadu = callPackage ../applications/networking/instant-messengers/kadu { };
 
           kbibtex = callPackage ../applications/office/kbibtex { };
