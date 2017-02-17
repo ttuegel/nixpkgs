@@ -13951,6 +13951,8 @@ with pkgs;
 
   ktorrent = callPackage ../applications/networking/p2p/ktorrent/5.nix { };
 
+  ktikz = kde4.callPackage ../applications/graphics/ktikz { };
+
   kubernetes = callPackage ../applications/networking/cluster/kubernetes {
     go = go_1_6;
   };
@@ -16625,12 +16627,15 @@ with pkgs;
 
         kgraphviewer = callPackage ../applications/graphics/kgraphviewer { };
 
+<<<<<<< HEAD
         kmplayer = callPackage ../applications/video/kmplayer { };
 
         ktikz = callPackage ../applications/graphics/ktikz { };
 
         kvirc = callPackage ../applications/networking/irc/kvirc { };
 
+=======
+>>>>>>> 3ad4fa59a4... kde4: move ktikz to top-level
       };
 
     in lib.makeScope deps.newScope make;
