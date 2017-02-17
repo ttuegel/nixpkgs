@@ -16664,8 +16664,6 @@ with pkgs;
 
           libkvkontakte = callPackage ../development/libraries/libkvkontakte { };
 
-          liblikeback = callPackage ../development/libraries/liblikeback { };
-
           massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
 
           psi = callPackage ../applications/networking/instant-messengers/psi { };
