@@ -413,23 +413,6 @@ modules=[
   ];
 }
 {
-  module="kdebindings";
-  split=true;
-  pkgs=[
-    { name="kimono";  }
-    { name="korundum";  }
-    { name="kross-interpreters"; sane="kross_interpreters"; }
-    { name="perlkde";  }
-    { name="perlqt";  }
-    { name="pykde4";  }
-    { name="qtruby";  }
-    { name="qyoto";  }
-    { name="smokegen";  }
-    { name="smokekde";  }
-    { name="smokeqt";  }
-  ];
-}
-{
   module="kdeaccessibility";
   split=true;
   pkgs=[
