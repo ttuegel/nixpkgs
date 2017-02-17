@@ -13921,6 +13921,8 @@ with pkgs;
 
   keymon = callPackage ../applications/video/key-mon { };
 
+  kgraphviewer = kde4.callPackage ../applications/graphics/kgraphviewer { };
+
   khal = callPackage ../applications/misc/khal { };
 
   khard = callPackage ../applications/misc/khard { };
@@ -16625,17 +16627,12 @@ with pkgs;
 
         kbibtex = callPackage ../applications/office/kbibtex { };
 
-        kgraphviewer = callPackage ../applications/graphics/kgraphviewer { };
-
-<<<<<<< HEAD
         kmplayer = callPackage ../applications/video/kmplayer { };
 
         ktikz = callPackage ../applications/graphics/ktikz { };
 
         kvirc = callPackage ../applications/networking/irc/kvirc { };
 
-=======
->>>>>>> 3ad4fa59a4... kde4: move ktikz to top-level
       };
 
     in lib.makeScope deps.newScope make;
