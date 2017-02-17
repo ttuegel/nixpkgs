@@ -15072,7 +15072,7 @@ with pkgs;
     themes = [];  # extra themes, etc.
   };
 
-  skrooge2 = qt5.callPackage ../applications/office/skrooge/2.nix {};
+  skrooge = qt5.callPackage ../applications/office/skrooge {};
 
   slim = callPackage ../applications/display-managers/slim {
     libpng = libpng12;
@@ -16739,8 +16739,6 @@ with pkgs;
           kwebkitpart = callPackage ../applications/networking/browsers/kwebkitpart { };
 
           semnotes = callPackage ../applications/misc/semnotes { };
-
-          skrooge = callPackage ../applications/office/skrooge { };
 
           zanshin = callPackage ../applications/office/zanshin { };
         };
