@@ -12451,6 +12451,10 @@ with pkgs;
 
   AMB-plugins = callPackage ../applications/audio/AMB-plugins { };
 
+  amarok = kde4.callPackage ../applications/audio/amarok {
+    ffmpeg = ffmpeg_2;
+  };
+
   ams-lv2 = callPackage ../applications/audio/ams-lv2 { };
 
   amsn = callPackage ../applications/networking/instant-messengers/amsn { };
@@ -16623,9 +16627,6 @@ with pkgs;
       # the real work in this function is done below this list
       extraPackages = callPackage:
         rec {
-          amarok = callPackage ../applications/audio/amarok {
-            ffmpeg = ffmpeg_2;
-          };
 
           bluedevil = callPackage ../tools/bluetooth/bluedevil { };
 
