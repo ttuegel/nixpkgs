@@ -16648,8 +16648,6 @@ with pkgs;
 
           kdeconnect = callPackage ../applications/misc/kdeconnect/0.7.nix { };
 
-          kdenlive = callPackage ../applications/video/kdenlive { mlt = mlt-qt4; };
-
           kdesvn = callPackage ../applications/version-management/kdesvn { };
 
           kdevplatform = callPackage ../development/libraries/kdevplatform {
