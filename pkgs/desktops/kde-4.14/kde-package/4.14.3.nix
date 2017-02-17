@@ -424,53 +424,6 @@ modules=[
   ];
 }
 {
-  module="kdegames";
-  split=true;
-  pkgs=[
-    { name="bomber";  }
-    { name="bovo";  }
-    { name="granatier";  }
-    { name="kajongg";  }
-    { name="kapman";  }
-    { name="katomic";  }
-    { name="kblackbox";  }
-    { name="kblocks";  }
-    { name="kbounce";  }
-    { name="kbreakout";  }
-    { name="kdiamond";  }
-    { name="kfourinline";  }
-    { name="kgoldrunner";  }
-    { name="kigo";  }
-    { name="killbots";  }
-    { name="kiriki";  }
-    { name="kjumpingcube";  }
-    { name="klickety";  }
-    { name="klines";  }
-    { name="kmahjongg";  }
-    { name="kmines";  }
-    { name="knavalbattle";  }
-    { name="knetwalk";  }
-    { name="kolf";  }
-    { name="kollision";  }
-    { name="konquest";  }
-    { name="kpat";  }
-    { name="kreversi";  }
-    { name="kshisen";  }
-    { name="ksirk";  }
-    { name="ksnakeduel";  }
-    { name="kspaceduel";  }
-    { name="ksquares";  }
-    { name="ksudoku";  }
-    { name="ktuberling";  }
-    { name="kubrick";  }
-    { name="libkdegames";  }
-    { name="libkmahjongg";  }
-    { name="lskat";  }
-    { name="palapeli";  }
-    { name="picmi";  }
-  ];
-}
-{
   module="kdeedu";
   split=true;
   pkgs=[
