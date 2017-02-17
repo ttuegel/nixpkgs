@@ -16628,8 +16628,6 @@ with pkgs;
             ffmpeg = ffmpeg_2;
           };
 
-          bangarang = callPackage ../applications/video/bangarang { };
-
           basket = callPackage ../applications/office/basket { };
 
           bluedevil = callPackage ../tools/bluetooth/bluedevil { };
