@@ -16616,8 +16616,6 @@ with pkgs;
 
         wrapper = callPackage ../build-support/kdewrapper {};
 
-        bluedevil = callPackage ../tools/bluetooth/bluedevil { };
-
         colord-kde = callPackage ../tools/misc/colord-kde { };
 
         kadu = callPackage ../applications/networking/instant-messengers/kadu { };
