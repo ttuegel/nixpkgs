@@ -391,20 +391,6 @@ modules=[
   ];
 }
 {
-  module="kdenetwork";
-  split=true;
-  pkgs=[
-    { name="kdenetwork-filesharing"; sane="kdenetwork_filesharing"; }
-    { name="kdenetwork-strigi-analyzers"; sane="kdenetwork_strigi_analyzers"; }
-    { name="kget";  }
-    { name="kopete";  }
-    { name="kppp";  }
-    { name="krdc";  }
-    { name="krfb";  }
-    { name="zeroconf-ioslave"; sane="zeroconf_ioslave"; }
-  ];
-}
-{
   module="kdeutils";
   split=true;
   pkgs=[
