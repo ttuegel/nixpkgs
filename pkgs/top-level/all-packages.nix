@@ -16656,8 +16656,6 @@ with pkgs;
 
           kdesvn = callPackage ../applications/version-management/kdesvn { };
 
-          kdevelop = callPackage ../applications/editors/kdevelop { };
-
           kdevplatform = callPackage ../development/libraries/kdevplatform {
             boost = boost155;
           };
