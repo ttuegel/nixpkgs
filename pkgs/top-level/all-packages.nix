@@ -16632,8 +16632,6 @@ with pkgs;
 
           bluedevil = callPackage ../tools/bluetooth/bluedevil { };
 
-          choqok = callPackage ../applications/networking/instant-messengers/choqok { };
-
           colord-kde = callPackage ../tools/misc/colord-kde { };
 
           eventlist = callPackage ../applications/office/eventlist {};
