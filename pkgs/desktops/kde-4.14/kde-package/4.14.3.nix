@@ -382,13 +382,6 @@ modules=[
     { name="step";  }
   ];
 }
-{
-  module="kde-baseapps";
-sane="kde_baseapps";  split=true;
-  pkgs=[
-    { name="kde-baseapps"; sane="kde_baseapps"; }
-  ];
-}
 { module="kactivities";  split=false;}
 { module="kdepim";  split=false;}
 { module="kdepimlibs";  split=false;}
