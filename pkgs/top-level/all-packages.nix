@@ -16662,8 +16662,6 @@ with pkgs;
 
           kuickshow = callPackage ../applications/graphics/kuickshow { };
 
-          libkvkontakte = callPackage ../development/libraries/libkvkontakte { };
-
           massif-visualizer = callPackage ../development/tools/analysis/massif-visualizer { };
 
           psi = callPackage ../applications/networking/instant-messengers/psi { };
