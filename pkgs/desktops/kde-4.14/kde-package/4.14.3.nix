@@ -413,17 +413,6 @@ modules=[
   ];
 }
 {
-  module="kdeaccessibility";
-  split=true;
-  pkgs=[
-    { name="jovie";  }
-    { name="kaccessible";  }
-    { name="kmag";  }
-    { name="kmousetool";  }
-    { name="kmouth";  }
-  ];
-}
-{
   module="kde-baseapps";
 sane="kde_baseapps";  split=true;
   pkgs=[
