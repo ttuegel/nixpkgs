@@ -13946,6 +13946,8 @@ with pkgs;
     stdenv = overrideCC stdenv gcc49;
   };
 
+  kmplayer = kde4.callPackage ../applications/video/kmplayer { };
+
   konversation = qt5.callPackage ../applications/networking/irc/konversation { };
 
   krita = qt5.callPackage ../applications/graphics/krita {
@@ -16626,10 +16628,6 @@ with pkgs;
       make = self: let inherit (self) callPackage; in {
 
         kdelibs = kde5.kdelibs;
-
-        kmplayer = callPackage ../applications/video/kmplayer { };
-
-        ktikz = callPackage ../applications/graphics/ktikz { };
 
         kvirc = callPackage ../applications/networking/irc/kvirc { };
 
