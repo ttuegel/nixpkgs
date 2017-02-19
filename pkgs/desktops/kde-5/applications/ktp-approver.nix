@@ -8,7 +8,7 @@ kdeApp {
   name = "ktp-approver";
   meta = { license = with lib.licenses; lgpl21; };
   nativeBuildInputs = [ ecm ];
-  buildInputs = [
+  propagatedBuildInputs = [
     kconfig kdbusaddons ki18n knotifications kservice qtbase telepathy
   ];
 }
