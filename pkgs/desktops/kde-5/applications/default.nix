@@ -43,6 +43,7 @@ let
     };
     filelight = callPackage ./filelight.nix {};
     gwenview = callPackage ./gwenview.nix {};
+    kaccounts-integration = callPackage ./kaccounts-integration {};
     kate = callPackage ./kate.nix {};
     kdenlive = callPackage ./kdenlive.nix {};
     kcalc = callPackage ./kcalc.nix {};
