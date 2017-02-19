@@ -62,6 +62,7 @@ let
     kompare = callPackage ./kompare.nix {};
     konsole = callPackage ./konsole.nix {};
     ktp-accounts-kcm = callPackage ./ktp-accounts-kcm.nix {};
+    ktp-approver = callPackage ./ktp-approver.nix {};
     kwalletmanager = callPackage ./kwalletmanager.nix {};
     libkdcraw = callPackage ./libkdcraw.nix {};
     libkexiv2 = callPackage ./libkexiv2.nix {};
