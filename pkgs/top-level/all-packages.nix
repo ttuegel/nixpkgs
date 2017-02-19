@@ -9279,6 +9279,8 @@ with pkgs;
 
     libkeyfinder = callPackage ../development/libraries/libkeyfinder { };
 
+    libsignon-qt5 = callPackage ../misc/signond { enableDaemon = false; };
+
     mlt = callPackage ../development/libraries/mlt/qt-5.nix {
       ffmpeg = ffmpeg_2;
     };
@@ -17784,6 +17786,8 @@ with pkgs;
   sailsd = callPackage ../misc/sailsd { };
 
   shc = callPackage ../tools/security/shc { };
+
+  signond = qt5.callPackage ../misc/signond { };
 
   canon-cups-ufr2 = callPackage ../misc/cups/drivers/canon { };
 
