@@ -10,7 +10,7 @@ kdeApp {
   meta = { license = with lib.licenses; [ gpl2 ]; };
   nativeBuildInputs = [ ecm ];
   propagatedNativeBuildInputs = [ intltool ];
-  buildInputs = [
+  propagatedBuildInputs = [
     kaccounts-integration kdeclarative kio ki18n kpackage qtbase qtdeclarative
   ];
 }
