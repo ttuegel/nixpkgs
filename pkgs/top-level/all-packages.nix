@@ -14035,6 +14035,7 @@ with pkgs;
     };
   });
 
+  libsignon-glib = callPackage ../development/libraries/accounts-sso/libsignon-glib { };
 
   liferea = callPackage ../applications/networking/newsreaders/liferea {
     webkitgtk = webkitgtk24x;
