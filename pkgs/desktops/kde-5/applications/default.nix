@@ -61,6 +61,7 @@ let
     kmix = callPackage ./kmix.nix {};
     kompare = callPackage ./kompare.nix {};
     konsole = callPackage ./konsole.nix {};
+    ktp-accounts-kcm = callPackage ./ktp-accounts-kcm.nix {};
     kwalletmanager = callPackage ./kwalletmanager.nix {};
     libkdcraw = callPackage ./libkdcraw.nix {};
     libkexiv2 = callPackage ./libkexiv2.nix {};
