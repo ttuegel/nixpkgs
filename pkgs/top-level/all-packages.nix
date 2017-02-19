@@ -9327,6 +9327,8 @@ with pkgs;
 
     telepathy = callPackage ../development/libraries/telepathy/qt { };
 
+    telepathy-logger-qt = callPackage ../development/libraries/telepathy-logger-qt { };
+
     vlc = lowPrio (callPackage ../applications/video/vlc {
       qt4 = null;
       withQt5 = true;
