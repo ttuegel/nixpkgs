@@ -9258,7 +9258,7 @@ with pkgs;
 
     inherit kdeFrameworks;
 
-    accounts-qt = callPackage ../development/libraries/accounts-qt { };
+    accounts-qt5 = callPackage ../development/libraries/accounts-qt5 { };
 
     fcitx-qt5 = callPackage ../tools/inputmethods/fcitx/fcitx-qt5.nix { };
 

@@ -5,7 +5,7 @@
 }:
 
 stdenv.mkDerivation rec {
-  name = "accounts-qt-${version}";
+  name = "accounts-qt5-${version}";
   version = "1.15";
 
   src = fetchFromGitLab {
