@@ -26,5 +26,6 @@ stdenv.mkDerivation {
   '';
 
   nativeBuildInputs = [ autoconf automake gtk_doc libtool pkgconfig ];
-  buildInputs = [ glib gobjectIntrospection signond ];
+  buildInputs = [ gobjectIntrospection ];
+  propagatedBuildInputs = [ glib signond ];
 }
