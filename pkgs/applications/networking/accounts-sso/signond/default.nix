@@ -1,7 +1,7 @@
 {
   stdenv, lib, fetchFromGitLab, copyPathsToStore,
   doxygen, pkgconfig, qmakeHook,
-  qtbase,
+  libsignon-qt5, qtbase,
   enableDaemon ? true,
 }:
 
@@ -22,45 +22,45 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" ];
 
   nativeBuildInputs = [ doxygen pkgconfig qmakeHook ];
-  buildInputs = [ qtbase ];
+  buildInputs = [ qtbase ] ++ lib.optional enableDaemon libsignon-qt5;
 
   postPatch = ''
     find . -name "*.pc.in" | while read filename; do
-      sed -i $filename -e "/^includedir/ c includedir=$dev/include"
+      sed -i $filename -e "
+        /^includedir/ c includedir=$dev/include
+      "
     done
 
-    sed -i "lib/SignOn/SignOnQt5Config.cmake.in" \
-        -e "/set(SIGNONQT_INCLUDE_DIRS/ c set(SIGNONQT_INCLUDE_DIRS $dev/include/\$\''${TARGET})"
+    sed -i "lib/SignOn/SignOnQt5Config.cmake.in" -e "
+      /set(SIGNONQT_INCLUDE_DIRS/ c\
+      set(SIGNONQT_INCLUDE_DIRS $dev/include/\$\''${TARGET})
+    "
 
-    sed -i "common-pkgconfig.pri" \
-        -e "/pkgconfig.path/ c pkgconfig.path = $dev/lib/pkgconfig"
+    sed -i "common-pkgconfig.pri" -e "
+      /pkgconfig\\.path/ c pkgconfig.path = $dev/lib/pkgconfig
+    "
 
-    sed -i "common-installs-config.pri" \
-        -e "/headers.path/ c headers.path = $dev/include/\$\''${TARGET}"
-  ''
-  + lib.optionalString (!enableDaemon) ''
-    sed -i "signon.pro" \
-        -e '/^SUBDIRS/ c SUBDIRS = lib' \
-        -e '/src\.depends/ d' \
-        -e '/tests\.depends/ d'
+    sed -i "common-installs-config.pri" -e "
+      /headers\\.path/ c headers.path = $dev/include/\$\''${TARGET}
+    "
+
+    sed -i "lib/signond/signond.pro" -e "
+      /headers\\.path/ c headers.path = $dev/include/signond
+    "
+
+    sed -i "signon.pro" -e "
+      /^SUBDIRS/ c SUBDIRS = ${if enableDaemon then "src server" else "lib"}
+      ${lib.optionalString enableDaemon ''
+      /src\.depends/ a PKGCONFIG = libsignon-qt5
+      ''}
+      /src\.depends/ d
+      /tests\.depends/ d
+    "
   '';
-
 
   preConfigure = ''
     qmakeFlags+=("LIBDIR=$out/lib")
     qmakeFlags+=("CMAKE_CONFIG_PATH=$dev/lib/cmake/SignOnQt5")
-  '';
-
-  postFixup = lib.optionalString (!enableDaemon) ''
-    rm -fr "$dev/include/signond"
-    rm "$dev/lib/pkgconfig/signond.pc"
-
-    rm -fr "$dev/include/signon-extension"
-    rm "$dev/lib/pkgconfig/SignOnExtension.pc"
-
-    rm -fr "$dev/include/signon-plugins"
-    rm "$dev/lib/pkgconfig/signon-plugins.pc"
-    rm "$dev/lib/pkgconfig/signon-plugins-common.pc"
   '';
 
   meta = with stdenv.lib; {

@@ -1,7 +1,7 @@
 {
   stdenv, fetchFromGitLab, lib,
   autoconf, automake, gtk_doc, libtool, pkgconfig,
-  glib, gobjectIntrospection, signond,
+  glib, gobjectIntrospection, libsignon-qt5
 }:
 
 let version = "1.14"; in
@@ -19,7 +19,7 @@ stdenv.mkDerivation {
 
   postPatch = ''
     sed -i "libsignon-glib/Makefile.am" \
-        -e "/^DBUS_INTERFACES_DIR/ c DBUS_INTERFACES_DIR = ${signond}/share/dbus-1/interfaces|"
+        -e "/^DBUS_INTERFACES_DIR/ c DBUS_INTERFACES_DIR = ${libsignon-qt5}/share/dbus-1/interfaces"
   '';
 
   preConfigure = ''
@@ -29,5 +29,5 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [ autoconf automake gtk_doc libtool pkgconfig ];
   buildInputs = [ gobjectIntrospection ];
-  propagatedBuildInputs = [ glib signond ];
+  propagatedBuildInputs = [ glib libsignon-qt5 ];
 }
