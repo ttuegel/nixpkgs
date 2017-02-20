@@ -24,25 +24,27 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ doxygen pkgconfig qmakeHook ];
   buildInputs = [ qtbase ];
 
-  postPatch = lib.optionalString (!enableDaemon) ''
-    sed -i "signon.pro" \
-        -e '/^SUBDIRS/ s|^.*$|SUBDIRS = lib|' \
-        -e '/^src\.depends/ s|^.*$||' \
-        -e '/^tests.\.depends/ s|^.*$||'
-
+  postPatch = ''
     find . -name "*.pc.in" | while read filename; do
-      sed -i $filename -e "/^includedir/ s|^.*|includdir=$dev/include|"
+      sed -i $filename -e "/^includedir/ c includedir=$dev/include"
     done
 
-    sed -i "lib/SignOnQt/SignOnQt5Config.cmake.in" \
-        -e "/set(SIGNONQT_INCLUDE_DIRS/ s|^.*$|set(SIGNONQT_INCLUDE_DIRS $dev/include/\$\''${TARGET})|"
+    sed -i "lib/SignOn/SignOnQt5Config.cmake.in" \
+        -e "/set(SIGNONQT_INCLUDE_DIRS/ c set(SIGNONQT_INCLUDE_DIRS $dev/include/\$\''${TARGET})"
 
     sed -i "common-pkgconfig.pri" \
-        -e "/pkgconfig.path/ s|^.*$|pkgconfig.path = $dev/lib/pkgconfig|"
+        -e "/pkgconfig.path/ c pkgconfig.path = $dev/lib/pkgconfig"
 
     sed -i "common-installs-config.pri" \
-        -e "/headers.path/ s|^.*$|headers.path $dev/include/\$\''${TARGET}|"
+        -e "/headers.path/ c headers.path = $dev/include/\$\''${TARGET}"
+  ''
+  + lib.optionalString (!enableDaemon) ''
+    sed -i "signon.pro" \
+        -e '/^SUBDIRS/ c SUBDIRS = lib' \
+        -e '/src\.depends/ d' \
+        -e '/tests\.depends/ d'
   '';
+
 
   preConfigure = ''
     qmakeFlags+=("LIBDIR=$out/lib")
