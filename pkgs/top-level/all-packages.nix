@@ -9279,7 +9279,7 @@ with pkgs;
 
     libkeyfinder = callPackage ../development/libraries/libkeyfinder { };
 
-    libsignon-qt5 = callPackage ../misc/signond { enableDaemon = false; };
+    libsignon-qt5 = callPackage ../applications/networking/accounts-sso/signond { enableDaemon = false; };
 
     mlt = callPackage ../development/libraries/mlt/qt-5.nix {
       ffmpeg = ffmpeg_2;
