@@ -63,6 +63,7 @@ let
     konsole = callPackage ./konsole.nix {};
     ktp-accounts-kcm = callPackage ./ktp-accounts-kcm.nix {};
     ktp-approver = callPackage ./ktp-approver.nix {};
+    ktp-auth-handler = callPackage ./ktp-auth-handler.nix {};
     ktp-common-internals = callPackage ./ktp-common-internals.nix {};
     kwalletmanager = callPackage ./kwalletmanager.nix {};
     libkdcraw = callPackage ./libkdcraw.nix {};
