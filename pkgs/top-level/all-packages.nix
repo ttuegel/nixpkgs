@@ -15245,6 +15245,8 @@ with pkgs;
 
   telepathy_idle = callPackage ../applications/networking/instant-messengers/telepathy/idle {};
 
+  telepathy-accounts-signon = qt5.callPackage ../applications/networking/accounts-sso/telepathy-accounts-signon {};
+
   terminal-notifier = callPackage ../applications/misc/terminal-notifier {};
 
   terminator = callPackage ../applications/misc/terminator {
