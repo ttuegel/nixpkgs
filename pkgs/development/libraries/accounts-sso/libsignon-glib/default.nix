@@ -15,9 +15,11 @@ stdenv.mkDerivation {
     owner = "accounts-sso";
   };
 
+  outputs = [ "out" "dev" ];
+
   postPatch = ''
     sed -i "libsignon-glib/Makefile.am" \
-        -e "/^DBUS_INTERFACES_DIR/ s|^.*$|DBUS_INTERFACES_DIR = ${signond}/share/dbus-1/interfaces|"
+        -e "/^DBUS_INTERFACES_DIR/ c DBUS_INTERFACES_DIR = ${signond}/share/dbus-1/interfaces|"
   '';
 
   preConfigure = ''
