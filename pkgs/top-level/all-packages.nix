@@ -17792,7 +17792,7 @@ with pkgs;
 
   shc = callPackage ../tools/security/shc { };
 
-  signond = qt5.callPackage ../misc/signond { };
+  signond = qt5.callPackage ../applications/networking/accounts-sso/signond { };
 
   canon-cups-ufr2 = callPackage ../misc/cups/drivers/canon { };
 
