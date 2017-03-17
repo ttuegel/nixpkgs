@@ -1,51 +1,44 @@
-{ stdenv, fetchurl, makeWrapper
-, intltool, isocodes, pkgconfig
+{ stdenv, runCommand, fetchurl, fetchFromGitHub, makeWrapper
+, emojione, intltool, isocodes, pkgconfig
 , python3, pygobject3
 , gtk2, gtk3, atk, dconf, glib, json_glib
 , dbus, libnotify, gobjectIntrospection, wayland
-, nodePackages
 }:
+
+let
+
+  # Extract emoij.json without building emojione
+  emoji_json = runCommand "emoji.json" {} ''
+    unpackFile ${emojione.src}
+    mv package/emoji.json $out
+  '';
+
+  cldr-emoji-annotation = fetchFromGitHub {
+    owner = "fujiwarat";
+    repo = "cldr-emoji-annotation";
+    rev = "30.0.3_2";
+    sha256 = "0rh50rykigk4a2y0lcdz8pidmix99v5azx2nbsxb36fniq6ahz9a";
+  };
+
+in
 
 stdenv.mkDerivation rec {
   name = "ibus-${version}";
-  version = "1.5.14";
+  version = "1.5.15";
 
   src = fetchurl {
     url = "https://github.com/ibus/ibus/releases/download/${version}/${name}.tar.gz";
-    sha256 = "0g4x02d7j5w1lfn4zvmzsq93h17lajgn9d7hlvr6pws28vz40ax4";
+    sha256 = "11g3jf6dgvmszvpgpva0y587kr0sffl79xmymvghrb1sdynvmxs1";
   };
 
   postPatch = ''
     # These paths will be set in the wrapper.
-    sed -e "/export IBUS_DATAROOTDIR/ s/^.*$//" \
-        -e "/export IBUS_LIBEXECDIR/ s/^.*$//" \
-        -e "/export IBUS_LOCALEDIR/ s/^.*$//" \
-        -e "/export IBUS_PREFIX/ s/^.*$//" \
-        -i "setup/ibus-setup.in"
-  '';
+    sed -i "setup/ibus-setup.in" \
+        -e "/export IBUS_DATAROOTDIR/ d" \
+        -e "/export IBUS_LIBEXECDIR/ d" \
+        -e "/export IBUS_LOCALEDIR/ d" \
+        -e "/export IBUS_PREFIX/ d"
 
-  configureFlags = [
-    "--disable-gconf"
-    "--enable-dconf"
-    "--disable-memconf"
-    "--enable-ui"
-    "--enable-python-library"
-    "--with-emoji-json-file=${nodePackages.emojione}/lib/node_modules/emojione/emoji.json"
-  ];
-
-  buildInputs = [
-    python3 pygobject3
-    intltool isocodes pkgconfig
-    gtk2 gtk3 dconf
-    json_glib
-    dbus libnotify gobjectIntrospection wayland
-  ];
-
-  propagatedBuildInputs = [ glib ];
-
-  nativeBuildInputs = [ makeWrapper ];
-
-  preConfigure = ''
     # Fix hard-coded installation paths, so make does not try to overwrite our
     # Python installation.
     sed -e "/py2overridesdir=/ s|=.*$|=$out/lib/${python3.libPrefix}|" \
@@ -56,6 +49,28 @@ stdenv.mkDerivation rec {
     # Don't try to generate a system-wide dconf database; it wouldn't work.
     substituteInPlace data/dconf/Makefile.in --replace "dconf update" "echo"
   '';
+
+  configureFlags = [
+    "--disable-gconf"
+    "--enable-dconf"
+    "--disable-memconf"
+    "--enable-ui"
+    "--enable-python-library"
+    "--with-emoji-json-file=${emoji_json}"
+    "--with-emoji-annotation-dir=${cldr-emoji-annotation}/annotations"
+  ];
+
+  buildInputs = [
+    python3 pygobject3
+    intltool isocodes pkgconfig
+    gtk2
+    json_glib
+    dbus libnotify wayland
+  ];
+
+  propagatedBuildInputs = [ dconf glib gobjectIntrospection gtk3 ];
+
+  nativeBuildInputs = [ makeWrapper ];
 
   preFixup = ''
     for f in "$out/bin"/*; do #*/

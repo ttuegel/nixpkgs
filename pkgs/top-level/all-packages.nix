@@ -1240,6 +1240,7 @@ with pkgs;
   ibus = callPackage ../tools/inputmethods/ibus {
     inherit (python3Packages) pygobject3;
     inherit (gnome3) dconf glib;
+    inherit (nodePackages) emojione;
   };
 
   ibus-qt = callPackage ../tools/inputmethods/ibus/ibus-qt.nix { };
