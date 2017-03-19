@@ -14,9 +14,21 @@ wrapProgramsHook() {
     runHook preWrap
 
     if [ -z "$dontWrapPrograms" ] && [ ${#makeWrapperArgs[*]} -gt 0 ]; then
-        for i in $prefix/bin/* $prefix/libexec/* $prefix/sbin/*; do
-            echo "Wrapping $i"
-            wrapProgram "$i" "${makeWrapperArgs[@]}"
+        local targets=()
+        for dir in $prefix/bin $prefix/libexec $prefix/sbin; do
+            if [ -d "$dir" ]; then
+                find "$dir" -print | while read i; do targets+=("$i"); done
+            fi
+        done
+
+        for t in "${targets[@]}"; do
+            local canonical="$(readlink -f $t)"
+            if [ -a "$canonical" ] && [ -x "$canonical" ]; then
+                echo "wrapProgramsHook: wrapping $t"
+                wrapProgram "$t" "${makeWrapperArgs[@]}"
+            else
+                echo "wrapProgramsHook: skipping $t"
+            fi
         done
     fi
 
