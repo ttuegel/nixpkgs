@@ -1,11 +1,46 @@
-_ecmSetXdgDirs() {
+setBuildXdgPaths() {
     addToSearchPath XDG_DATA_DIRS "$1/share"
     addToSearchPath XDG_CONFIG_DIRS "$1/etc/xdg"
 }
 
-envHooks+=(_ecmSetXdgDirs)
+envHooks+=(setBuildXdgPaths)
 
-_ecmConfig() {
+ecmSharedDataDirs=( \
+    doc/HTML \
+    config.kcfg \
+    kconf_update \
+    kservices5 \
+    kservicetypes5 \
+    kxmlgui5 \
+    knotifications5 \
+    icons \
+    locale \
+    sounds \
+    templates \
+    wallpapers \
+    applications \
+    desktop-directories \
+    mime \
+    appdata \
+    man \
+    info \
+    dbus-1 \
+)
+
+setRunXdgBuildPaths() {
+    for d in ${ecmSharedDataDirs[*]}; do
+        if [ -d "$1/share/d" ]; then
+            addToSearchPath RUNTIME_XDG_DATA_DIRS "$1/share"
+            break
+        fi
+    done
+
+    if [ -d "$1/etc/xdg" ]; then
+        addToSearchPath RUNTIME_XDG_CONFIG_DIRS "$1/etc/xdg"
+    fi
+}
+
+ecmSetCMakeFlags() {
     # Because we need to use absolute paths here, we must set *all* the paths.
     cmakeFlags+=" -DKDE_INSTALL_EXECROOTDIR=${!outputBin}"
     cmakeFlags+=" -DKDE_INSTALL_BINDIR=${!outputBin}/bin"
@@ -48,4 +83,4 @@ _ecmConfig() {
     cmakeFlags+=" -DKDE_INSTALL_AUTOSTARTDIR=${!outputBin}/etc/xdg/autostart"
 }
 
-preConfigureHooks+=(_ecmConfig)
+preConfigureHooks+=(ecmSetCMakeFlags)
