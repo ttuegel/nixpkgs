@@ -36,7 +36,7 @@ _qtModuleMultioutDevsPost() {
     fi
 }
 
-if [ -n "$NIX_QT_SUBMODULE" ]; then
+if [ -n "$buildingQtModule" ]; then
     preFixupHooks+=(_qtModuleMultioutDevsPre)
     postFixupHooks+=(_qtModuleMultioutDevsPost)
 fi

@@ -272,6 +272,7 @@ stdenv.mkDerivation {
     '';
 
   inherit lndir;
+  inherit (stdenv) isDarwin;
   setupHook = ../../qtbase-setup-hook.sh;
 
   enableParallelBuilding = true;

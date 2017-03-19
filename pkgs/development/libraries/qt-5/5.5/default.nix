@@ -47,7 +47,7 @@ let
       propagatedBuildInputs = args.qtInputs ++ (args.propagatedBuildInputs or []);
       nativeBuildInputs = (args.nativeBuildInputs or []) ++ [ self.qmakeHook ];
 
-      NIX_QT_SUBMODULE = args.NIX_QT_SUBMODULE or true;
+      buildingQtModule = args.buildingQtModule or true;
 
       outputs = args.outputs or [ "out" "dev" ];
       setOutputFlags = args.setOutputFlags or false;

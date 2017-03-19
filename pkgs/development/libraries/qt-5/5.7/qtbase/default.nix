@@ -288,9 +288,8 @@ stdenv.mkDerivation {
     '';
 
   inherit lndir;
-  setupHook = if stdenv.isDarwin
-              then ../../qtbase-setup-hook-darwin.sh
-              else ../../qtbase-setup-hook.sh;
+  inherit (stdenv) isDarwin;
+  setupHook = ../../qtbase-setup-hook.sh;
 
   enableParallelBuilding = true;
 
