@@ -1,4 +1,4 @@
-{ stdenv, runCommand, fetchurl, fetchFromGitHub, wrapProgramsHook
+{ stdenv, runCommand, fetchurl, fetchFromGitHub
 , emojione, intltool, isocodes, pkgconfig
 , python3, pygobject3
 , gtk2, gtk3, atk, dconf, glib, json_glib
@@ -61,17 +61,13 @@ stdenv.mkDerivation rec {
     "--with-emoji-annotation-dir=${cldr-emoji-annotation}/annotations"
   ];
 
-  buildInputs = [
-    python3 pygobject3
-    intltool isocodes pkgconfig
-    gtk2
-    json_glib
-    dbus libnotify wayland
+  nativeBuildInputs = [ intltool pkgconfig ];
+
+  buildInputs = [ dbus gtk2 isocodes json_glib libnotify wayland ];
+
+  propagatedBuildInputs = [
+    dconf glib gobjectIntrospection gtk3 python3 pygobject3
   ];
-
-  propagatedBuildInputs = [ dconf glib gobjectIntrospection gtk3 ];
-
-  nativeBuildInputs = [ wrapProgramsHook ];
 
   doInstallCheck = true;
   installCheckPhase = "$out/bin/ibus version";
