@@ -1,4 +1,4 @@
-{ stdenv, runCommand, fetchurl, fetchFromGitHub, makeWrapper
+{ stdenv, runCommand, fetchurl, fetchFromGitHub, wrapProgramsHook
 , emojione, intltool, isocodes, pkgconfig
 , python3, pygobject3
 , gtk2, gtk3, atk, dconf, glib, json_glib
@@ -70,17 +70,7 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = [ dconf glib gobjectIntrospection gtk3 ];
 
-  nativeBuildInputs = [ makeWrapper ];
-
-  preFixup = ''
-    for f in "$out/bin"/*; do #*/
-      wrapProgram "$f" \
-        --prefix XDG_DATA_DIRS : "$out/share:$GSETTINGS_SCHEMAS_PATH" \
-        --prefix PYTHONPATH : "$PYTHONPATH" \
-        --prefix GI_TYPELIB_PATH : "$GI_TYPELIB_PATH:$out/lib/girepository-1.0" \
-        --prefix GIO_EXTRA_MODULES : "${dconf}/lib/gio/modules"
-    done
-  '';
+  nativeBuildInputs = [ wrapProgramsHook ];
 
   doInstallCheck = true;
   installCheckPhase = "$out/bin/ibus version";
