@@ -16,7 +16,7 @@ top-level attribute to `top-level/all-packages.nix`.
 
 {
   newScope,
-  stdenv, fetchurl, makeSetupHook, makeWrapper,
+  stdenv, fetchurl, makeSetupHook, makeWrapper, substituteAll,
   bison, cups ? null, harfbuzz, mesa, perl,
   gstreamer, gst-plugins-base,
 
@@ -108,7 +108,10 @@ let
       makeQtWrapper =
         makeSetupHook
         { deps = [ makeWrapper ]; }
-        (if stdenv.isDarwin then ../make-qt-wrapper-darwin.sh else ../make-qt-wrapper.sh);
+        (substituteAll {
+          inherit (stdenv) isDarwin;
+          src = ../make-qt-wrapper.sh;
+        });
 
       qmakeHook =
         makeSetupHook

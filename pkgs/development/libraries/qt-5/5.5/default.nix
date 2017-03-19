@@ -18,7 +18,7 @@
 
 {
   newScope,
-  stdenv, fetchurl, makeSetupHook, makeWrapper,
+  stdenv, fetchurl, makeSetupHook, makeWrapper, substituteAll,
   bison, cups ? null, harfbuzz, mesa, perl,
   libgnomeui, GConf, gnome_vfs,
   gstreamer, gst-plugins-base,
@@ -116,7 +116,10 @@ let
       makeQtWrapper =
         makeSetupHook
         { deps = [ makeWrapper ]; }
-        ../make-qt-wrapper.sh;
+        (substituteAll {
+          inherit (stdenv) isDarwin;
+          src = ../make-qt-wrapper.sh;
+        });
 
       qmakeHook =
         makeSetupHook
