@@ -9357,7 +9357,7 @@ with pkgs;
 
   qt55 = recurseIntoAttrs (import ../development/libraries/qt-5/5.5 {
     inherit newScope;
-    inherit stdenv fetchurl makeSetupHook makeWrapper substituteAll;
+    inherit stdenv fetchurl makeSetupHook wrapProgramsHook substituteAll;
     bison = bison2; # error: too few arguments to function 'int yylex(...
     cups = if stdenv.isLinux then cups else null;
     harfbuzz = harfbuzz-icu;
@@ -9371,7 +9371,7 @@ with pkgs;
 
   qt56 = recurseIntoAttrs (import ../development/libraries/qt-5/5.6 {
     inherit newScope;
-    inherit stdenv fetchurl makeSetupHook makeWrapper substituteAll;
+    inherit stdenv fetchurl makeSetupHook wrapProgramsHook substituteAll;
     bison = bison2; # error: too few arguments to function 'int yylex(...
     cups = if stdenv.isLinux then cups else null;
     harfbuzz = harfbuzz-icu;
@@ -9384,7 +9384,7 @@ with pkgs;
 
   qt57 = recurseIntoAttrs (import ../development/libraries/qt-5/5.7 {
     inherit newScope;
-    inherit stdenv fetchurl makeSetupHook makeWrapper substituteAll;
+    inherit stdenv fetchurl makeSetupHook wrapProgramsHook substituteAll;
     bison = bison2; # error: too few arguments to function 'int yylex(...
     cups = if stdenv.isLinux then cups else null;
     harfbuzz = harfbuzz-icu;
