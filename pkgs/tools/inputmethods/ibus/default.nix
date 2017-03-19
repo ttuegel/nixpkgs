@@ -8,6 +8,7 @@
 let
 
   # Extract emoij.json without building emojione
+  # to avoid build dependency on node.js
   emoji_json = runCommand "emoji.json" {} ''
     unpackFile ${emojione.src}
     mv package/emoji.json $out
