@@ -1,4 +1,4 @@
-{ kdeFramework, lib, copyPathsToStore, cmake, pkgconfig }:
+{ kdeFramework, lib, copyPathsToStore, cmake, pkgconfig, wrapProgramsHook }:
 
 kdeFramework {
   name = "extra-cmake-modules";
@@ -7,7 +7,7 @@ kdeFramework {
 
   outputs = [ "out" ];  # this package has no runtime components
 
-  propagatedNativeBuildInputs = [ cmake pkgconfig ];
+  propagatedNativeBuildInputs = [ cmake pkgconfig wrapProgramsHook ];
 
   setupHook = ./setup-hook.sh;
 

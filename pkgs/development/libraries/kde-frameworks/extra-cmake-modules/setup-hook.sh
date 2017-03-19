@@ -1,9 +1,9 @@
-setBuildXdgPaths() {
+ecmFindXdgBuildPaths() {
     addToSearchPath XDG_DATA_DIRS "$1/share"
     addToSearchPath XDG_CONFIG_DIRS "$1/etc/xdg"
 }
 
-envHooks+=(setBuildXdgPaths)
+envHooks+=(ecmFindXdgBuildPaths)
 
 ecmSharedDataDirs=( \
     doc/HTML \
@@ -27,18 +27,24 @@ ecmSharedDataDirs=( \
     dbus-1 \
 )
 
-setRunXdgBuildPaths() {
+ecmFindXdgRuntimePaths() {
     for d in ${ecmSharedDataDirs[*]}; do
-        if [ -d "$1/share/d" ]; then
-            addToSearchPath RUNTIME_XDG_DATA_DIRS "$1/share"
+        if [ -d "$1/share/$d" ]; then
+            makeWrapperArgs+=(--prefix XDG_DATA_DIRS : "$1/share")
             break
         fi
     done
 
     if [ -d "$1/etc/xdg" ]; then
-        addToSearchPath RUNTIME_XDG_CONFIG_DIRS "$1/etc/xdg"
+        makeWrapperArgs+=(--prefix XDG_CONFIG_DIRS : "$1/etc/xdg")
     fi
 }
+
+if [ -z "$crossConfig" ]; then
+    envHooks+=(ecmFindXdgRuntimePaths)
+else
+    crossEnvHooks+=(ecmFindXdgRuntimePaths)
+fi
 
 ecmSetCMakeFlags() {
     # Because we need to use absolute paths here, we must set *all* the paths.
