@@ -105,14 +105,6 @@ let
         qtxmlpatterns
       ];
 
-      makeQtWrapper =
-        makeSetupHook
-        { deps = [ wrapProgramsHook ]; }
-        (substituteAll {
-          inherit (stdenv) isDarwin;
-          src = ../make-qt-wrapper.sh;
-        });
-
       qmakeHook =
         makeSetupHook
         { deps = [ self.qtbase.dev ]; }

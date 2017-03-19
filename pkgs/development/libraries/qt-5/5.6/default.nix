@@ -119,14 +119,6 @@ let
         qtwebchannel qtwebengine qtwebkit qtwebsockets qtx11extras qtxmlpatterns
       ];
 
-      makeQtWrapper =
-        makeSetupHook
-        { deps = [ wrapProgramsHook ]; }
-        (substituteAll {
-          inherit (stdenv) isDarwin;
-          src = ../make-qt-wrapper.sh;
-        });
-
       qmakeHook =
         makeSetupHook
         { deps = [ self.qtbase.dev ]; }

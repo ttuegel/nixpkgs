@@ -326,7 +326,10 @@ with pkgs;
 
   wrapProgramsHook = makeSetupHook {
     deps = [ makeWrapper ];
-  } ../build-support/setup-hooks/wrap-programs-hook.sh;
+  } (substituteAll {
+    inherit (stdenv) isDarwin;
+    src = ../build-support/setup-hooks/wrap-programs-hook.sh;
+  });
 
   separateDebugInfo = makeSetupHook { } ../build-support/setup-hooks/separate-debug-info.sh;
 
