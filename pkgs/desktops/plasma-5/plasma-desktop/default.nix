@@ -44,7 +44,7 @@ plasmaPackage rec {
     sed -i "$out/share/plasma/shells/org.kde.plasma.desktop/contents/defaults" \
         -e 's/Containment=org.kde.desktopcontainment/Containment=org.kde.plasma.folder/'
 
-    wrapQtProgram $out/lib/libexec/kimpanel \
+    wrapQtProgram $out/libexec/kimpanel-ibus-panel \
         --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
         --prefix GI_TYPELIB_PATH : "$GI_TYPELIB_PATH"
   '';

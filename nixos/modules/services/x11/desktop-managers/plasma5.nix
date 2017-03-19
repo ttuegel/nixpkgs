@@ -64,8 +64,8 @@ in
       };
 
       security.wrappers = {
-        kcheckpass.source = "${plasma5.plasma-workspace.out}/lib/libexec/kcheckpass";
-        "start_kdeinit".source = "${pkgs.kinit.out}/lib/libexec/kf5/start_kdeinit";
+        kcheckpass.source = "${plasma5.plasma-workspace.out}/libexec/kcheckpass";
+        "start_kdeinit".source = "${pkgs.kinit.out}/libexec/kf5/start_kdeinit";
       };
 
       environment.systemPackages = with pkgs; with qt5; with libsForQt5; with plasma5; with kdeApplications;
@@ -227,8 +227,7 @@ in
 
       # use kimpanel as the default IBus panel
       i18n.inputMethod.ibus.panel =
-        lib.mkDefault
-        "${plasma5.plasma-desktop}/lib/libexec/kimpanel-ibus-panel";
+        lib.mkDefault "${plasma5.plasma-desktop}/libexec/kimpanel-ibus-panel";
 
     })
   ];
