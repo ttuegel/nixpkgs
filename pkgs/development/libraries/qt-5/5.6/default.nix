@@ -130,7 +130,10 @@ let
       qmakeHook =
         makeSetupHook
         { deps = [ self.qtbase.dev ]; }
-        (if stdenv.isDarwin then ../qmake-hook-darwin.sh else ../qmake-hook.sh);
+        (substituteAll {
+          inherit (stdenv) isDarwin;
+          src = ../qmake-hook.sh;
+        });
     };
 
    self = makeScope newScope addPackages;

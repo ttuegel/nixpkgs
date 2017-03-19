@@ -124,7 +124,10 @@ let
       qmakeHook =
         makeSetupHook
         { deps = [ self.qtbase.dev ]; }
-        ../qmake-hook.sh;
+        (substituteAll {
+          inherit (stdenv) isDarwin;
+          src = ../qmake-hook.sh;
+        });
 
     };
 
