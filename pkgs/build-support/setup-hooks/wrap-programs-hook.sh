@@ -2,10 +2,20 @@ makeWrapperArgs=()
 
 dontWrapOutputs=()
 
+findProgramsInOutput() {
+    for dir in "$1/bin" "$1/libexec" "$1/sbin"; do
+        if [ -d "$dir" ]; then
+            find "$dir" -executable -a '(' -type f -o -type l ')'
+        fi
+    done
+}
+
 wrapProgramsHook() {
     # Wrap each output only once
     for p in "${dontWrapOutputs[@]}"; do
-        if [ "$p" == "$prefix" ]; then return 0; fi
+        if [ "$p" == "$prefix" ]; then
+            return 0
+        fi
     done
     dontWrapOutputs+=("$prefix")
 
@@ -13,29 +23,24 @@ wrapProgramsHook() {
 
     runHook preWrap
 
-    if [ -z "$dontWrapPrograms" ] && [ ${#makeWrapperArgs[*]} -gt 0 ]; then
-        local targets=()
-        for dir in $prefix/bin $prefix/libexec $prefix/sbin; do
-            if [ -d "$dir" ]; then
-                find "$dir" -print | while read i; do targets+=("$i"); done
+    if [ ${#makeWrapperArgs[*]} -gt 0 ]; then
+
+        findProgramsInOutput "$prefix" | while read t; do
+            local canonical="$(realpath $t)"
+            if [ -a "$canonical" ] && [ -x "$canonical" ]; then
+                echo "wrapping $t"
+                wrapProgram "$t" "${makeWrapperArgs[@]}"
             fi
         done
 
-        for t in "${targets[@]}"; do
-            local canonical="$(readlink -f $t)"
-            if [ -a "$canonical" ] && [ -x "$canonical" ]; then
-                echo "wrapProgramsHook: wrapping $t"
-                wrapProgram "$t" "${makeWrapperArgs[@]}"
-            else
-                echo "wrapProgramsHook: skipping $t"
-            fi
-        done
     fi
 
     runHook postWrap
 }
 
-fixupOutputHooks+=(wrapProgramsHook)
+if [ -z "$dontWrapPrograms" ]; then
+    fixupOutputHooks+=(wrapProgramsHook)
+fi
 
 wrapFrameworkPath_Darwin() {
     if [ -n "@isDarwin@" ]; then
