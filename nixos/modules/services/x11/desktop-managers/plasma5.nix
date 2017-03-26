@@ -64,7 +64,6 @@ in
       };
 
       security.wrappers = {
-        kcheckpass.source = "${plasma5.plasma-workspace.out}/libexec/kcheckpass";
         "start_kdeinit".source = "${pkgs.kinit.out}/libexec/start_kdeinit";
       };
 
