@@ -3,5 +3,5 @@
 plasmaPackage {
   name = "kdecoration";
   nativeBuildInputs = [ extra-cmake-modules ];
-  buildInputs = [ qtbase ];
+  propagatedBuildInputs = [ qtbase ];
 }

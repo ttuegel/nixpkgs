@@ -10,8 +10,8 @@ plasmaPackage {
   nativeBuildInputs = [
     extra-cmake-modules kdoctools
   ];
+  buildInputs = [ gconf glib libcanberra_gtk3 libpulseaudio ];
   propagatedBuildInputs = [
-    gconf glib kconfigwidgets kcoreaddons kdeclarative
-    kglobalaccel ki18n libcanberra_gtk3 libpulseaudio plasma-framework
+    kconfigwidgets kcoreaddons kdeclarative kglobalaccel ki18n plasma-framework
   ];
 }

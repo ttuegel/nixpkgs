@@ -10,8 +10,8 @@ plasmaPackage {
   nativeBuildInputs = [
     extra-cmake-modules
   ];
-  buildInputs = [
+  buildInputs = [ libXcursor ];
+  propagatedBuildInputs = [
     breeze-qt5 kconfig kconfigwidgets kiconthemes kio kwayland
-    libXcursor
   ];
 }

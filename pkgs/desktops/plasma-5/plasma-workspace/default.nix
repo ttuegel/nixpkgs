@@ -38,7 +38,7 @@ plasmaPackage {
   postInstall = ''
     rm "$out/bin/startkde"
     rm "$out/bin/startplasmacompositor"
-    rm "$out/lib/libexec/startplasma"
+    rm "$out/libexec/startplasma"
     rm -r "$out/share/wayland-sessions"
   '';
 }
