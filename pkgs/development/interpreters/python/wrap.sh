@@ -116,3 +116,37 @@ createBuildInputsPth() {
         done
     fi
 }
+
+# Setup wrapProgramsHook
+# If wrapProgramsHook is included, Python programs are wrapped automatically.
+# Otherwise, this safely does nothing.
+
+buildOutputPythonPath() {
+    buildPythonPath "$prefix $pythonPath"
+}
+
+preWrapOutput+=(buildOutputPythonPath)
+
+patchPythonTarget() {
+    local f="$target"
+
+    # Rewrite "#! .../env python" to "#! /nix/store/.../python".
+    # Strip suffix, like "3" or "2.7m" -- we don't have any choice on which
+    # Python to use besides one with this hook anyway.
+    if head -n1 "$f" | grep -q '#!.*/env.*\(python\|pypy\)'; then
+        sed -i "$f" -e "1 s^.*/env[ ]*\(python\|pypy\)[^ ]*^#! @executable@^"
+    fi
+
+    # catch /python and /.python-wrapped
+    if head -n1 "$f" | grep -q '/\.\?\(python\|pypy\)'; then
+        # dont wrap EGG-INFO scripts since they are called from python
+        if echo "$f" | grep -q EGG-INFO/scripts; then
+            dontWrapTargets+=("$target")
+        else
+            patchPythonScript "$f"
+            makeWrapperArgs+=(--prefix PATH ":" "$program_PATH")
+        fi
+    fi
+}
+
+preWrapTarget+=(patchPythonTarget)
