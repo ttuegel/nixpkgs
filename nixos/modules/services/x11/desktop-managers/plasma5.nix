@@ -70,88 +70,47 @@ in
 
       environment.systemPackages = with pkgs; with qt5; with libsForQt5; with plasma5; with kdeApplications;
         [
-          frameworkintegration
-          kactivities
-          kauth
-          kcmutils
-          kconfig
-          kconfigwidgets
-          kcoreaddons
-          kdbusaddons
-          kdeclarative
-          kded
-          kdesu
-          kdnssd
-          kemoticons
-          kfilemetadata
-          kglobalaccel
-          kguiaddons
-          kiconthemes
-          kidletime
-          kimageformats
-          kinit
-          kio
-          kjobwidgets
-          knewstuff
-          knotifications
-          knotifyconfig
-          kpackage
-          kparts
-          kpeople
-          krunner
-          kservice
-          ktextwidgets
-          kwallet
-          kwallet-pam
-          kwalletmanager
-          kwayland
-          kwidgetsaddons
-          kxmlgui
-          kxmlrpcclient
-          plasma-framework
-          solid
-          sonnet
-          threadweaver
-
+          # Themes and integration
           breeze-qt5
+          breeze-gtk
+          breeze-icons
+          frameworkintegration
+          kde-gtk-config
+          oxygen
+          plasma-integration
+          polkit-kde-agent
+          pkgs.hicolor_icon_theme
+
+          # Desktop environment
           kactivitymanagerd
           kde-cli-tools
           kdecoration
           kdeplasma-addons
           kgamma5
+          khelpcenter
           khotkeys
           kinfocenter
           kmenuedit
           kscreen
           kscreenlocker
           ksysguard
-          kwayland
           kwin
           kwrited
-          libkscreen
-          libksysguard
           milou
-          plasma-integration
-          polkit-kde-agent
-          systemsettings
-
+          phonon-backend-gstreamer
           plasma-desktop
           plasma-workspace
           plasma-workspace-wallpapers
-
-          dolphin-plugins
-          ffmpegthumbs
-          kdegraphics-thumbnailers
-          kio-extras
           print-manager
+          systemsettings
 
-          breeze-icons
-          pkgs.hicolor_icon_theme
-
-          kde-gtk-config breeze-gtk
-
-          phonon-backend-gstreamer
+          # Base applications
+          dolphin dolphin-plugins
+          ffmpegthumbs kdegraphics-thumbnailers kio-extras
+          konsole
         ]
+
+        ++ cfg.extraPackages
 
         ++ lib.optionals cfg.enableQt4Support [ breeze-qt4 pkgs.phonon-backend-gstreamer ]
 
@@ -162,16 +121,6 @@ in
         ++ lib.optional config.powerManagement.enable powerdevil
         ++ lib.optional config.services.colord.enable colord-kde
         ++ lib.optionals config.services.samba.enable [ kdenetwork-filesharing pkgs.samba ];
-
-      services.xserver.desktopManager.plasma5.extraPackages =
-        with kdeApplications; with plasma5;
-        [
-          khelpcenter
-          oxygen
-
-          dolphin
-          konsole
-        ];
 
       environment.pathsToLink = [ "/share" ];
 
