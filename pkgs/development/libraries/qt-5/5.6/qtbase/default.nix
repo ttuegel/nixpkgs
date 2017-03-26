@@ -1,4 +1,4 @@
-{ stdenv, lib, fetchgit, copyPathsToStore
+{ stdenv, lib, fetchgit, copyPathsToStore, wrapQtAppsHook
 , srcs
 
 , xlibs, libX11, libxcb, libXcursor, libXext, libXrender, libXi
@@ -187,6 +187,9 @@ stdenv.mkDerivation {
   # if dependency paths contain the string "pq", which can occur in the hash.
   # To prevent these failures, we need to override PostgreSQL detection.
   PSQL_LIBS = lib.optionalString (postgresql != null) "-L${postgresql.lib}/lib -lpq";
+
+  dontWrapPrograms = true;
+  propagatedNativeBuildInputs = [ wrapQtAppsHook ];
 
   propagatedBuildInputs = [
     libxml2 libxslt openssl pcre16 sqlite zlib

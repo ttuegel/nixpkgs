@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, pkgconfig, which, makeQtWrapper,
+{ stdenv, fetchurl, pkgconfig, which,
   libtool, openssl, qtbase, qttools }:
 
 with stdenv.lib;
@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ libtool openssl qtbase qttools ];
 
-  nativeBuildInputs = [ makeQtWrapper pkgconfig which ];
+  nativeBuildInputs = [ pkgconfig which ];
 
   configureFlags = [ "CXXFLAGS=-std=c++11" ];
 
@@ -24,11 +24,6 @@ stdenv.mkDerivation rec {
     substituteInPlace Local.mak \
       --replace ${qtbase}/bin/moc ${qtbase.dev}/bin/moc \
       --replace ${qtbase}/bin/uic ${qtbase.dev}/bin/uic
-  '';
-
-  postInstall = ''
-    wrapQtProgram "$out/bin/xca"
-    wrapQtProgram "$out/bin/xca_db_stat"
   '';
 
   meta = with stdenv.lib; {

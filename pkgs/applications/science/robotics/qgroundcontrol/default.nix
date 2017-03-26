@@ -1,30 +1,24 @@
 { stdenv, fetchgit, git,  espeak, SDL, udev, doxygen, cmake
   , qtbase, qtlocation, qtserialport, qtdeclarative, qtconnectivity, qtxmlpatterns
   , qtsvg, qtquick1, qtquickcontrols, qtgraphicaleffects, qmakeHook
-  , makeQtWrapper, lndir
+  , lndir
   , gst_all_1, qt-gstreamer1, pkgconfig, glibc
   , version ? "2.9.4"
 }:
 
 stdenv.mkDerivation rec {
   name = "qgroundcontrol-${version}";
-  buildInputs = [
-   SDL udev doxygen git
-  ] ++ gstInputs;
 
-  qtInputs = [
-    qtbase qtlocation qtserialport qtdeclarative qtconnectivity qtxmlpatterns qtsvg 
+  buildInputs = with gst_all_1; [
+    SDL udev doxygen git
+    gstreamer gst-plugins-base
+    qtbase qtlocation qtserialport qtdeclarative qtconnectivity qtxmlpatterns qtsvg
     qtquick1 qtquickcontrols qtgraphicaleffects
   ];
 
-  gstInputs = with gst_all_1; [
-    gstreamer gst-plugins-base
-  ];
+  nativeBuildInputs = [ pkgconfig qmakeHook ];
 
   enableParallelBuilding = true;
-  nativeBuildInputs = [
-    pkgconfig makeQtWrapper qmakeHook
- ] ++ qtInputs;
 
   patches = [ ./0001-fix-gcc-cmath-namespace-issues.patch ];
   postPatch = ''
@@ -68,12 +62,6 @@ stdenv.mkDerivation rec {
     done
   '';
 
-
-  postInstall = ''
-    wrapQtProgram "$out/bin/qgroundcontrol" \
-      --prefix GST_PLUGIN_SYSTEM_PATH : "$GST_PLUGIN_SYSTEM_PATH"
-  '';
-  
 
   # TODO: package mavlink so we can build from a normal source tarball
   src = fetchgit {

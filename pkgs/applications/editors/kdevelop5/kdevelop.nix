@@ -1,10 +1,10 @@
-{ stdenv, fetchurl, cmake, gettext, pkgconfig, extra-cmake-modules, makeQtWrapper
+{ stdenv, fetchurl, cmake, gettext, pkgconfig, extra-cmake-modules
 , qtquickcontrols, qtwebkit, qttools
 , kconfig, kdeclarative, kdoctools, kiconthemes, ki18n, kitemmodels, kitemviews
 , kjobwidgets, kcmutils, kio, knewstuff, knotifyconfig, kparts, ktexteditor
 , threadweaver, kxmlgui, kwindowsystem, grantlee
 , plasma-framework, krunner, kdevplatform, kdevelop-pg-qt, shared_mime_info
-, libksysguard, konsole, llvmPackages, makeWrapper
+, libksysguard, konsole, llvmPackages
 }:
 
 let
@@ -22,7 +22,7 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [
-    cmake gettext pkgconfig extra-cmake-modules makeWrapper makeQtWrapper
+    cmake gettext pkgconfig extra-cmake-modules
   ];
 
   buildInputs = [
@@ -35,8 +35,7 @@ stdenv.mkDerivation rec {
   ];
 
   postInstall = ''
-    wrapQtProgram "$out/bin/kdevelop"
-    wrapProgram "$out/bin/kdevelop!" --prefix PATH ":" "${qttools}/bin"
+    makeWrapperArgs+=(--prefix PATH ":" "${qttools}/bin")
   '';
 
   meta = with stdenv.lib; {

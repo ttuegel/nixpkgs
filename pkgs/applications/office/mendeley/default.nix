@@ -92,7 +92,6 @@ stdenv.mkDerivation {
     sha256 = sha256;
   };
 
-  nativeBuildInputs = [ qt5.makeQtWrapper ];
   buildInputs = [ dpkg which ] ++ deps;
 
   unpackPhase = "true";
@@ -117,8 +116,7 @@ stdenv.mkDerivation {
     rm $out/bin/qt* $out/bin/Qt*
 
     # Patch up link handler script
-    wrapProgram $out/bin/install-mendeley-link-handler.sh \
-      --prefix PATH ':' ${stdenv.lib.makeBinPath [ which gconf desktop_file_utils ] }
+    makeWrapperArgs+=(--prefix PATH ':' ${stdenv.lib.makeBinPath [ which gconf desktop_file_utils ] })
   '';
 
   dontStrip = true;

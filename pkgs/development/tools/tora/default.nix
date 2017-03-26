@@ -1,4 +1,4 @@
-{ stdenv, lib, fetchFromGitHub, cmake, extra-cmake-modules, makeQtWrapper
+{ stdenv, lib, fetchFromGitHub, cmake, extra-cmake-modules
 , boost, doxygen, openssl, mysql, postgresql, graphviz, loki, qscintilla, qtbase }:
 
 let
@@ -18,8 +18,10 @@ in stdenv.mkDerivation rec {
   enableParallelBuilding = true;
 
   buildInputs = [
-    cmake extra-cmake-modules makeQtWrapper
     boost doxygen graphviz loki mysql openssl postgresql qscintillaLib qtbase
+  ];
+  nativeBuildInputs = [
+    cmake extra-cmake-modules
   ];
 
   preConfigure = ''
@@ -53,9 +55,8 @@ in stdenv.mkDerivation rec {
     "-lssl"
   ];
 
-  postFixup = ''
-    wrapQtProgram $out/bin/tora \
-      --prefix PATH : ${lib.getBin graphviz}/bin
+  preFixup = ''
+    makeWrapperArgs+=(--prefix PATH : ${lib.getBin graphviz}/bin)
   '';
 
   meta = with stdenv.lib; {

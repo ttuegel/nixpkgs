@@ -1,4 +1,4 @@
-{ stdenv, lib, fetchFromGitHub, cmake, python3, qtbase, makeQtWrapper, curaengine }:
+{ stdenv, lib, fetchFromGitHub, cmake, python3, qtbase, curaengine }:
 
 stdenv.mkDerivation rec {
   name = "cura-${version}";
@@ -13,19 +13,13 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ qtbase ];
   propagatedBuildInputs = with python3.pkgs; [ uranium zeroconf pyserial ];
-  nativeBuildInputs = [ cmake python3.pkgs.wrapPython makeQtWrapper ];
+  nativeBuildInputs = [ cmake python3.pkgs.wrapPython ];
 
   cmakeFlags = [ "-DCMAKE_MODULE_PATH=${python3.pkgs.uranium}/share/cmake-${cmake.majorVersion}/Modules" ];
 
   postPatch = ''
     sed -i 's,/python''${PYTHON_VERSION_MAJOR}/dist-packages,/python''${PYTHON_VERSION_MAJOR}.''${PYTHON_VERSION_MINOR}/site-packages,g' CMakeLists.txt
     sed -i 's, executable_name = .*, executable_name = "${curaengine}/bin/CuraEngine",' plugins/CuraEngineBackend/CuraEngineBackend.py
-  '';
-
-  postFixup = ''
-    wrapPythonPrograms
-    mv $out/bin/cura $out/bin/.cura-noqtpath
-    makeQtWrapper $out/bin/.cura-noqtpath $out/bin/cura
   '';
 
   meta = with stdenv.lib; {

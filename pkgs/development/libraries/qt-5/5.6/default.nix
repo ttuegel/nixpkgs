@@ -25,7 +25,7 @@ existing packages here and modify it as necessary.
 
 {
   newScope,
-  stdenv, fetchurl, makeSetupHook, makeWrapper, substituteAll,
+  stdenv, fetchurl, makeSetupHook, substituteAll,
   bison, cups ? null, harfbuzz, mesa, perl,
   gstreamer, gst-plugins-base,
 
@@ -62,6 +62,7 @@ let
       setOutputFlags = args.setOutputFlags or false;
 
       setupHook = ../qtsubmodule-setup-hook.sh;
+      dontWrapPrograms = true;
 
       enableParallelBuilding = args.enableParallelBuilding or true;
 
@@ -118,11 +119,6 @@ let
         qtscript qtsensors qtserialport qtsvg qttools qttranslations qtwayland
         qtwebchannel qtwebengine qtwebkit qtwebsockets qtx11extras qtxmlpatterns
       ];
-
-      makeQtWrapper =
-        makeSetupHook
-        { deps = [ makeWrapper ]; }
-        (if stdenv.isDarwin then ../make-qt-wrapper-darwin.sh else ../make-qt-wrapper.sh);
 
       qmakeHook =
         makeSetupHook

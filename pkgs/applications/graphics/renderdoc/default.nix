@@ -1,5 +1,5 @@
 { stdenv, fetchFromGitHub, cmake, qtbase, qtx11extras
-, pkgconfig, xorg, makeQtWrapper, vulkan-loader
+, pkgconfig, xorg, vulkan-loader
 }:
 
 stdenv.mkDerivation rec {
@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     qtbase xorg.libpthreadstubs xorg.libXdmcp qtx11extras vulkan-loader
   ];
-  nativeBuildInputs = [ cmake makeQtWrapper pkgconfig ];
+  nativeBuildInputs = [ cmake pkgconfig ];
 
   cmakeFlags = [
     "-DBUILD_VERSION_HASH=${src.rev}-distro-nix"
@@ -30,10 +30,11 @@ stdenv.mkDerivation rec {
     mkdir $out/bin/.bin
     mv $out/bin/qrenderdoc $out/bin/.bin/qrenderdoc
     ln -s $out/bin/.bin/qrenderdoc $out/bin/qrenderdoc
-    wrapQtProgram $out/bin/qrenderdoc --suffix LD_LIBRARY_PATH : $out/lib --suffix LD_LIBRARY_PATH : ${vulkan-loader}/lib
     mv $out/bin/renderdoccmd $out/bin/.bin/renderdoccmd
     ln -s $out/bin/.bin/renderdoccmd $out/bin/renderdoccmd
-    wrapProgram $out/bin/renderdoccmd --suffix LD_LIBRARY_PATH : $out/lib --suffix LD_LIBRARY_PATH : ${vulkan-loader}/lib
+
+    makeWrapperArgs+=(--suffix LD_LIBRARY_PATH : $out/lib)
+    makeWrapperArgs+=(--suffix LD_LIBRARY_PATH : ${vulkan-loader}/lib)
   '';
   enableParallelBuilding = true;
 

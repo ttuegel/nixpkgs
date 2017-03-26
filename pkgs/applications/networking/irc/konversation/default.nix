@@ -21,7 +21,6 @@
 , kio
 , kparts
 , kwallet
-, makeQtWrapper
 , solid
 , sonnet
 , phonon

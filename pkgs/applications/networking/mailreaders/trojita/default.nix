@@ -4,7 +4,6 @@
 , cmake
 , qtbase
 , qtwebkit
-, makeQtWrapper
 }:
 
 stdenv.mkDerivation rec {
@@ -18,19 +17,13 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [
-    cmake
     qtbase
     qtwebkit
   ];
 
   nativeBuildInputs = [
-    makeQtWrapper
+    cmake
   ];
-
-  postInstall = ''
-    wrapQtProgram "$out/bin/trojita"
-  '';
-
 
   meta = {
     description = "A Qt IMAP e-mail client";

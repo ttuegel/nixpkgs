@@ -1,6 +1,5 @@
 { stdenv, fetchurl, pkgconfig, zlib, freetype, cairo, lua5, texlive, ghostscript
 , libjpeg, qtbase
-, makeQtWrapper
 }:
 
 stdenv.mkDerivation rec {
@@ -31,12 +30,8 @@ stdenv.mkDerivation rec {
     libjpeg pkgconfig zlib qtbase freetype cairo lua5 texlive ghostscript
   ];
 
-  nativeBuildInputs = [ makeQtWrapper ];
-
-  postFixup = ''
-    for prog in $out/bin/*; do
-      wrapQtProgram "$prog" --prefix PATH : "${texlive}/bin"
-    done
+  preWrap = ''
+    makeWrapperArgs+=(--prefix PATH : "${texlive}/bin")
   '';
 
   #TODO: make .desktop entry

@@ -1,5 +1,5 @@
 { stdenv, fetchFromGitHub, cmake, pkgconfig
-, qtbase, qtmultimedia, qtsvg, makeQtWrapper
+, qtbase, qtmultimedia, qtsvg
 , lxqt, libvncserver, libvirt, pixman, spice_gtk, spice_protocol
 }:
 
@@ -23,13 +23,7 @@ stdenv.mkDerivation rec {
     libvirt libvncserver pixman spice_gtk spice_protocol
   ];
 
-  nativeBuildInputs = [ cmake pkgconfig makeQtWrapper ];
-
-  postFixup = ''
-    for f in $out/bin/* ; do
-      wrapQtProgram $f
-    done
-  '';
+  nativeBuildInputs = [ cmake pkgconfig ];
 
   enableParallelBuilding = true;
 

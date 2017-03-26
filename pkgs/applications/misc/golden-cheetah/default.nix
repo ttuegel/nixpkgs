@@ -1,6 +1,6 @@
 { stdenv, fetchurl
 , qtbase, qtsvg, qtserialport, qtwebkit, qtmultimedia, qttools, qtconnectivity
-, yacc, flex, zlib, config, qmakeHook, makeQtWrapper
+, yacc, flex, zlib, config, qmakeHook
 }:
 stdenv.mkDerivation rec {
   name = "golden-cheetah-${version}";
@@ -10,11 +10,11 @@ stdenv.mkDerivation rec {
     url = "https://github.com/GoldenCheetah/GoldenCheetah/archive/V${version}.tar.gz";
     sha256 = "0fiz2pj155cd357kph50lc6rjyzwp045glfv4y68qls9j7m9ayaf";
   };
-  qtInputs = [
+  buildInputs = [
     qtbase qtsvg qtserialport qtwebkit qtmultimedia qttools yacc flex zlib
     qtconnectivity
   ];
-  nativeBuildInputs = [ makeQtWrapper qmakeHook ] ++ qtInputs;
+  nativeBuildInputs = [ qmakeHook ];
   preConfigure = ''
     cp src/gcconfig.pri.in src/gcconfig.pri
     cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri
@@ -24,7 +24,9 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/bin
     cp src/GoldenCheetah $out/bin
-    wrapQtProgram $out/bin/GoldenCheetah --set LD_LIBRARY_PATH "${zlib.out}/lib"
+  '';
+  preFixup = ''
+    makeWrapperArgs+=(--prefix LD_LIBRARY_PATH : "${zlib.out}/lib")
   '';
   meta = {
     description = "Performance software for cyclists, runners and triathletes";

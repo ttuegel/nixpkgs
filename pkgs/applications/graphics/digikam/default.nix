@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, cmake, extra-cmake-modules, makeQtWrapper
+{ stdenv, fetchurl, cmake, extra-cmake-modules
 
 # For `digitaglinktree`
 , perl, sqlite
@@ -52,7 +52,7 @@ stdenv.mkDerivation rec {
     sha256 = "0dgsgji14l5zvxny36hrfsp889fsfrsbbn9bg57m18404xp903kg";
   };
 
-  nativeBuildInputs = [ cmake extra-cmake-modules makeQtWrapper ];
+  nativeBuildInputs = [ cmake extra-cmake-modules ];
 
   patches = [ ./0001-Disable-fno-operator-names.patch ];
 
@@ -101,15 +101,14 @@ stdenv.mkDerivation rec {
     "-DENABLE_INTERNALMYSQL=1"
   ];
 
-  fixupPhase = ''
+  preFixup = ''
     substituteInPlace $out/bin/digitaglinktree \
       --replace "/usr/bin/perl" "${perl}/bin/perl" \
       --replace "/usr/bin/sqlite3" "${sqlite}/bin/sqlite3"
+  '';
 
-    wrapQtProgram $out/bin/digikam \
-      --prefix PATH : "${gnumake}/bin:${hugin}/bin:${enblend-enfuse}/bin"
-
-    wrapQtProgram $out/bin/showfoto
+  preWrap = ''
+    makeWrapperArgs+=(--prefix PATH : "${gnumake}/bin:${hugin}/bin:${enblend-enfuse}/bin")
   '';
 
   meta = {

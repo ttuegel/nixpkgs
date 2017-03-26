@@ -16,7 +16,7 @@ top-level attribute to `top-level/all-packages.nix`.
 
 {
   newScope,
-  stdenv, fetchurl, makeSetupHook, makeWrapper, substituteAll,
+  stdenv, fetchurl, makeSetupHook, substituteAll,
   bison, cups ? null, harfbuzz, mesa, perl,
   gstreamer, gst-plugins-base, gtk3, dconf,
 
@@ -53,6 +53,7 @@ let
       setOutputFlags = args.setOutputFlags or false;
 
       setupHook = ../qtsubmodule-setup-hook.sh;
+      dontWrapPrograms = true;
 
       enableParallelBuilding = args.enableParallelBuilding or true;
 
@@ -105,11 +106,6 @@ let
         qtwebsockets qtx11extras qtxmlpatterns
       ] ++ optional (!stdenv.isDarwin) qtwayland
         ++ optional (stdenv.isDarwin) qtmacextras);
-
-      makeQtWrapper =
-        makeSetupHook
-        { deps = [ makeWrapper ] ++ optionals (!stdenv.isDarwin) [ dconf.lib gtk3 ]; }
-        (if stdenv.isDarwin then ../make-qt-wrapper-darwin.sh else ../make-qt-wrapper.sh);
 
       qmakeHook =
         makeSetupHook

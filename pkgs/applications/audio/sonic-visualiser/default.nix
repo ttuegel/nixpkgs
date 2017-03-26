@@ -2,7 +2,7 @@
 
 { stdenv, fetchurl, alsaLib, bzip2, fftw, libjack2, libX11, liblo
 , libmad, libogg, librdf, librdf_raptor, librdf_rasqal, libsamplerate
-, libsndfile, pkgconfig, libpulseaudio, makeQtWrapper, qtbase, redland
+, libsndfile, pkgconfig, libpulseaudio, qtbase, redland
 , qmakeHook, rubberband, serd, sord, vampSDK, fftwFloat
 }:
 
@@ -32,7 +32,7 @@ stdenv.mkDerivation rec {
       libX11
     ];
 
-  nativeBuildInputs = [ makeQtWrapper qmakeHook ];
+  nativeBuildInputs = [ qmakeHook ];
 
   configurePhase = ''
     for i in sonic-visualiser svapp svcore svgui;
@@ -44,7 +44,6 @@ stdenv.mkDerivation rec {
     mkdir -p $out/{bin,share/sonic-visualiser}
     cp sonic-visualiser $out/bin/
     cp -r samples $out/share/sonic-visualiser/
-    wrapQtProgram "$out/bin/sonic-visualiser"
   '';
 
   meta = with stdenv.lib; {

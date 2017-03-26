@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, qtbase, qtsvg, qtx11extras, makeQtWrapper, muparser, cmake }:
+{ stdenv, fetchFromGitHub, qtbase, qtsvg, qtx11extras, muparser, cmake }:
 
 stdenv.mkDerivation rec {
   name    = "albert-${version}";
@@ -11,7 +11,7 @@ stdenv.mkDerivation rec {
     sha256 = "0plb8c7js91bpf7qgq1snhry8x4zixyy34lq42nhsglab2kaq4ns";
   };
 
-  nativeBuildInputs = [ cmake makeQtWrapper ];
+  nativeBuildInputs = [ cmake ];
 
   buildInputs = [ qtbase qtsvg qtx11extras muparser ];
 
@@ -20,10 +20,6 @@ stdenv.mkDerivation rec {
   postPatch = ''
     sed -i "/QStringList dirs = {/a    \"$out/lib\"," \
       src/lib/albert/src/pluginsystem/extensionmanager.cpp
-  '';
-
-  fixupPhase = ''
-    wrapQtProgram $out/bin/albert
   '';
 
   meta = with stdenv.lib; {

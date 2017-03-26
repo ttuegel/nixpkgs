@@ -1,6 +1,6 @@
 {
   stdenv, lib, fetchurl,
-  gettext, makeQtWrapper, pkgconfig,
+  gettext, pkgconfig,
   qtbase,
   alsaLib, curl, faad2, ffmpeg, flac, fluidsynth, gdk_pixbuf, lame, libbs2b,
   libcddb, libcdio082, libcue, libjack2, libmad, libmcs, libmms, libmodplug,
@@ -32,7 +32,7 @@ stdenv.mkDerivation {
   sourceRoots = lib.attrNames sources;
 
   nativeBuildInputs = [
-    gettext makeQtWrapper pkgconfig
+    gettext pkgconfig
   ];
 
   buildInputs = [
@@ -70,8 +70,6 @@ stdenv.mkDerivation {
     done
 
     source $stdenv/setup
-    wrapQtProgram $out/bin/audacious
-    wrapQtProgram $out/bin/audtool
   '';
 
   enableParallelBuilding = true;

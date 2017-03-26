@@ -1,4 +1,4 @@
-{ stdenv, lib, fetchurl, cmake, extra-cmake-modules, makeQtWrapper
+{ stdenv, lib, fetchurl, cmake, extra-cmake-modules
 , karchive, kconfig, kwidgetsaddons, kcompletion, kcoreaddons
 , kguiaddons, ki18n, kitemmodels, kitemviews, kwindowsystem
 , kio, kcrash
@@ -16,7 +16,7 @@ stdenv.mkDerivation rec {
     sha256 = "934ed82c3f4e55e7819b327c838ea2f307d3bf3d040722501378b01d76a3992d";
   };
 
-  nativeBuildInputs = [ cmake extra-cmake-modules makeQtWrapper ];
+  nativeBuildInputs = [ cmake extra-cmake-modules ];
 
   buildInputs = [
     karchive kconfig kwidgetsaddons kcompletion kcoreaddons kguiaddons
@@ -28,12 +28,6 @@ stdenv.mkDerivation rec {
   NIX_CFLAGS_COMPILE = [ "-I${ilmbase.dev}/include/OpenEXR" ];
 
   enableParallelBuilding = true;
-
-  postInstall = ''
-    for i in $out/bin/*; do
-      wrapQtProgram "$i"
-    done
-  '';
 
   meta = with stdenv.lib; {
     description = "A free an open source painting application";

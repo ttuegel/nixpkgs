@@ -1,5 +1,5 @@
 { stdenv, fetchurl, cmake, alsaLib, udev, qtbase,
-  qtsvg, qttools, makeQtWrapper }:
+  qtsvg, qttools }:
 
 let
   version = "0.21.0";
@@ -14,7 +14,7 @@ stdenv.mkDerivation {
   };
 
   buildInputs = [
-    cmake alsaLib udev qtbase qtsvg qttools makeQtWrapper
+    cmake alsaLib udev qtbase qtsvg qttools
   ];
 
   cmakeFlags = [

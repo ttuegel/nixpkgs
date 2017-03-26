@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, fetchpatch, pkgconfig, perl, python, which, makeQtWrapper
+{ stdenv, fetchFromGitHub, fetchpatch, pkgconfig, perl, python, which
 , libX11, libxcb, mesa
 , qtbase, qtdeclarative, qtquickcontrols, qttools, qtx11extras, qmakeHook
 , libchardet
@@ -89,9 +89,8 @@ stdenv.mkDerivation rec {
     patchShebangs build-mpv
   '';
 
-  postInstall = ''
-    wrapQtProgram $out/bin/bomi \
-      ${optionalString youtubeSupport "--prefix PATH ':' '${youtube-dl}/bin'"}
+  preWrap = optionalString youtubeSupport ''
+    makeWrapperArgs+=(--prefix PATH ":" "${youtube-dl}/bin")
   '';
 
   dontUseQmakeConfigure = true;
@@ -104,7 +103,7 @@ stdenv.mkDerivation rec {
                    ++ optional cddaSupport "--enable-cdda"
                    ;
 
-  nativeBuildInputs = [ pkgconfig perl python which qttools makeQtWrapper qmakeHook ];
+  nativeBuildInputs = [ pkgconfig perl python which qttools qmakeHook ];
 
   enableParallelBuilding = true;
 

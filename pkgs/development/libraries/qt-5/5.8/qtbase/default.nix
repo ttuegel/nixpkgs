@@ -1,5 +1,5 @@
 {
-  stdenv, lib, copyPathsToStore,
+  stdenv, lib, copyPathsToStore, wrapQtAppsHook,
   src, version,
 
   coreutils, bison, flex, gdb, gperf, lndir, patchelf, perl, pkgconfig, python2,
@@ -191,6 +191,9 @@ stdenv.mkDerivation {
   # To prevent these failures, we need to override PostgreSQL detection.
   PSQL_LIBS = lib.optionalString (postgresql != null) "-L${postgresql.lib}/lib -lpq";
 
+  dontWrapPrograms = true;
+  propagatedNativeBuildInputs = [ wrapQtAppsHook ];
+
   propagatedBuildInputs = [
     libxml2 libxslt openssl pcre16 sqlite zlib
 
@@ -207,6 +210,9 @@ stdenv.mkDerivation {
     # Text rendering
     fontconfig freetype
 
+    # For wrappers
+    gtk3
+
     # X11 libs
     libX11 libXcomposite libXext libXi libXrender libxcb libxkbcommon xcbutil
     xcbutilimage xcbutilkeysyms xcbutilrenderutil xcbutilwm
@@ -218,7 +224,7 @@ stdenv.mkDerivation {
   ]);
 
   buildInputs = [ ]
-    ++ lib.optionals (!stdenv.isDarwin) [ gtk3 libinput ]
+    ++ lib.optionals (!stdenv.isDarwin) [ libinput ]
     ++ lib.optional developerBuild gdb
     ++ lib.optional (cups != null) cups
     ++ lib.optional (mysql != null) mysql.lib

@@ -1,4 +1,4 @@
-{stdenv, fetchurl, qtbase, qtsvg, qttools, qmakeHook, makeQtWrapper}:
+{stdenv, fetchurl, qtbase, qtsvg, qttools, qmakeHook }:
 
 stdenv.mkDerivation rec {
   name = "qt5ct-${version}";
@@ -10,14 +10,10 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ qtbase qtsvg ];
-  nativeBuildInputs = [ makeQtWrapper qmakeHook qttools ];
+  nativeBuildInputs = [ qmakeHook qttools ];
 
   preConfigure = ''
     qmakeFlags="$qmakeFlags PLUGINDIR=$out/lib/qt5/plugins/platformthemes/"
-  '';
-
-  preFixup = ''
-    wrapQtProgram $out/bin/qt5ct
   '';
 
   meta = with stdenv.lib; {

@@ -1,5 +1,5 @@
-{ stdenv, fetchurl, makeWrapper
-, qtbase, makeQtWrapper, qtquickcontrols, qtscript, qtdeclarative, qmakeHook
+{ stdenv, fetchurl
+, qtbase, qtquickcontrols, qtscript, qtdeclarative, qmakeHook
 , withDocumentation ? false
 }:
 
@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ qtbase qtscript qtquickcontrols qtdeclarative ];
 
-  nativeBuildInputs = [ qmakeHook makeQtWrapper makeWrapper ];
+  nativeBuildInputs = [ qmakeHook ];
 
   doCheck = true;
 
@@ -48,7 +48,6 @@ stdenv.mkDerivation rec {
     Type=Application
     Categories=Qt;Development;IDE;
     __EOF__
-    wrapQtProgram $out/bin/qtcreator
   '';
 
   meta = {

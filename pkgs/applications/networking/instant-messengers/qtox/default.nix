@@ -1,6 +1,6 @@
 { stdenv, fetchFromGitHub, cmake, pkgconfig, openal, opencv,
   libtoxcore, libsodium, libXScrnSaver, glib, gdk_pixbuf, gtk2, cairo, xorg,
-  pango, atk, qrencode, ffmpeg, filter-audio, makeQtWrapper,
+  pango, atk, qrencode, ffmpeg, filter-audio,
   qtbase, qtsvg, qttools, qttranslations, sqlcipher,
   libvpx, libopus }:
 
@@ -25,7 +25,7 @@ stdenv.mkDerivation rec {
     libpthreadstubs libXdmcp
   ]);
 
-  nativeBuildInputs = [ cmake makeQtWrapper pkgconfig ];
+  nativeBuildInputs = [ cmake pkgconfig ];
 
   cmakeFlags = [
     "-DGIT_DESCRIBE=${version}"
@@ -36,7 +36,6 @@ stdenv.mkDerivation rec {
 
     mkdir -p $out/bin
     cp qtox $out/bin
-    wrapQtProgram $out/bin/qtox
 
     runHook postInstall
   '';

@@ -1,4 +1,4 @@
-{ stdenv, lib, makeQtWrapper, fetchFromGitHub, fetchpatch
+{ stdenv, lib, fetchFromGitHub, fetchpatch
 , cmake, extra-cmake-modules, pkgconfig, libxcb, libpthreadstubs, lndir
 , libXdmcp, libXau, qtbase, qtdeclarative, qttools, pam, systemd
 , themes
@@ -70,7 +70,7 @@ in
 stdenv.mkDerivation {
   name = "sddm-${version}";
 
-  nativeBuildInputs = [ lndir makeQtWrapper ];
+  nativeBuildInputs = [ lndir ];
   buildInputs = [ unwrapped ] ++ themes;
   themes = map (pkg: pkg.out or pkg) themes;
   inherit unwrapped;
@@ -79,6 +79,7 @@ stdenv.mkDerivation {
   configurePhase = "runHook preConfigure; runHook postConfigure";
   buildPhase = "runHook preBuild; runHook postBuild";
 
+  dontWrapPrograms = true;
   installPhase = ''
     runHook preInstall
 
@@ -97,8 +98,11 @@ stdenv.mkDerivation {
       addToSearchPath RUNTIME_XDG_CONFIG_DIRS "$pkg/etc/xdg"
     done
 
+    makeWrapperArgs+=(--prefix XDG_DATA_DIRS : "$RUNTIME_XDG_DATA_DIRS")
+    makeWrapperArgs+=(--prefix XDG_CONFIG_DIRS : "$RUNTIME_XDG_CONFIG_DIRS")
+
     mkdir -p "$out/bin"
-    makeQtWrapper "$unwrapped/bin/sddm" "$out/bin/sddm"
+    makeWrapper "$unwrapped/bin/sddm" "$out/bin/sddm" "''${makeWrapperArgs[@]}"
 
     mkdir -p "$out/share/sddm"
     for pkg in $unwrapped $themes; do

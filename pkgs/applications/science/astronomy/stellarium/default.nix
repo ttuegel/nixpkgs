@@ -1,5 +1,5 @@
 { stdenv, fetchurl, cmake, freetype, libpng, mesa, gettext, openssl, perl, libiconv
-, qtscript, qtserialport, qttools, makeQtWrapper
+, qtscript, qtserialport, qttools
 , qtmultimedia
 }:
 
@@ -12,18 +12,12 @@ stdenv.mkDerivation rec {
     sha256 = "0il751lgnfkx35h1m8fzwwnrygpxjx2a80gng1i1rbybkykf7l3l";
   };
 
-  nativeBuildInputs = [ makeQtWrapper ];
-
   buildInputs = [
     cmake freetype libpng mesa gettext openssl perl libiconv qtscript
     qtserialport qttools qtmultimedia
   ];
 
   enableParallelBuilding = true;
-
-  postInstall = ''
-    wrapQtProgram "$out/bin/stellarium"
-  '';
 
   meta = {
     description = "Free open-source planetarium";
