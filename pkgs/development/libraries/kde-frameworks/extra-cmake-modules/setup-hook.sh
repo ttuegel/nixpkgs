@@ -1,11 +1,11 @@
-_ecmSetXdgDirs() {
+setBuildXdgPaths() {
     addToSearchPath XDG_DATA_DIRS "$1/share"
     addToSearchPath XDG_CONFIG_DIRS "$1/etc/xdg"
 }
 
-envHooks+=(_ecmSetXdgDirs)
+envHooks+=(setBuildXdgPaths)
 
-_ecmConfig() {
+ecmSetCMakeFlags() {
     # Because we need to use absolute paths here, we must set *all* the paths.
     cmakeFlags+=" -DKDE_INSTALL_EXECROOTDIR=${!outputBin}"
     cmakeFlags+=" -DKDE_INSTALL_BINDIR=${!outputBin}/bin"
@@ -49,4 +49,48 @@ _ecmConfig() {
     cmakeFlags+=" -DKDE_INSTALL_AUTOSTARTDIR=${!outputBin}/etc/xdg/autostart"
 }
 
-preConfigureHooks+=(_ecmConfig)
+preConfigureHooks+=(ecmSetCMakeFlags)
+
+ecmSharedPaths=( \
+    share/config.kcfg \
+    share/kconf_update \
+    share/kservices5 \
+    share/kservicetypes5 \
+    share/knotifications5 \
+    share/icons \
+    share/applications \
+    share/desktop-directories \
+    share/mime \
+    share/appdata \
+    share/dbus-1 \
+    etc/xdg \
+)
+
+# Install the default setup hook to propagate services to the environment
+installSetupHook() {
+    local output
+    local prefix
+
+    local -a propagate=()
+    for output in $outputs; do
+        prefix=${!output}
+        for subdir in "${ecmSharedPaths[@]}"; do
+            if [ -d $prefix/$subdir ]; then
+                propagate+=($prefix)
+                break;
+            fi
+        done
+    done
+
+    if [ ${#propagate[*]} -gt 0 ]; then
+        local support="${!outputDev}/nix-support"
+        mkdir -p "$support"
+        for prefix in "${propagate[@]}"; do
+            echo "propagatedUserEnvPkgs+=\" $prefix\"" >>"$support/setup-hook"
+        done
+    fi
+}
+
+if [ -z "$dontInstallSetupHook" ]; then
+    postFixup+=(installSetupHook)
+fi
