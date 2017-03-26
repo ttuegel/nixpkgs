@@ -16,7 +16,7 @@ top-level attribute to `top-level/all-packages.nix`.
 
 {
   newScope,
-  stdenv, fetchurl, makeSetupHook, makeWrapper,
+  stdenv, fetchurl, makeSetupHook, makeWrapper, substituteAll,
   bison, cups ? null, harfbuzz, mesa, perl,
   gstreamer, gst-plugins-base, gtk3, dconf,
 
@@ -47,7 +47,7 @@ let
         (args.nativeBuildInputs or [])
         ++ [ perl self.qmakeHook ];
 
-      NIX_QT_SUBMODULE = args.NIX_QT_SUBMODULE or true;
+      buildingQtModule = args.buildingQtModule or true;
 
       outputs = args.outputs or [ "out" "dev" ];
       setOutputFlags = args.setOutputFlags or false;
@@ -114,7 +114,10 @@ let
       qmakeHook =
         makeSetupHook
         { deps = [ self.qtbase.dev ]; }
-        (if stdenv.isDarwin then ../qmake-hook-darwin.sh else ../qmake-hook.sh);
+        (substituteAll {
+          inherit (stdenv) isDarwin;
+          src = ../qmake-hook.sh;
+        });
 
     };
 
