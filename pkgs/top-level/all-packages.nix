@@ -335,6 +335,11 @@ with pkgs;
     src = ../build-support/setup-hooks/wrap-programs-hook.sh;
   });
 
+  wrapQtAppsHook =
+    makeSetupHook
+    { deps = [ wrapProgramsHook ]; }
+    ../build-support/setup-hooks/wrap-qt-apps-hook.sh;
+
   separateDebugInfo = makeSetupHook { } ../build-support/setup-hooks/separate-debug-info.sh;
 
   useOldCXXAbi = makeSetupHook { } ../build-support/setup-hooks/use-old-cxx-abi.sh;
