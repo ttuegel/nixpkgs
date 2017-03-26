@@ -43,7 +43,7 @@ in
         XDG_CONFIG_DIRS = [ "/etc/xdg" ];
         XDG_DATA_DIRS = [ "/share" ];
         MOZ_PLUGIN_PATH = [ "/lib/mozilla/plugins" ];
-        LIBEXEC_PATH = [ "/lib/libexec" ];
+        LIBEXEC_PATH = [ "/libexec" ];
       };
 
     environment.extraInit =

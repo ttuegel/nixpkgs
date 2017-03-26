@@ -44,7 +44,7 @@ in
       panel = mkOption {
         type = with types; nullOr path;
         default = null;
-        example = literalExample "''${pkgs.plasma5.plasma-desktop}/lib/libexec/kimpanel-ibus-panel";
+        example = literalExample "''${pkgs.plasma5.plasma-desktop}/libexec/kimpanel-ibus-panel";
         description = "Replace the IBus panel with another panel.";
       };
     };
