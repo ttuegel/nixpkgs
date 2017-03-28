@@ -64,7 +64,7 @@ in
       };
 
       security.wrappers = {
-        "start_kdeinit".source = "${pkgs.kinit.out}/libexec/start_kdeinit";
+        "start_kdeinit".source = "${lib.getBin pkgs.kinit}/libexec/kf5/start_kdeinit";
       };
 
       environment.systemPackages = with pkgs; with qt5; with libsForQt5; with plasma5; with kdeApplications;

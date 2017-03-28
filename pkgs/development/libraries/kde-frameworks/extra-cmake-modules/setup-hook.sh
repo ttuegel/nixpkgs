@@ -12,7 +12,6 @@ ecmSetCMakeFlags() {
     cmakeFlags+=" -DKDE_INSTALL_SBINDIR=${!outputBin}/sbin"
     cmakeFlags+=" -DKDE_INSTALL_LIBDIR=${!outputLib}/lib"
     cmakeFlags+=" -DKDE_INSTALL_LIBEXECDIR=${!outputBin}/libexec"
-    cmakeFlags+=" -DKDE_INSTALL_LIBEXECDIR_KF5=${!outputBin}/libexec"
     cmakeFlags+=" -DKDE_INSTALL_CMAKEPACKAGEDIR=${!outputDev}/lib/cmake"
     cmakeFlags+=" -DKDE_INSTALL_QTPLUGINDIR=${!outputBin}/lib/qt5/plugins"
     cmakeFlags+=" -DKDE_INSTALL_PLUGINDIR=${!outputBin}/lib/qt5/plugins"

@@ -31,6 +31,7 @@ in runCommand "startkde" env ''
   for p in $bins; do
       addToSearchPath suffixPATH "$p/bin"
       addToSearchPath suffixPATH "$p/libexec"
+      addToSearchPath suffixPATH "$p/libexec/kf5"
   done
 
   # Configure Qt search paths
