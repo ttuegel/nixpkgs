@@ -216,33 +216,30 @@ let cfg = config.fonts.fontconfig;
       ln -s ${latestPkg.out}/etc/fonts/fonts.conf \
             $latest_folder/fonts.conf
 
-      # fontconfig default config files
-      ln -s ${supportPkg.out}/etc/fonts/conf.d/*.conf \
-            $support_folder/conf.d/
-      ln -s ${latestPkg.out}/etc/fonts/conf.d/*.conf \
-            $latest_folder/conf.d/
-
-      # update latest 51-local.conf path to look at the latest local.conf
-      rm    $latest_folder/conf.d/51-local.conf
-
-      substitute ${latestPkg.out}/etc/fonts/conf.d/51-local.conf \
-                 $latest_folder/conf.d/51-local.conf \
-                 --replace local.conf /etc/fonts/${latestVersion}/local.conf
-
       # 00-nixos-cache.conf
       ln -s ${cacheConfSupport} \
             $support_folder/conf.d/00-nixos-cache.conf
       ln -s ${cacheConfLatest}  $latest_folder/conf.d/00-nixos-cache.conf
 
       # 10-nixos-rendering.conf
-      ln -s ${renderConf}       $support_folder/conf.d/10-nixos-rendering.conf
-      ln -s ${renderConf}       $latest_folder/conf.d/10-nixos-rendering.conf
+      ln -s ${renderConf} $support_folder/conf.d/10-nixos-rendering.conf
+      ln -s ${renderConf} $latest_folder/conf.d/10-nixos-rendering.conf
 
       # 50-user.conf
-      ${optionalString (! cfg.includeUserConf) ''
-      rm    $support_folder/conf.d/50-user.conf
-      rm    $latest_folder/conf.d/50-user.conf
+      ${optionalString cfg.includeUserConf ''
+      ln -s ${supportPkg.out}/etc/fonts/conf.d/50-user.conf \
+            $support_folder/conf.d/
+      ln -s ${latestPkg.out}/etc/fonts/conf.d/50-user.conf \
+            $latest_folder/conf.d/
       ''}
+
+      # 51-local.conf
+      ln -s ${supportPkg.out}/etc/fonts/conf.d/51-local.conf \
+            $support_folder/conf.d
+      substitute \
+          ${latestPkg.out}/etc/fonts/conf.d/51-local.conf \
+          $latest_folder/conf.d/51-local.conf \
+          --replace local.conf /etc/fonts/${latestVersion}/local.conf
 
       # local.conf (indirect priority 51)
       ${optionalString (cfg.localConf != "") ''
