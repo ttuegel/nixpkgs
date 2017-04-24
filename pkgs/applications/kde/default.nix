@@ -83,6 +83,7 @@ let
       kio-extras = callPackage ./kio-extras.nix {};
       kldap = callPackage ./kldap.nix {};
       kmail = callPackage ./kmail.nix {};
+      kmail-account-wizard = callPackage ./kmail-account-wizard.nix {};
       kmailtransport = callPackage ./kmailtransport.nix {};
       kmbox = callPackage ./kmbox.nix {};
       kmime = callPackage ./kmime.nix {};
@@ -106,10 +107,12 @@ let
       mailcommon = callPackage ./mailcommon.nix {};
       mailimporter = callPackage ./mailimporter.nix {};
       marble = callPackage ./marble.nix {};
+      mbox-importer = callPackage ./mbox-importer.nix {};
       messagelib = callPackage ./messagelib.nix {};
       okteta = callPackage ./okteta.nix {};
       okular = callPackage ./okular.nix {};
       pimcommon = callPackage ./pimcommon.nix {};
+      pim-sieve-editor = callPackage ./pim-sieve-editor.nix {};
       print-manager = callPackage ./print-manager.nix {};
       spectacle = callPackage ./spectacle.nix {};
 
