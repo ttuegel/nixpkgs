@@ -1,6 +1,6 @@
 { stdenv, fetchgit
 , qtbase, qtmultimedia, qtquick1, qtquickcontrols
-, qtimageformats, qtgraphicaleffects
+, qtimageformats, qtgraphicaleffects, qtwebkit
 , telegram-qml, libqtelegram-aseman-edition
 , gst_all_1
 , makeQtWrapper, qmakeHook }:
@@ -16,8 +16,8 @@ stdenv.mkDerivation rec {
 
   buildInputs =
   [ qtbase qtmultimedia qtquick1 qtquickcontrols
-    qtimageformats qtgraphicaleffects
-    telegram-qml libqtelegram-aseman-edition 
+    qtimageformats qtgraphicaleffects qtwebkit
+    telegram-qml libqtelegram-aseman-edition
   ] ++ (with gst_all_1; [ gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly ]);
 
   nativeBuildInputs = [ makeQtWrapper qmakeHook ];
@@ -25,8 +25,12 @@ stdenv.mkDerivation rec {
   enableParallelBuilding = true;
 
   fixupPhase = ''
+    runHook preFixup
+
     wrapQtProgram $out/bin/cutegram \
       --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0"
+
+    runHook postHook
   '';
 
   meta = with stdenv.lib; {
