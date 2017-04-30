@@ -1,5 +1,5 @@
 { fetchurl, fetchpatch, stdenv, pkgconfig, python, file, bc
-, qtbase, qtsvg, hunspell, makeWrapper #, mythes, boost
+, qtbase, qtsvg, hunspell, makeQtWrapper
 }:
 
 stdenv.mkDerivation rec {
@@ -21,8 +21,10 @@ stdenv.mkDerivation rec {
   # LaTeX is used from $PATH, as people often want to have it with extra pkgs
   buildInputs = [
     pkgconfig qtbase qtsvg python file/*for libmagic*/ bc
-    hunspell makeWrapper # enchant
+    hunspell
   ];
+
+  nativeBuildInputs = [ makeQtWrapper ];
 
   # bogus configure script tests
   preConfigure = ''
@@ -42,7 +44,7 @@ stdenv.mkDerivation rec {
 
   # python is run during runtime to do various tasks
   postFixup = ''
-    wrapProgram "$out/bin/lyx" \
+    wrapQtProgram "$out/bin/lyx" \
       --prefix PATH : '${python}/bin'
   '';
 
