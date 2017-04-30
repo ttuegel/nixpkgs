@@ -1,4 +1,4 @@
-{ fetchurl, stdenv, pkgconfig, python, file, bc
+{ fetchurl, fetchpatch, stdenv, pkgconfig, python, file, bc
 , qtbase, qtsvg, hunspell, makeWrapper #, mythes, boost
 }:
 
@@ -10,6 +10,13 @@ stdenv.mkDerivation rec {
     url = "ftp://ftp.lyx.org/pub/lyx/stable/2.2.x/${name}.tar.xz";
     sha256 = "0s2mma8fkj5mi8qzc0j67589mbj854bypx2s3y59y1n429s3sp58";
   };
+
+  patches = [
+    # Patch is based on upstream: 6d375ddeac49ac8c6340398c9797354edca3f5d1
+    # We cannot use the patch provided by upstream; it does not apply
+    # because it uses DOS line terminators.
+    ./lyx-build-with-qt-5.8.patch
+  ];
 
   # LaTeX is used from $PATH, as people often want to have it with extra pkgs
   buildInputs = [
