@@ -1,6 +1,6 @@
 { stdenv, fetchzip, cmake, pkgconfig
 , alsaLib, freetype, libjack2, lame, libogg, libpulseaudio, libsndfile, libvorbis
-, portaudio, qtbase, qtdeclarative, qtenginio, qtscript, qtsvg, qttools
+, portaudio, qtbase, qtdeclarative, qtscript, qtsvg, qttools
 , qtwebkit, qtxmlpatterns
 }:
 
@@ -45,7 +45,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     alsaLib libjack2 freetype lame libogg libpulseaudio libsndfile libvorbis
-    portaudio qtbase qtdeclarative qtenginio qtscript qtsvg qttools
+    portaudio qtbase qtdeclarative qtscript qtsvg qttools
     qtwebkit qtxmlpatterns #tesseract
   ];
 
