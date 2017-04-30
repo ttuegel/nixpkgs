@@ -36,15 +36,22 @@ stdenv.mkDerivation rec {
   qmakeFlags = [ "DEFINES+=RICOCHET_NO_PORTABLE" ];
 
   installPhase = ''
+    runHook preInstall
+
     mkdir -p $out/bin
     cp ricochet $out/bin
-    wrapQtProgram $out/bin/ricochet
 
     mkdir -p $out/share/applications
     cp $desktopItem/share/applications"/"* $out/share/applications
 
     mkdir -p $out/share/pixmaps
     cp icons/ricochet.png $out/share/pixmaps/ricochet.png
+
+    runHook postInstall
+  '';
+
+  postFixup = ''
+    wrapQtProgram $out/bin/ricochet
   '';
 
   meta = with stdenv.lib; {
