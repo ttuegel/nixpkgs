@@ -1,0 +1,26 @@
+Index: GoldenCheetah-3.4/src/FileIO/Device.h
+===================================================================
+--- GoldenCheetah-3.4.orig/src/FileIO/Device.h
++++ GoldenCheetah-3.4/src/FileIO/Device.h
+@@ -49,7 +49,7 @@ typedef QSharedPointer<DeviceRideItem> D
+ class Device;
+ typedef QSharedPointer<Device> DevicePtr;
+ 
+-class Device : public QObject
++class Device : public QThread
+ {
+     Q_OBJECT
+ 
+Index: GoldenCheetah-3.4/src/FileIO/MoxyDevice.h
+===================================================================
+--- GoldenCheetah-3.4.orig/src/FileIO/MoxyDevice.h
++++ GoldenCheetah-3.4/src/FileIO/MoxyDevice.h
+@@ -39,7 +39,7 @@ struct MoxyDevices : public Devices
+     virtual bool isBikeOnly() { return false; }; // Moxy is multisport
+ };
+ 
+-struct MoxyDevice : public Device,QThread
++struct MoxyDevice : public Device
+ {
+     Q_DECLARE_TR_FUNCTIONS(MoxyDevice)
+ 

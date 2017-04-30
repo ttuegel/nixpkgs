@@ -10,6 +10,7 @@ stdenv.mkDerivation rec {
     url = "https://github.com/GoldenCheetah/GoldenCheetah/archive/V${version}.tar.gz";
     sha256 = "0fiz2pj155cd357kph50lc6rjyzwp045glfv4y68qls9j7m9ayaf";
   };
+  patches = [ ./stop-illegal-multiple-inheritance.patch ];
   qtInputs = [
     qtbase qtsvg qtserialport qtwebkit qtmultimedia qttools yacc flex zlib
     qtconnectivity
