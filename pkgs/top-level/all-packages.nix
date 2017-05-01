@@ -15208,6 +15208,8 @@ with pkgs;
 
   qgis = callPackage ../applications/gis/qgis {};
 
+  qgroundcontrol = libsForQt56.callPackage ../applications/science/robotics/qgroundcontrol { };
+
   qjackctl = libsForQt5.callPackage ../applications/audio/qjackctl { };
 
   qmetro = callPackage ../applications/misc/qmetro { };
