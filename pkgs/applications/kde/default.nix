@@ -87,6 +87,7 @@ let
       krfb = callPackage ./krfb.nix {};
       kwalletmanager = callPackage ./kwalletmanager.nix {};
       libkdcraw = callPackage ./libkdcraw.nix {};
+      libkdepim = callPackage ./libkdepim.nix {};
       libkexiv2 = callPackage ./libkexiv2.nix {};
       libkipi = callPackage ./libkipi.nix {};
       libkomparediff2 = callPackage ./libkomparediff2.nix {};
