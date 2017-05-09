@@ -58,6 +58,7 @@ let
       dolphin-plugins = callPackage ./dolphin-plugins.nix {};
       ffmpegthumbs = callPackage ./ffmpegthumbs.nix { };
       filelight = callPackage ./filelight.nix {};
+      grantleetheme = callPackage ./grantleetheme.nix {};
       gwenview = callPackage ./gwenview.nix {};
       kate = callPackage ./kate.nix {};
       kcachegrind = callPackage ./kcachegrind.nix {};
