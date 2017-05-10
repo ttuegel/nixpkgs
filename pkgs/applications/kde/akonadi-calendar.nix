@@ -1,0 +1,19 @@
+{
+  kdeApp, lib,
+  extra-cmake-modules, kdoctools,
+  akonadi, akonadi-contacts, kcalcore, kcalutils, kcontacts,
+  kidentitymanagement, kio, kmailtransport,
+}:
+
+kdeApp {
+  name = "akonadi-calendar";
+  meta = {
+    license = with lib.licenses; [ gpl2 lgpl21 ];
+    maintainers = [ lib.maintainers.ttuegel ];
+  };
+  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
+  propagatedBuildInputs = [
+    akonadi akonadi-contacts kcalcore kcalutils kcontacts kidentitymanagement
+    kio kmailtransport
+  ];
+}
