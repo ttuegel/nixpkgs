@@ -84,3 +84,22 @@ Index: akonadi-17.04.0/src/akonadicontrol/agentprocessinstance.cpp
          mController->start(agentLauncherExec, arguments);
      }
      return true;
+Index: akonadi-17.04.0/src/akonadicontrol/agentmanager.cpp
+===================================================================
+--- akonadi-17.04.0.orig/src/akonadicontrol/agentmanager.cpp
++++ akonadi-17.04.0/src/akonadicontrol/agentmanager.cpp
+@@ -102,12 +102,12 @@ AgentManager::AgentManager(bool verbose,
+     mStorageController = new Akonadi::ProcessControl;
+     mStorageController->setShutdownTimeout(15 * 1000);   // the server needs more time for shutdown if we are using an internal mysqld
+     connect(mStorageController, &Akonadi::ProcessControl::unableToStart, this, &AgentManager::serverFailure);
+-    mStorageController->start(QStringLiteral("akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
++    mStorageController->start(QStringLiteral(NIX_OUT "/bin/akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
+ 
+     if (mAgentServerEnabled) {
+         mAgentServer = new Akonadi::ProcessControl;
+         connect(mAgentServer, &Akonadi::ProcessControl::unableToStart, this, &AgentManager::agentServerFailure);
+-        mAgentServer->start(QStringLiteral("akonadi_agent_server"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
++        mAgentServer->start(QStringLiteral(NIX_OUT "/bin/akonadi_agent_server"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
+     }
+ 
+ #ifndef QT_NO_DEBUG
