@@ -76,6 +76,7 @@ let
       kdegraphics-thumbnailers = callPackage ./kdegraphics-thumbnailers.nix {};
       kdenetwork-filesharing = callPackage ./kdenetwork-filesharing.nix {};
       kdenlive = callPackage ./kdenlive.nix {};
+      kdepim-runtime = callPackage ./kdepim-runtime.nix {};
       kdepim-apps-libs = callPackage ./kdepim-apps-libs.nix {};
       kdf = callPackage ./kdf.nix {};
       kgpg = callPackage ./kgpg.nix {};
