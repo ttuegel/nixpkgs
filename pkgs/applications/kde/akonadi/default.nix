@@ -15,10 +15,10 @@ kdeApp {
   };
   patches = copyPathsToStore (lib.readPathsFromFile ./. ./series);
   nativeBuildInputs = [ extra-cmake-modules ];
-  buildInputs = [
-    kcompletion kconfigwidgets kdbusaddons kdesignerplugin kiconthemes kio
+  propagatedBuildInputs = [
+    boost kcompletion kconfigwidgets kdbusaddons kdesignerplugin kiconthemes kio
+    kitemmodels
   ];
-  propagatedBuildInputs = [ boost kitemmodels ];
   cmakeFlags = [
     "-DMYSQLD_EXECUTABLE=${lib.getBin mysql}/bin/mysqld"
   ];
