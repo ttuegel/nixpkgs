@@ -55,6 +55,7 @@ let
       akonadi-mime = callPackage ./akonadi-mime.nix {};
       akonadi-notes = callPackage ./akonadi-notes.nix {};
       akonadi-search = callPackage ./akonadi-search.nix {};
+      akonadiconsole = callPackage ./akonadiconsole.nix {};
       ark = callPackage ./ark {};
       baloo-widgets = callPackage ./baloo-widgets.nix {};
       calendarsupport = callPackage ./calendarsupport.nix {};
