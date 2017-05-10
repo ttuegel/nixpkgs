@@ -15,4 +15,6 @@ stdenv.mkDerivation (args // {
     ++ [ "-DBUILD_TESTING=OFF" ]
     ++ lib.optional debug "-DCMAKE_BUILD_TYPE=Debug";
 
+  enableParallelBuilding = args.enableParallelBuilding or true;
+
 })
