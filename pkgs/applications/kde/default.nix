@@ -62,6 +62,7 @@ let
       filelight = callPackage ./filelight.nix {};
       grantleetheme = callPackage ./grantleetheme.nix {};
       gwenview = callPackage ./gwenview.nix {};
+      kalarmcal = callPackage ./kalarmcal.nix {};
       kate = callPackage ./kate.nix {};
       kcachegrind = callPackage ./kcachegrind.nix {};
       kcalc = callPackage ./kcalc.nix {};
