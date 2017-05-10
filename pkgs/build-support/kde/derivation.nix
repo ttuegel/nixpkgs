@@ -7,7 +7,8 @@ stdenv.mkDerivation (args // {
   outputs = args.outputs or [ "out" "dev" ];
 
   propagatedUserEnvPkgs =
-    builtins.map lib.getBin (args.propagatedBuildInputs or []);
+    (args.propagatedUserEnvPkgs or [])
+    ++ builtins.map lib.getBin (args.propagatedBuildInputs or []);
 
   cmakeFlags =
     (args.cmakeFlags or [])
