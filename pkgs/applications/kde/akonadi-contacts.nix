@@ -12,8 +12,7 @@ kdeApp {
     maintainers = [ lib.maintainers.ttuegel ];
   };
   nativeBuildInputs = [ extra-cmake-modules ];
-  buildInputs = [
-    akonadi-mime grantlee kcontacts kio kitemmodels kmime qtwebengine
+  propagatedBuildInputs = [
+    akonadi akonadi-mime grantlee kcontacts kio kitemmodels kmime qtwebengine
   ];
-  propagatedBuildInputs = [ akonadi ];
 }
