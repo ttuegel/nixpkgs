@@ -2,10 +2,10 @@
   kdeApp, lib, kdeWrapper,
   extra-cmake-modules, kdoctools,
   kbookmarks, kcalutils, kcompletion, kconfig, kconfigwidgets, kcoreaddons,
-  kdelibs4support, kguiaddons, ki18n, kiconthemes, kinit, kio, knotifications,
-  knotifyconfig, kparts, kpty, kservice, ktextwidgets, ktnef, kwidgetsaddons,
-  kwindowsystem, kxmlgui, libksieve, mailcommon, messagelib, qtscript,
-  qtwebengine, kmail-account-wizard, pim-sieve-editor
+  kdelibs4support, kdepim-runtime, kguiaddons, ki18n, kiconthemes, kinit, kio,
+  kmail-account-wizard, knotifications, knotifyconfig, kparts, kpty, kservice,
+  ktextwidgets, ktnef, kwallet, kwidgetsaddons, kwindowsystem, kxmlgui, libksieve,
+  mailcommon, messagelib, pim-sieve-editor, qtscript, qtwebengine,
 }:
 
 let
@@ -19,11 +19,12 @@ let
       nativeBuildInputs = [ extra-cmake-modules kdoctools ];
       propagatedBuildInputs = [
         kbookmarks kcalutils kcompletion kconfig kconfigwidgets kcoreaddons
-        kdelibs4support kguiaddons ki18n kiconthemes kinit kio knotifications
-        knotifyconfig kparts kpty kservice ktextwidgets ktnef kwidgetsaddons
-        kwindowsystem kxmlgui libksieve mailcommon messagelib qtscript
-        qtwebengine kmail-account-wizard pim-sieve-editor
+        kdelibs4support kguiaddons ki18n kiconthemes kinit kio
+        kmail-account-wizard knotifications knotifyconfig kparts kpty kservice
+        ktextwidgets ktnef kwidgetsaddons kwindowsystem kxmlgui libksieve
+        mailcommon messagelib pim-sieve-editor qtscript qtwebengine
       ];
+      propagatedUserEnvPkgs = [ kdepim-runtime kwallet ];
     };
 in
 kdeWrapper {
