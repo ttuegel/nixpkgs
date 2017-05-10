@@ -57,6 +57,7 @@ let
       akonadi-search = callPackage ./akonadi-search.nix {};
       ark = callPackage ./ark {};
       baloo-widgets = callPackage ./baloo-widgets.nix {};
+      calendarsupport = callPackage ./calendarsupport.nix {};
       dolphin = callPackage ./dolphin.nix {};
       dolphin-plugins = callPackage ./dolphin-plugins.nix {};
       ffmpegthumbs = callPackage ./ffmpegthumbs.nix { };
