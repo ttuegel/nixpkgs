@@ -64,7 +64,7 @@ let
       dolphin-plugins = callPackage ./dolphin-plugins.nix {};
       ffmpegthumbs = callPackage ./ffmpegthumbs.nix { };
       filelight = callPackage ./filelight.nix {};
-      grantleetheme = callPackage ./grantleetheme.nix {};
+      grantleetheme = callPackage ./grantleetheme {};
       gwenview = callPackage ./gwenview.nix {};
       kalarmcal = callPackage ./kalarmcal.nix {};
       kate = callPackage ./kate.nix {};
@@ -80,7 +80,7 @@ let
       kdenetwork-filesharing = callPackage ./kdenetwork-filesharing.nix {};
       kdenlive = callPackage ./kdenlive.nix {};
       kdepim-runtime = callPackage ./kdepim-runtime.nix {};
-      kdepim-apps-libs = callPackage ./kdepim-apps-libs.nix {};
+      kdepim-apps-libs = callPackage ./kdepim-apps-libs {};
       kdf = callPackage ./kdf.nix {};
       kgpg = callPackage ./kgpg.nix {};
       khelpcenter = callPackage ./khelpcenter.nix {};
