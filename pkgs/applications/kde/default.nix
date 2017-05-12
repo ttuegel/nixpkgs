@@ -105,6 +105,7 @@ let
       konsole = callPackage ./konsole.nix {};
       kontact = callPackage ./kontact.nix {};
       kontactinterface = callPackage ./kontactinterface.nix {};
+      korganizer = callPackage ./korganizer.nix {};
       kpimtextedit = callPackage ./kpimtextedit.nix {};
       kqtquickcharts = callPackage ./kqtquickcharts.nix {};
       krfb = callPackage ./krfb.nix {};
