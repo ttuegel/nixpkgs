@@ -2,14 +2,62 @@ Index: qtbase-opensource-src-5.8.0/src/gui/kernel/qguiapplication.cpp
 ===================================================================
 --- qtbase-opensource-src-5.8.0.orig/src/gui/kernel/qguiapplication.cpp
 +++ qtbase-opensource-src-5.8.0/src/gui/kernel/qguiapplication.cpp
-@@ -1217,6 +1217,10 @@ void QGuiApplicationPrivate::createPlatf
+@@ -1216,7 +1216,12 @@ void QGuiApplicationPrivate::createPlatf
+     QHighDpiScaling::initHighDpiScaling();
  
      // Load the platform integration
-     QString platformPluginPath = QString::fromLocal8Bit(qgetenv("QT_QPA_PLATFORM_PLUGIN_PATH"));
-+    if (!platformPluginPath.isEmpty()) {
+-    QString platformPluginPath = QString::fromLocal8Bit(qgetenv("QT_QPA_PLATFORM_PLUGIN_PATH"));
++    QString platformPluginPath = QStringLiteral(NIXPKGS_QPA_PLATFORM_PLUGIN_PATH);
++    QString envPlatformPluginPath = QString::fromLocal8Bit(qgetenv("QT_QPA_PLATFORM_PLUGIN_PATH"));
++    if (!envPlatformPluginPath.isEmpty()) {
 +        platformPluginPath.append(QStringLiteral(":"));
++        platformPluginPath.append(envPlatformPluginPath);
 +    }
-+    platformPluginPath.append(QStringLiteral(NIXPKGS_QPA_PLATFORM_PLUGIN_PATH));
  
  
      QByteArray platformName;
+Index: qtbase-opensource-src-5.8.0/src/gui/kernel/qplatformintegrationfactory.cpp
+===================================================================
+--- qtbase-opensource-src-5.8.0.orig/src/gui/kernel/qplatformintegrationfactory.cpp
++++ qtbase-opensource-src-5.8.0/src/gui/kernel/qplatformintegrationfactory.cpp
+@@ -59,11 +59,17 @@ Q_GLOBAL_STATIC_WITH_ARGS(QFactoryLoader
+ QPlatformIntegration *QPlatformIntegrationFactory::create(const QString &platform, const QStringList &paramList, int &argc, char **argv, const QString &platformPluginPath)
+ {
+ #ifndef QT_NO_LIBRARY
+-    // Try loading the plugin from platformPluginPath first:
++
+     if (!platformPluginPath.isEmpty()) {
+-        QCoreApplication::addLibraryPath(platformPluginPath);
+-        if (QPlatformIntegration *ret = qLoadPlugin<QPlatformIntegration, QPlatformIntegrationPlugin>(directLoader(), platform, paramList, argc, argv))
++        QStringList libraryPaths(QCoreApplication::libraryPaths());
++        // Search *only* platformPluginPath first.
++        // Other paths will be searched if this fails.
++        QCoreApplication::setLibraryPaths(platformPluginPath.split(':'));
++        QPlatformIntegration *ret = qLoadPlugin<QPlatformIntegration, QPlatformIntegrationPlugin>(directLoader(), platform, paramList, argc, argv);
++        QCoreApplication::setLibraryPaths(libraryPaths);
++        if (ret) {
+             return ret;
++        }
+     }
+ #else
+     Q_UNUSED(platformPluginPath);
+@@ -83,7 +89,10 @@ QStringList QPlatformIntegrationFactory:
+     QStringList list;
+ #ifndef QT_NO_LIBRARY
+     if (!platformPluginPath.isEmpty()) {
+-        QCoreApplication::addLibraryPath(platformPluginPath);
++        QStringList libraryPaths(QCoreApplication::libraryPaths());
++        // Search *only* platformPluginPath first.
++        // Other paths will be searched if this fails.
++        QCoreApplication::setLibraryPaths(platformPluginPath.split(':'));
+         list = directLoader()->keyMap().values();
+         if (!list.isEmpty()) {
+             const QString postFix = QLatin1String(" (from ")
+@@ -93,6 +102,7 @@ QStringList QPlatformIntegrationFactory:
+             for (QStringList::iterator it = list.begin(); it != end; ++it)
+                 (*it).append(postFix);
+         }
++        QCoreApplication::setLibraryPaths(libraryPaths);
+     }
+ #else
+     Q_UNUSED(platformPluginPath);
