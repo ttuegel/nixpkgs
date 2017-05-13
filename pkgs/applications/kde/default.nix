@@ -68,6 +68,7 @@ let
       grantleetheme = callPackage ./grantleetheme {};
       gwenview = callPackage ./gwenview.nix {};
       incidenceeditor = callPackage ./incidenceeditor.nix {};
+      k3b = callPackage ./k3b.nix {};
       kaddressbook = callPackage ./kaddressbook.nix {};
       kalarmcal = callPackage ./kalarmcal.nix {};
       kate = callPackage ./kate.nix {};
@@ -112,6 +113,7 @@ let
       ktnef = callPackage ./ktnef.nix {};
       kwalletmanager = callPackage ./kwalletmanager.nix {};
       libgravatar = callPackage ./libgravatar.nix {};
+      libkcddb = callPackage ./libkcddb.nix {};
       libkdcraw = callPackage ./libkdcraw.nix {};
       libkdepim = callPackage ./libkdepim.nix {};
       libkexiv2 = callPackage ./libkexiv2.nix {};

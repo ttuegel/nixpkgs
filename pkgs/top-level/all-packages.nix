@@ -1028,6 +1028,8 @@ with pkgs;
 
   socklog = callPackage ../tools/system/socklog { };
 
+  staccato = callPackage ../tools/text/staccato { };
+
   syscall_limiter = callPackage ../os-specific/linux/syscall_limiter {};
 
   syslogng = callPackage ../tools/system/syslog-ng { };
@@ -1136,7 +1138,6 @@ with pkgs;
   };
 
   blueman = callPackage ../tools/bluetooth/blueman {
-    inherit (gnome3) dconf gsettings_desktop_schemas;
     withPulseAudio = config.pulseaudio or true;
   };
 
@@ -1848,7 +1849,10 @@ with pkgs;
 
   fdk_aac = callPackage ../development/libraries/fdk-aac { };
 
-  flameGraph = callPackage ../development/tools/flamegraph { };
+  flamegraph = callPackage ../development/tools/flamegraph { };
+
+  # Awkward historical capitalization for flamegraph. Remove eventually
+  flameGraph = flamegraph;
 
   flvtool2 = callPackage ../tools/video/flvtool2 { };
 
@@ -2038,6 +2042,8 @@ with pkgs;
   gnokii = callPackage ../tools/misc/gnokii { };
 
   gnuapl = callPackage ../development/interpreters/gnu-apl { };
+
+  gnu-cobol = callPackage ../development/compilers/gnu-cobol { };
 
   gnufdisk = callPackage ../tools/system/fdisk {
     guile = guile_1_8;
@@ -2569,6 +2575,8 @@ with pkgs;
   klick = callPackage ../applications/audio/klick { };
 
   knockknock = callPackage ../tools/security/knockknock { };
+
+  partition-manager = libsForQt5.callPackage ../tools/misc/partition-manager { };
 
   kpcli = callPackage ../tools/security/kpcli { };
 
@@ -3322,6 +3330,8 @@ with pkgs;
   openjade = callPackage ../tools/text/sgml/openjade { };
 
   openmvg = callPackage ../applications/science/misc/openmvg { };
+
+  openmvs = callPackage ../applications/science/misc/openmvs { };
 
   openntpd = callPackage ../tools/networking/openntpd { };
 
@@ -4819,6 +4829,8 @@ with pkgs;
   zpaq = callPackage ../tools/archivers/zpaq { };
   zpaqd = callPackage ../tools/archivers/zpaq/zpaqd.nix { };
 
+  zsh-git-prompt = callPackage ../shells/zsh-git-prompt { };
+
   zsh-navigation-tools = callPackage ../tools/misc/zsh-navigation-tools { };
 
   zsh-syntax-highlighting = callPackage ../shells/zsh-syntax-highlighting { };
@@ -5352,11 +5364,9 @@ with pkgs;
     inherit (darwin.apple_sdk.frameworks) Security Foundation;
   };
 
-  go_1_8 = callPackage ../development/compilers/go/1.8.nix ({
+  go_1_8 = callPackage ../development/compilers/go/1.8.nix {
     inherit (darwin.apple_sdk.frameworks) Security Foundation;
-  } // stdenv.lib.optionalAttrs stdenv.isDarwin {
-    stdenv = stdenvAdapters.overrideCC pkgs.stdenv pkgs.clang_38;
-  });
+  };
 
   go = go_1_8;
 
@@ -6320,7 +6330,13 @@ with pkgs;
 
   ### DEVELOPMENT / TOOLS
 
-  activator = callPackage ../development/tools/activator { };
+  activator = throw ''
+    Typesafe Activator was removed in 2017-05-08 as the actual package reaches end of life.
+
+    See https://github.com/NixOS/nixpkgs/pull/25616
+    and http://www.lightbend.com/community/core-tools/activator-and-sbt
+    for more information.
+  '';
 
   alloy = callPackage ../development/tools/alloy { };
 
@@ -9687,6 +9703,8 @@ with pkgs;
       libva = libva-full; # also wants libva-x11
     };
 
+    kpmcore = callPackage ../development/libraries/kpmcore { };
+
     mlt = callPackage ../development/libraries/mlt/qt-5.nix {
       ffmpeg = ffmpeg_2;
     };
@@ -11999,9 +12017,10 @@ with pkgs;
   linuxPackages_latest_xen_dom0 = recurseIntoAttrs (linuxPackagesFor (pkgs.linux_latest.override { features.xen_dom0=true; }));
 
   # Hardened linux
-  linux_hardened = linux_4_9.override {
+  linux_hardened = let linux = pkgs.linux_4_11; in linux.override {
     extraConfig = import ../os-specific/linux/kernel/hardened-config.nix {
       inherit stdenv;
+      inherit (linux) version;
     };
   };
 
@@ -12732,6 +12751,8 @@ with pkgs;
   inherit (callPackages ../data/fonts/noto-fonts {})
     noto-fonts noto-fonts-cjk noto-fonts-emoji;
 
+  nullmailer = callPackage ../servers/mail/nullmailer { };
+
   numix-icon-theme = callPackage ../data/icons/numix-icon-theme { };
 
   numix-icon-theme-circle = callPackage ../data/icons/numix-icon-theme-circle { };
@@ -13409,10 +13430,10 @@ with pkgs;
 
   inherit (callPackage ../applications/virtualization/docker { })
     docker_17_03
-    docker_17_04;
+    docker_17_05;
 
   docker = docker_17_03;
-  docker-edge = docker_17_04;
+  docker-edge = docker_17_05;
 
   docker-proxy = callPackage ../applications/virtualization/docker/proxy.nix { };
 
@@ -14452,9 +14473,7 @@ with pkgs;
     boost = boost155;
   };
 
-  k3b-original = lowPrio (kde4.callPackage ../applications/misc/k3b { });
-
-  k3b = kde4.callPackage ../applications/misc/k3b/wrapper.nix { };
+  k3b = kdeApplications.k3b;
 
   k9copy = libsForQt5.callPackage ../applications/video/k9copy {};
 
@@ -14539,7 +14558,7 @@ with pkgs;
     openjpeg = openjpeg_1;
   };
 
-  krusader = kde4.callPackage ../applications/misc/krusader { };
+  krusader = libsForQt5.callPackage ../applications/misc/krusader { };
 
   ksuperkey = callPackage ../tools/X11/ksuperkey { };
 
@@ -15119,7 +15138,7 @@ with pkgs;
 
   openbox-menu = callPackage ../applications/misc/openbox-menu { };
 
-  openbrf = callPackage ../applications/misc/openbrf { };
+  openbrf = libsForQt5.callPackage ../applications/misc/openbrf { };
 
   opencpn = callPackage ../applications/misc/opencpn { };
 
@@ -15380,8 +15399,8 @@ with pkgs;
     qt = qt4;
   };
 
-  # 0.5.7 segfaults when opening the main panel with qt 5.7 but qt 5.8 is OK
-  qsyncthingtray = libsForQt5.callPackage ../applications/misc/qsyncthingtray { };
+  # 0.5.7 segfaults when opening the main panel with qt 5.7 and fails to compile with qt 5.8
+  qsyncthingtray = libsForQt56.callPackage ../applications/misc/qsyncthingtray { };
 
   qsynth = callPackage ../applications/audio/qsynth { };
 

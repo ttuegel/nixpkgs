@@ -73,7 +73,7 @@ let
 in {
 
   inherit python bootstrapped-pip pythonAtLeast pythonOlder isPy26 isPy27 isPy33 isPy34 isPy35 isPy36 isPyPy isPy3k mkPythonDerivation buildPythonPackage buildPythonApplication;
-  inherit fetchPypi;
+  inherit fetchPypi callPackage;
   inherit sharedLibraryExtension;
 
   # helpers
@@ -677,15 +677,15 @@ in {
   aniso8601 = buildPythonPackage rec {
     name = "aniso8601-${version}";
     version = "1.2.0";
- 
+
     meta = {
       description = "Parses ISO 8601 strings.";
       homepage    = "https://bitbucket.org/nielsenb/aniso8601";
       license     = licenses.bsd3;
     };
- 
+
     propagatedBuildInputs = with self; [ dateutil ];
- 
+
     src = pkgs.fetchurl {
       url = "mirror://pypi/a/aniso8601/${name}.tar.gz";
       sha256 = "502400f82574afa804cc915d83f15c67533d364dcd594f8a6b9d2053f3404dd4";
@@ -5244,28 +5244,32 @@ in {
     '';
   };
 
-  pytestcov = buildPythonPackage (rec {
-    name = "pytest-cov-2.3.1";
+  pytestcov = buildPythonPackage rec {
+    name = "pytest-cov-2.4.0";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/p/pytest-cov/${name}.tar.gz";
-      sha256 = "fa0a212283cdf52e2eecc24dd6459bb7687cc29adb60cb84258fab73be8dda0f";
+      sha256 = "03c2qc42r4bczyw93gd7n0qi1h1jfhw7fnbhi33c3vp1hs81gm2k";
     };
 
+   buildInputs = with self; [ pytest pytest_xdist virtualenv process-tests ];
    propagatedBuildInputs = with self; [ coverage ];
-   buildInputs = with self; [ pytest covCore virtualenv process-tests helper ];
 
+   # xdist related tests fail with the following error
+   # OSError: [Errno 13] Permission denied: 'py/_code'
    doCheck = false;
    checkPhase = ''
+     # allow to find the module helper during the test run
+     export PYTHONPATH=$PYTHONPATH:$PWD/tests
      py.test tests
    '';
 
     meta = {
       description = "Plugin for coverage reporting with support for both centralised and distributed testing, including subprocesses and multiprocessing";
-      homepage = https://github.com/schlamar/pytest-cov;
+      homepage = https://github.com/pytest-dev/pytest-cov;
       license = licenses.mit;
     };
-  });
+  };
 
   pytest-expect = callPackage ../development/python-modules/pytest-expect { };
 
@@ -5290,19 +5294,20 @@ in {
   };
 
   pytest_xdist = buildPythonPackage rec {
-    name = "pytest-xdist-1.8";
+    name = "pytest-xdist-1.14";
 
     src = pkgs.fetchurl {
-      url = "mirror://pypi/p/pytest-xdist/pytest-xdist-1.8.zip";
-      sha256 = "b02135db7080c0978b7ce5d8f43a5879231441c2062a4791bc42b6f98c94fa69";
+      url = "mirror://pypi/p/pytest-xdist/${name}.zip";
+      sha256 = "08rn2l39ds60xshs4js787l84pfckksqklfq2wq9x8ig2aci2pja";
     };
 
-    buildInputs = with self; [ pytest ];
+    buildInputs = with self; [ pytest setuptools_scm ];
     propagatedBuildInputs = with self; [ execnet ];
 
     meta = {
       description = "py.test xdist plugin for distributed testing and loop-on-failing modes";
-      homepage = http://bitbucket.org/hpk42/pytest-xdist;
+      homepage = https://github.com/pytest-dev/pytest-xdist;
+      license = licenses.mit;
     };
   };
 
@@ -12063,14 +12068,14 @@ in {
 
   glances = buildPythonPackage rec {
     name = "glances-${version}";
-    version = "2.8.2";
+    version = "2.9.1";
     disabled = isPyPy;
 
     src = pkgs.fetchFromGitHub {
       owner = "nicolargo";
       repo = "glances";
       rev = "v${version}";
-      sha256 = "1jwaq9k6q8wn197wadiwid7d8aik24rhsypmcl5q0jviwkhhiri9";
+      sha256 = "13pnim8zxqbw5b1jkl1ggqn2rg5kfwhznw42ckizrhg73ngy9yyp";
     };
 
     doCheck = false;
@@ -22082,7 +22087,7 @@ in {
       homepage = "https://github.com/goinnn/django-multiselectfield";
     };
   };
-  
+
   reviewboard = buildPythonPackage rec {
     name = "ReviewBoard-2.5.1.1";
 
@@ -24685,11 +24690,11 @@ in {
 
   freezegun = buildPythonPackage rec {
     name = "freezegun-${version}";
-    version = "0.3.5";
+    version = "0.3.8";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/f/freezegun/freezegun-${version}.tar.gz";
-      sha256 = "02ly89wwn0plcw8clkkzvxaw6zlpm8qyqpm9x2mfw4a0vppb4ngf";
+      sha256 = "1sf38d3ibv1jhhvr52x7dhrsiyqk1hm165dfv8w8wh0fhmgxg151";
     };
 
     propagatedBuildInputs = with self; [
@@ -24700,6 +24705,7 @@ in {
     meta = with stdenv.lib; {
       description = "FreezeGun: Let your Python tests travel through time";
       homepage = "https://github.com/spulec/freezegun";
+      license = licenses.asl20;
     };
   };
 
@@ -31064,32 +31070,7 @@ EOF
     };
   };
 
-  whoosh = buildPythonPackage rec {
-    name = "${pname}-${version}";
-    pname = "Whoosh";
-    version = "2.7.4";
-    src = pkgs.fetchurl {
-      url = "https://pypi.python.org/packages/25/2b/6beed2107b148edc1321da0d489afc4617b9ed317ef7b72d4993cad9b684/${name}.tar.gz";
-      sha256 = "10qsqdjpbc85fykc1vgcs8xwbgn4l2l52c8d83xf1q59pwyn79bw";
-    };
-    buildInputs = with self; [ pytest ];
-
-    # Wrong encoding
-    postPatch = ''
-      rm tests/test_reading.py
-    '';
-    checkPhase =  ''
-      py.test -k "not test_timelimit"
-    '';
-
-    meta = {
-      description = "Fast, pure-Python full text indexing, search, and spell checking library.";
-      homepage    = "http://bitbucket.org/mchaput/whoosh";
-      license     = licenses.bsd2;
-      maintainers = with maintainers; [ nand0p ];
-      platforms   = platforms.all;
-    };
-  };
+  whoosh = callPackage ../development/python-modules/whoosh { };
 
   packet-python = buildPythonPackage rec {
     name = "${pname}-${version}";
