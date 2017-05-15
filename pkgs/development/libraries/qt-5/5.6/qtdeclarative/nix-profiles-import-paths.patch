@@ -8,7 +8,7 @@ Index: qtdeclarative-opensource-src-5.5.1/src/qml/qml/qqmlimport.cpp
  
 +    // Add library paths derived from NIX_PROFILES.
 +    const QByteArrayList profiles = qgetenv("NIX_PROFILES").split(' ');
-+    const QString qmldir = QString::fromLatin1("/lib/qt5/qml");
++    const QString qmldir = QStringLiteral(NIXPKGS_QML2_IMPORT_PREFIX);
 +    Q_FOREACH (const QByteArray &profile, profiles) {
 +        if (!profile.isEmpty()) {
 +            addImportPath(QFile::decodeName(profile) + qmldir);
