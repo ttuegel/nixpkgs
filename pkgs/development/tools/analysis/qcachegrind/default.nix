@@ -1,6 +1,7 @@
-{ stdenv, fetchurl, cmake, qmakeHook, makeQtWrapper, qtbase, perl, python, php }:
+{ mkDerivation, stdenv, lib, fetchurl
+, qmake, makeQtWrapper, qtbase, perl, python, php }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "qcachegrind-${version}";
   version = "16.12.3";
 
@@ -11,7 +12,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ qtbase perl python php ];
 
-  nativeBuildInputs = [ qmakeHook makeQtWrapper ];
+  nativeBuildInputs = [ qmake makeQtWrapper ];
 
   postInstall = ''
      mkdir -p $out/bin
@@ -34,7 +35,7 @@ stdenv.mkDerivation rec {
     install -Dm644 kcachegrind/hi48-app-kcachegrind.png "$out/share/icons/hicolor/48x48/apps/kcachegrind.png"
   '');
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A Qt GUI to visualize profiling data";
     license = licenses.gpl2;
     platforms = platforms.unix;

@@ -1,6 +1,6 @@
-{ fetchgit, libcommuni, makeQtWrapper, qtbase, qmakeHook, stdenv }:
+{ mkDerivation, lib, fetchgit, libcommuni, makeQtWrapper, qtbase, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "communi-${version}";
   version = "2016-08-19";
 
@@ -11,7 +11,7 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  nativeBuildInputs = [ makeQtWrapper qmakeHook ];
+  nativeBuildInputs = [ makeQtWrapper qmake ];
 
   buildInputs = [ libcommuni qtbase ];
 
@@ -39,7 +39,7 @@ stdenv.mkDerivation rec {
     patchelf --set-rpath "$out/lib:$(patchelf --print-rpath $out/bin/.communi-wrapped)" $out/bin/.communi-wrapped
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A simple and elegant cross-platform IRC client";
     homepage = https://github.com/communi/communi-desktop;
     license = licenses.bsd3;

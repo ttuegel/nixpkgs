@@ -1,6 +1,6 @@
-{ stdenv, fetchurl, qmakeHook, qtscript }:
+{ mkDerivation, lib, fetchurl, qmake, qtscript }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "smplayer-17.4.2";
 
   src = fetchurl {
@@ -9,7 +9,7 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ qtscript ];
-  nativeBuildInputs = [ qmakeHook ];
+  nativeBuildInputs = [ qmake ];
 
   dontUseQmakeConfigure = true;
 
@@ -17,10 +17,10 @@ stdenv.mkDerivation rec {
     makeFlags="PREFIX=$out"
   '';
 
-  meta = {
+  meta = with lib; {
     description = "A complete front-end for MPlayer";
     homepage = "http://smplayer.sourceforge.net/";
-    license = stdenv.lib.licenses.gpl3Plus;
-    platforms = stdenv.lib.platforms.linux;
+    license = licenses.gpl3Plus;
+    platforms = platforms.linux;
   };
 }

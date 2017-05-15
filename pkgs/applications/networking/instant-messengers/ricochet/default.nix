@@ -1,9 +1,9 @@
-{ stdenv, fetchurl, pkgconfig, makeDesktopItem, unzip
+{ mkDerivation, lib, fetchurl, pkgconfig, makeDesktopItem, unzip
 , qtbase, qttools, makeQtWrapper, qtmultimedia, qtquick1, qtquickcontrols
-, openssl, protobuf, qmakeHook
+, openssl, protobuf, qmake
 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "ricochet-${version}";
   version = "1.1.4";
 
@@ -23,11 +23,11 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [
-    qtbase qttools qtmultimedia qtquick1 qtquickcontrols
+    qtbase qtmultimedia qtquick1 qtquickcontrols
     openssl protobuf
   ];
 
-  nativeBuildInputs = [ pkgconfig makeQtWrapper qmakeHook ];
+  nativeBuildInputs = [ pkgconfig makeQtWrapper qmake qttools ];
 
   preConfigure = ''
     export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE $(pkg-config --cflags openssl)"
@@ -47,7 +47,7 @@ stdenv.mkDerivation rec {
     cp icons/ricochet.png $out/share/pixmaps/ricochet.png
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Anonymous peer-to-peer instant messaging";
     homepage = "https://ricochet.im";
     license = licenses.bsd3;

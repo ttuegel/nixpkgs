@@ -1,5 +1,6 @@
-{ stdenv, fetchurl, makeDesktopItem, cmake, boost163, zlib, openssl,
-R, qt5, libuuid, hunspellDicts, unzip, ant, jdk, gnumake, makeWrapper, pandoc
+{ mkDerivation, lib, fetchurl, makeDesktopItem, cmake, boost163, zlib, openssl
+, R, libuuid, hunspellDicts, unzip, ant, jdk, gnumake, makeWrapper, pandoc
+, full, qtwebkit, qmake
 }:
 
 let
@@ -7,10 +8,10 @@ let
   ginVer = "1.5";
   gwtVer = "2.7.0";
 in
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "RStudio-${version}";
 
-  buildInputs = [ cmake boost163 zlib openssl R qt5.full qt5.qtwebkit qt5.qmakeHook libuuid unzip ant jdk makeWrapper pandoc ];
+  buildInputs = [ cmake boost163 zlib openssl R full qtwebkit qmake libuuid unzip ant jdk makeWrapper pandoc ];
 
   src = fetchurl {
     url = "https://github.com/rstudio/rstudio/archive/v${version}.tar.gz";
@@ -90,7 +91,7 @@ stdenv.mkDerivation rec {
       cp ${pandoc}/bin/pandoc dependencies/common/pandoc/
     '';
 
-  cmakeFlags = [ "-DRSTUDIO_TARGET=Desktop" "-DQT_QMAKE_EXECUTABLE=${qt5.qmakeHook}/bin/qmake" ];
+  cmakeFlags = [ "-DRSTUDIO_TARGET=Desktop" "-DQT_QMAKE_EXECUTABLE=${qmake}/bin/qmake" ];
 
   desktopItem = makeDesktopItem {
     name = name;
@@ -111,7 +112,7 @@ stdenv.mkDerivation rec {
       ln $out/rstudio.png $out/share/icons
   '';
 
-  meta = with stdenv.lib;
+  meta = with lib;
     { description = "Set of integrated tools for the R language";
       homepage = http://www.rstudio.com/;
       license = licenses.agpl3;

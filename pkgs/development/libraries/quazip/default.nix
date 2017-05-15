@@ -1,6 +1,6 @@
-{ fetchurl, stdenv, zip, zlib, qtbase, qmakeHook }:
+{ mkDerivation, lib, fetchurl, zip, zlib, qtbase, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "quazip-0.7.1";
 
   src = fetchurl {
@@ -11,12 +11,12 @@ stdenv.mkDerivation rec {
   preConfigure = "cd quazip";
 
   buildInputs = [ zlib qtbase ];
-  nativeBuildInputs = [ qmakeHook ];
+  nativeBuildInputs = [ qmake ];
 
-  meta = {
+  meta = with lib; {
     description = "Provides access to ZIP archives from Qt programs";
-    license = stdenv.lib.licenses.gpl2Plus;
+    license = licenses.gpl2Plus;
     homepage = http://quazip.sourceforge.net/;
-    platforms = stdenv.lib.platforms.linux;
+    platforms = platforms.linux;
   };
 }

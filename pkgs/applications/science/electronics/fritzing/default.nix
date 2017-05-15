@@ -1,8 +1,9 @@
-{ stdenv, fetchpatch, fetchFromGitHub, makeQtWrapper, qmakeHook, pkgconfig
+{ mkDerivation, lib, fetchpatch, fetchFromGitHub
+, makeQtWrapper, qmake, pkgconfig
 , qtbase, qtsvg, qtserialport, boost, libgit2
 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "fritzing-${version}";
   version = "0.9.3b";
 
@@ -28,7 +29,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ qtbase qtsvg qtserialport boost libgit2 ];
 
-  nativeBuildInputs = [ qmakeHook makeQtWrapper pkgconfig ];
+  nativeBuildInputs = [ qmake makeQtWrapper pkgconfig ];
 
   qmakeFlags = [ "phoenix.pro" ];
 
@@ -42,11 +43,11 @@ stdenv.mkDerivation rec {
     wrapQtProgram $out/bin/Fritzing
   '';
 
-  meta = {
+  meta = with lib; {
     description = "An open source prototyping tool for Arduino-based projects";
     homepage = http://fritzing.org/;
-    license = stdenv.lib.licenses.gpl3;
-    maintainers = [ stdenv.lib.maintainers.robberer ];
-    platforms = stdenv.lib.platforms.linux;
+    license = licenses.gpl3;
+    maintainers = [ maintainers.robberer ];
+    platforms = platforms.linux;
   };
 }

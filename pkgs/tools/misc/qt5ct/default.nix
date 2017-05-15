@@ -1,6 +1,6 @@
-{stdenv, fetchurl, qtbase, qtsvg, qttools, qmakeHook, makeQtWrapper}:
+{ mkDerivation, lib, fetchurl, qtbase, qtsvg, qttools, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "qt5ct-${version}";
   version = "0.30";
 
@@ -9,18 +9,14 @@ stdenv.mkDerivation rec {
     sha256 = "1k0ywd440qvf84chadjb4fnkn8dkfl56cc3a6wqg6a59drslvng6";
   };
 
-  buildInputs = [ qtbase qtsvg ];
-  nativeBuildInputs = [ makeQtWrapper qmakeHook qttools ];
+  propagatedBuildInputs = [ qtbase qtsvg ];
+  nativeBuildInputs = [ qmake qttools ];
 
   preConfigure = ''
-    qmakeFlags="$qmakeFlags PLUGINDIR=$out/lib/qt5/plugins"
+    qmakeFlags="$qmakeFlags PLUGINDIR=$out/$qtPluginPrefix"
   '';
 
-  preFixup = ''
-    wrapQtProgram $out/bin/qt5ct
-  '';
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Qt5 Configuration Tool";
     homepage = https://www.opendesktop.org/content/show.php?content=168066;
     platforms = platforms.linux;

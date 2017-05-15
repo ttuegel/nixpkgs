@@ -1,6 +1,7 @@
-{ stdenv, fetchFromGitHub, git, gnupg, makeQtWrapper, pass, qtbase, qtsvg, qttools, qmakeHook }:
+{ mkDerivation, lib, fetchFromGitHub
+, git, gnupg, makeQtWrapper, pass, qtbase, qtsvg, qttools, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "qtpass-${version}";
   version = "1.1.6";
 
@@ -11,9 +12,9 @@ stdenv.mkDerivation rec {
     sha256 = "0jq5a1cvqvsjwld0nldl6kmcz9g59hiccmbg98xwji04n8174y7j";
   };
 
-  buildInputs = [ git gnupg pass qtbase qtsvg qttools ];
+  buildInputs = [ git gnupg pass qtbase qtsvg ];
 
-  nativeBuildInputs = [ makeQtWrapper qmakeHook ];
+  nativeBuildInputs = [ makeQtWrapper qmake qttools ];
 
   preConfigure = ''
     qmakeFlags="$qmakeFlags CONFIG+=release DESTDIR=$out"
@@ -34,7 +35,7 @@ stdenv.mkDerivation rec {
       --suffix PATH : ${pass}/bin
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A multi-platform GUI for pass, the standard unix password manager";
     homepage = https://qtpass.org;
     license = licenses.gpl3;

@@ -1,10 +1,10 @@
-{ stdenv, fetchurl, qtdeclarative , qttools, qtbase, qmakeHook }:
+{ mkDerivation, fetchurl, qtdeclarative , qttools, qtbase, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "qtinstaller";
 
-  propagatedBuildInputs = [qtdeclarative qttools];
-  nativeBuildInputs = [ qmakeHook ];
+  propagatedBuildInputs = [ qtdeclarative qttools ];
+  nativeBuildInputs = [ qmake ];
 
   version = "2.0.3";
   src = fetchurl {
@@ -16,7 +16,6 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "doc" ];
 
   setOutputFlags = false;
-  enableParallelBuilding = true;
   NIX_QT_SUBMODULE = true;
 
   installPhase = ''

@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, fftw, libsndfile, qtbase, qtmultimedia, qmakeHook, makeQtWrapper }:
+{ mkDerivation, lib, fetchFromGitHub, fftw, libsndfile, qtbase, qtmultimedia, qmake, makeQtWrapper }:
 
 let
 
@@ -9,7 +9,7 @@ let
       repo = "reaper";
       owner = "gillesdegottex";
     };
-    meta = with stdenv.lib; {
+    meta = with lib; {
      license = licenses.asl20;
     };
   };
@@ -21,12 +21,12 @@ let
       repo = "libqaudioextra";
       owner = "gillesdegottex";
     };
-    meta = with stdenv.lib; {
+    meta = with lib; {
      license = licenses.gpl3Plus;
     };
   };
 
-in stdenv.mkDerivation rec {
+in mkDerivation rec {
   name = "dfasma-${version}";
   version = "1.2.5";
 
@@ -37,9 +37,9 @@ in stdenv.mkDerivation rec {
     owner = "gillesdegottex";
   };
 
-  buildInputs = [ fftw libsndfile qtbase qtmultimedia qmakeHook ];
+  buildInputs = [ fftw libsndfile qtbase qtmultimedia ];
 
-  nativeBuildInputs = [ makeQtWrapper ];
+  nativeBuildInputs = [ makeQtWrapper qmake ];
 
   postPatch = ''
     substituteInPlace dfasma.pro --replace '$$DFASMAVERSIONGITPRO' '${version}'
@@ -57,7 +57,7 @@ in stdenv.mkDerivation rec {
     wrapQtProgram "$out/bin/dfasma"
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Analyse and compare audio files in time and frequency";
     longDescription = ''
       DFasma is free open-source software to compare audio files by time and

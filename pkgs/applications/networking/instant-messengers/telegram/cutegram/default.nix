@@ -1,11 +1,11 @@
-{ stdenv, fetchgit
+{ mkDerivation, lib, fetchgit
 , qtbase, qtmultimedia, qtquick1, qtquickcontrols
 , qtimageformats, qtgraphicaleffects, qtwebkit
 , telegram-qml, libqtelegram-aseman-edition
 , gst_all_1
-, makeQtWrapper, qmakeHook }:
+, makeQtWrapper, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "cutegram-${meta.version}";
 
   src = fetchgit {
@@ -20,16 +20,14 @@ stdenv.mkDerivation rec {
     telegram-qml libqtelegram-aseman-edition
   ] ++ (with gst_all_1; [ gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly ]);
 
-  nativeBuildInputs = [ makeQtWrapper qmakeHook ];
-
-  enableParallelBuilding = true;
+  nativeBuildInputs = [ makeQtWrapper qmake ];
 
   fixupPhase = ''
     wrapQtProgram $out/bin/cutegram \
       --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0"
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     version = "2.7.1";
     description = "Telegram client forked from sigram";
     homepage = "http://aseman.co/en/products/cutegram/";

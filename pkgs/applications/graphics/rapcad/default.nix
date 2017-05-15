@@ -1,8 +1,9 @@
-{ stdenv, fetchFromGitHub, fetchurl, cgal, boost, gmp, mpfr, flex, bison, dxflib, readline
-, qtbase, qmakeHook, mesa_glu
+{ mkDerivation, lib, fetchFromGitHub, fetchurl
+, cgal, boost, gmp, mpfr, flex, bison, dxflib, readline
+, qtbase, qmake, mesa_glu
 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   version = "0.9.8";
   name = "rapcad-${version}";
 
@@ -21,10 +22,10 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  nativeBuildInputs = [ qmakeHook ];
+  nativeBuildInputs = [ qmake ];
   buildInputs = [ qtbase cgal boost gmp mpfr flex bison dxflib readline mesa_glu ];
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     license = licenses.gpl3;
     maintainers = [ maintainers.raskin ];
     platforms = platforms.linux;

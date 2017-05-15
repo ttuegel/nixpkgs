@@ -1,8 +1,9 @@
-{ stdenv, fetchurl
+{ mkDerivation, lib, fetchurl
 , qtbase, qtsvg, qtserialport, qtwebkit, qtmultimedia, qttools, qtconnectivity
-, yacc, flex, zlib, config, qmakeHook, makeQtWrapper
+, yacc, flex, zlib, config, qmake, makeQtWrapper
 }:
-stdenv.mkDerivation rec {
+
+mkDerivation rec {
   name = "golden-cheetah-${version}";
   version = "3.4";
   src = fetchurl {
@@ -14,7 +15,7 @@ stdenv.mkDerivation rec {
     qtbase qtsvg qtserialport qtwebkit qtmultimedia qttools yacc flex zlib
     qtconnectivity
   ];
-  nativeBuildInputs = [ makeQtWrapper qmakeHook ] ++ qtInputs;
+  nativeBuildInputs = [ makeQtWrapper qmake ] ++ qtInputs;
   preConfigure = ''
     cp src/gcconfig.pri.in src/gcconfig.pri
     cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri
@@ -30,9 +31,9 @@ stdenv.mkDerivation rec {
 
     runHook postInstall
   '';
-  meta = {
+  meta = with lib; {
     description = "Performance software for cyclists, runners and triathletes";
-    platforms = stdenv.lib.platforms.linux;
-    maintainers = [ stdenv.lib.maintainers.ocharles ];
+    platforms = platforms.linux;
+    maintainers = [ maintainers.ocharles ];
   };
 }

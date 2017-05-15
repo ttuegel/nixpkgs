@@ -1,6 +1,6 @@
-{ stdenv, fetchFromGitHub, qtbase, qmakeHook, makeWrapper, libX11 }:
+{ mkDerivation, lib, fetchFromGitHub, qtbase, qmake, makeWrapper, libX11 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "cmst-${version}";
   version = "2017.03.18";
 
@@ -11,11 +11,9 @@ stdenv.mkDerivation rec {
     sha256 = "0lsg8ya36df48ij0jawgli3f63hy6mn9zcla48whb1l4r7cih545";
   };
 
-  nativeBuildInputs = [ makeWrapper qmakeHook ];
+  nativeBuildInputs = [ makeWrapper qmake ];
 
   buildInputs = [ qtbase ];
-
-  enableParallelBuilding = true;
 
   preConfigure = ''
     substituteInPlace ./cmst.pro \
@@ -38,11 +36,11 @@ stdenv.mkDerivation rec {
       --prefix "QTCOMPOSE" ":" "${libX11}/share/X11/locale"
   '';
 
-  meta = {
+  meta = with lib; {
     description = "QT GUI for Connman with system tray icon";
     homepage = "https://github.com/andrew-bibb/cmst";
-    maintainers = [ stdenv.lib.maintainers.matejc ];
-    platforms = stdenv.lib.platforms.linux;
-    license = stdenv.lib.licenses.mit;
+    maintainers = [ maintainers.matejc ];
+    platforms = platforms.linux;
+    license = licenses.mit;
   };
 }

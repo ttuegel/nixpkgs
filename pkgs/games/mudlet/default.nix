@@ -1,7 +1,7 @@
-{ fetchurl, unzip, stdenv, makeWrapper, qtbase, yajl, libzip, hunspell
-, boost, lua5_1, luafilesystem, luazip, lrexlib, luasqlite3, qmakeHook }:
+{ mkDerivation, lib, fetchurl, unzip, makeWrapper, qtbase, yajl, libzip, hunspell
+, boost, lua5_1, luafilesystem, luazip, lrexlib, luasqlite3, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "mudlet-${version}";
   version = "3.0.0-delta";
 
@@ -10,9 +10,10 @@ stdenv.mkDerivation rec {
     sha256 = "08fhqd323kgz5s17ac5z9dhkjxcmwvcmvhzy0x1vw4rayhijfrd7";
   };
 
+  nativeBuildInputs = [ makeWrapper qmake ];
   buildInputs = [
-    unzip qtbase lua5_1 hunspell libzip yajl boost makeWrapper
-    luafilesystem luazip lrexlib luasqlite3 qmakeHook
+    unzip qtbase lua5_1 hunspell libzip yajl boost
+    luafilesystem luazip lrexlib luasqlite3
   ];
 
   preConfigure = "cd src";
@@ -34,12 +35,12 @@ stdenv.mkDerivation rec {
 
   patches = [ ./libs.patch ];
 
-  meta = {
+  meta = with lib; {
     description = "Crossplatform mud client";
     homepage = http://mudlet.org/;
-    maintainers = [ stdenv.lib.maintainers.wyvie ];
-    platforms = stdenv.lib.platforms.linux;
-    license = stdenv.lib.licenses.gpl2;
+    maintainers = [ maintainers.wyvie ];
+    platforms = platforms.linux;
+    license = licenses.gpl2;
     broken = true;
   };
 }

@@ -1,6 +1,6 @@
-{ stdenv, fetchFromGitHub, fetchpatch, pkgconfig, perl, python, which, makeQtWrapper
+{ mkDerivation, lib, fetchFromGitHub, fetchpatch, pkgconfig, perl, python, which
 , libX11, libxcb, mesa
-, qtbase, qtdeclarative, qtquickcontrols, qttools, qtx11extras, qmakeHook
+, qtbase, qtdeclarative, qtquickcontrols, qttools, qtx11extras, qmake, makeQtWrapper
 , libchardet
 , ffmpeg
 
@@ -20,7 +20,7 @@
 , youtubeSupport ? true, youtube-dl ? null
 }:
 
-with stdenv.lib;
+with lib;
 
 assert jackSupport -> jack != null;
 assert portaudioSupport -> portaudio != null;
@@ -28,7 +28,7 @@ assert pulseSupport -> libpulseaudio != null;
 assert cddaSupport -> libcdda != null;
 assert youtubeSupport -> youtube-dl != null;
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "bomi-${version}";
   version = "0.9.11";
 
@@ -52,8 +52,7 @@ stdenv.mkDerivation rec {
     })
   ];
 
-  buildInputs = with stdenv.lib;
-                [ libX11
+  buildInputs = [ libX11
                   libxcb
                   mesa
                   qtbase
@@ -96,19 +95,18 @@ stdenv.mkDerivation rec {
 
   dontUseQmakeConfigure = true;
 
-  configureFlags = with stdenv.lib;
-                   [ "--qmake=qmake" ]
+  configureFlags = [ "--qmake=qmake" ]
                    ++ optional jackSupport "--enable-jack"
                    ++ optional portaudioSupport "--enable-portaudio"
                    ++ optional pulseSupport "--enable-pulseaudio"
                    ++ optional cddaSupport "--enable-cdda"
                    ;
 
-  nativeBuildInputs = [ pkgconfig perl python which qttools makeQtWrapper qmakeHook ];
+  nativeBuildInputs = [ pkgconfig perl python which qttools makeQtWrapper qmake ];
 
   enableParallelBuilding = true;
 
-  meta = with stdenv.lib; {
+  meta = {
     description = "Powerful and easy-to-use multimedia player";
     homepage = "https://bomi-player.github.io/";
     license = licenses.gpl2Plus;

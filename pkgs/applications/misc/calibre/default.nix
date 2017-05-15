@@ -1,10 +1,10 @@
-{ stdenv, fetchurl, fetchpatch, poppler_utils, pkgconfig, libpng
-, imagemagick, libjpeg, fontconfig, podofo, qtbase, qmakeHook, icu, sqlite
+{ mkDerivation, lib, fetchurl, fetchpatch, poppler_utils, pkgconfig, libpng
+, imagemagick, libjpeg, fontconfig, podofo, qtbase, qmake, icu, sqlite
 , makeWrapper, unrarSupport ? false, chmlib, python2Packages, xz, libusb1, libmtp
 , xdg_utils, makeDesktopItem
 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   version = "2.84.0";
   name = "calibre-${version}";
 
@@ -34,7 +34,7 @@ stdenv.mkDerivation rec {
       sha256 = "16xwa2fa47jvs954fjrwr8rhh89aljgi1d1wrfxa40sknlmfwxif";
     })
     # the unrar patch is not from debian
-  ] ++ stdenv.lib.optional (!unrarSupport) ./dont_build_unrar_plugin.patch;
+  ] ++ lib.optional (!unrarSupport) ./dont_build_unrar_plugin.patch;
 
   prePatch = ''
     sed -i "/pyqt_sip_dir/ s:=.*:= '${python2Packages.pyqt5}/share/sip/PyQt5':"  \
@@ -47,9 +47,7 @@ stdenv.mkDerivation rec {
 
   dontUseQmakeConfigure = true;
 
-  enableParallelBuilding = true;
-
-  nativeBuildInputs = [ makeWrapper pkgconfig qmakeHook ];
+  nativeBuildInputs = [ makeWrapper pkgconfig qmake ];
 
   buildInputs = [
     poppler_utils libpng imagemagick libjpeg
@@ -101,7 +99,7 @@ stdenv.mkDerivation rec {
     genericName = "E-book library management";
     icon = "@out@/share/calibre/images/library.png";
     comment = "Manage, convert, edit, and read e-books";
-    mimeType = stdenv.lib.concatStringsSep ";" [
+    mimeType = lib.concatStringsSep ";" [
       "application/x-mobipocket-subscription"
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       "text/html"
@@ -164,7 +162,7 @@ stdenv.mkDerivation rec {
     extraEntries = "NoDisplay=true";
   };
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Comprehensive e-book software";
     homepage = https://calibre-ebook.com;
     license = with licenses; if unrarSupport then unfreeRedistributable else gpl3;

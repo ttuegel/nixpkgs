@@ -1,19 +1,16 @@
-{ stdenv, fetchgit, git,  espeak, SDL, udev, doxygen, cmake
-  , qtbase, qtlocation, qtserialport, qtdeclarative, qtconnectivity, qtxmlpatterns
-  , qtsvg, qtquick1, qtquickcontrols, qtgraphicaleffects, qmakeHook
-  , makeQtWrapper, lndir
-  , gst_all_1, qt-gstreamer1, pkgconfig, glibc
-  , version ? "2.9.4"
+{ mkDerivation, lib, fetchgit, git,  espeak, SDL, udev, doxygen, cmake
+, qtbase, qtlocation, qtserialport, qtdeclarative, qtconnectivity, qtxmlpatterns
+, qtsvg, qtquick1, qtquickcontrols, qtgraphicaleffects, qmake
+, makeQtWrapper, lndir
+, gst_all_1, qt-gstreamer1, pkgconfig, glibc
+, version ? "2.9.4"
 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "qgroundcontrol-${version}";
-  buildInputs = [
-   SDL udev doxygen git
-  ] ++ gstInputs;
 
   qtInputs = [
-    qtbase qtlocation qtserialport qtdeclarative qtconnectivity qtxmlpatterns qtsvg 
+    qtbase qtlocation qtserialport qtdeclarative qtconnectivity qtxmlpatterns qtsvg
     qtquick1 qtquickcontrols qtgraphicaleffects
   ];
 
@@ -21,10 +18,8 @@ stdenv.mkDerivation rec {
     gstreamer gst-plugins-base
   ];
 
-  enableParallelBuilding = true;
-  nativeBuildInputs = [
-    pkgconfig makeQtWrapper qmakeHook
- ] ++ qtInputs;
+  buildInputs = [ SDL udev doxygen git ] ++ gstInputs ++ qtInputs;
+  nativeBuildInputs = [ pkgconfig makeQtWrapper qmake ];
 
   patches = [ ./0001-fix-gcc-cmath-namespace-issues.patch ];
   postPatch = ''
@@ -44,13 +39,13 @@ stdenv.mkDerivation rec {
     cd ..
     mkdir -p $out/share/applications
     cp -v qgroundcontrol.desktop $out/share/applications
-    
+
     mkdir -p $out/bin
     cp -v build/release/qgroundcontrol "$out/bin/"
-    
+
     mkdir -p $out/share/qgroundcontrol
     cp -rv resources/ $out/share/qgroundcontrol
-    
+
     mkdir -p $out/share/pixmaps
     cp -v resources/icons/qgroundcontrol.png $out/share/pixmaps
 
@@ -73,7 +68,6 @@ stdenv.mkDerivation rec {
     wrapQtProgram "$out/bin/qgroundcontrol" \
       --prefix GST_PLUGIN_SYSTEM_PATH : "$GST_PLUGIN_SYSTEM_PATH"
   '';
-  
 
   # TODO: package mavlink so we can build from a normal source tarball
   src = fetchgit {
@@ -83,12 +77,12 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  meta = {
+  meta = with lib; {
     description = "Provides full ground station support and configuration for the PX4 and APM Flight Stacks";
     homepage = http://qgroundcontrol.org/;
-    license = stdenv.lib.licenses.gpl3Plus;
-    platforms = with stdenv.lib.platforms; linux;
-    maintainers = with stdenv.lib.maintainers; [ pxc ];
+    license = licenses.gpl3Plus;
+    platforms = with platforms; linux;
+    maintainers = with maintainers; [ pxc ];
     broken = true; # relies improperly on private Qt 5.5 headers
   };
 }

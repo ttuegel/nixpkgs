@@ -1,6 +1,6 @@
-{ stdenv, fetchurl, qtbase, qtsvg, qttools, qmakeHook }:
+{ mkDerivation, lib, fetchurl, qtbase, qtsvg, qttools, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "qwt-6.1.2";
 
   src = fetchurl {
@@ -8,8 +8,8 @@ stdenv.mkDerivation rec {
     sha256 = "031x4hz1jpbirv9k35rqb52bb9mf2w7qav89qv1yfw1r3n6z221b";
   };
 
-  propagatedBuildInputs = [ qtbase qtsvg qttools ];
-  nativeBuildInputs = [ qmakeHook ];
+  propagatedBuildInputs = [ qtbase qtsvg ];
+  nativeBuildInputs = [ qmake qttools ];
 
   postPatch = ''
     sed -e "s|QWT_INSTALL_PREFIX.*=.*|QWT_INSTALL_PREFIX = $out|g" -i qwtconfig.pri
@@ -17,11 +17,11 @@ stdenv.mkDerivation rec {
 
   qmakeFlags = [ "-after doc.path=$out/share/doc/${name}" ];
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Qt widgets for technical applications";
     homepage = http://qwt.sourceforge.net/;
     # LGPL 2.1 plus a few exceptions (more liberal)
-    license = stdenv.lib.licenses.qwt;
+    license = licenses.qwt;
     platforms = platforms.linux;
     maintainers = [ maintainers.bjornfor ];
     branch = "6";

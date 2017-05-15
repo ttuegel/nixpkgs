@@ -1,6 +1,6 @@
-{ stdenv, fetchFromGitHub, fftw, qtbase, qmakeHook }:
+{ mkDerivation, lib, fetchFromGitHub, fftw, qtbase, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "libkeyfinder-${version}";
   version = "2.1";
 
@@ -11,7 +11,7 @@ stdenv.mkDerivation rec {
     owner = "ibsh";
   };
 
-  buildInputs = [ fftw qtbase qmakeHook ];
+  buildInputs = [ fftw qtbase qmake ];
 
   postPatch = ''
     substituteInPlace LibKeyFinder.pro \
@@ -28,7 +28,7 @@ stdenv.mkDerivation rec {
     cp -a lib*.so* $out/lib
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Musical key detection for digital audio (C++ library)";
     homepage = http://www.ibrahimshaath.co.uk/keyfinder/;
     license = licenses.gpl3Plus;

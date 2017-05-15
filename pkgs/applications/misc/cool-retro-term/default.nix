@@ -1,7 +1,7 @@
-{ stdenv, fetchgit, makeQtWrapper, qtbase, qtquick1, qmltermwidget,
-qtquickcontrols, qtgraphicaleffects, qmakeHook }:
+{ mkDerivation, lib, fetchgit, makeQtWrapper, qtbase, qtquick1, qmltermwidget,
+qtquickcontrols, qtgraphicaleffects, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   version = "1.0.0";
   name = "cool-retro-term-${version}";
 
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
   '';
 
   buildInputs = [ qtbase qtquick1 qmltermwidget qtquickcontrols qtgraphicaleffects ];
-  nativeBuildInputs = [ makeQtWrapper qmakeHook ];
+  nativeBuildInputs = [ makeQtWrapper qmake ];
 
   installFlags = [ "INSTALL_ROOT=$(out)" ];
 
@@ -31,7 +31,7 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  meta = {
+  meta = with lib; {
     description = "Terminal emulator which mimics the old cathode display";
     longDescription = ''
       cool-retro-term is a terminal emulator which tries to mimic the look and
@@ -39,8 +39,8 @@ stdenv.mkDerivation rec {
       eye-candy, customizable, and reasonably lightweight.
     '';
     homepage = "https://github.com/Swordifish90/cool-retro-term";
-    license = with stdenv.lib.licenses; [ gpl2 gpl3 ];
-    platforms = stdenv.lib.platforms.linux;
-    maintainers = with stdenv.lib.maintainers; [ skeidel ];
+    license = with licenses; [ gpl2 gpl3 ];
+    platforms = platforms.linux;
+    maintainers = with maintainers; [ skeidel ];
   };
 }

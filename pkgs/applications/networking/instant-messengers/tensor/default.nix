@@ -1,6 +1,6 @@
-{ stdenv, fetchgit, qtbase, qtquickcontrols, qmakeHook, makeQtWrapper, makeDesktopItem }:
+{ mkDerivation, lib, fetchgit, qtbase, qtquickcontrols, qmake, makeQtWrapper, makeDesktopItem }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "tensor-git-${version}";
   version = "2017-02-21";
 
@@ -11,10 +11,8 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  enableParallelBuilding = true;
-
   buildInputs = [ qtbase qtquickcontrols ];
-  nativeBuildInputs = [ qmakeHook makeQtWrapper ];
+  nativeBuildInputs = [ qmake makeQtWrapper ];
 
   desktopItem = makeDesktopItem {
     name        = "tensor";
@@ -44,7 +42,7 @@ stdenv.mkDerivation rec {
     runHook postInstall
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     homepage = https://matrix.org/docs/projects/client/tensor.html;
     description = "Cross-platform Qt5/QML-based Matrix client";
     license = licenses.gpl3;

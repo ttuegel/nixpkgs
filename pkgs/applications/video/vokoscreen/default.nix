@@ -1,9 +1,9 @@
-{ stdenv, fetchgit
-, pkgconfig, qtbase, qttools, qmakeHook, qtx11extras, alsaLib, libv4l, libXrandr
+{ mkDerivation, lib, fetchgit
+, pkgconfig, qtbase, qttools, qmake, qtx11extras, alsaLib, libv4l, libXrandr
 , ffmpeg
 }:
 
-stdenv.mkDerivation {
+mkDerivation {
   name = "vokoscreen-2.5.0";
   src = fetchgit {
     url = "https://github.com/vkohaupt/vokoscreen.git";
@@ -11,13 +11,11 @@ stdenv.mkDerivation {
     sha256 = "1hvw7xz1mj16ishbaip73wddbmgibsz0pad4y586zbarpynss25z";
   };
 
+  nativeBuildInputs = [ pkgconfig qmake qttools ];
   buildInputs = [
     alsaLib
     libv4l
-    pkgconfig
     qtbase
-    qttools
-    qmakeHook
     qtx11extras
     libXrandr
   ];
@@ -34,7 +32,7 @@ stdenv.mkDerivation {
     substituteInPlace settings/QvkSettings.cpp --subst-var-by ffmpeg ${ffmpeg}
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Simple GUI screencast recorder, using ffmpeg";
     homepage = "http://linuxecke.volkoh.de/vokoscreen/vokoscreen.html";
     longDescription = ''

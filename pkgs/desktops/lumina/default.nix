@@ -1,8 +1,8 @@
-{ stdenv, fetchFromGitHub, fluxbox, xscreensaver, desktop_file_utils, numlockx,
-  xorg, qtbase, qtsvg, qtmultimedia, qtx11extras, qmakeHook, qttools, oxygen-icons5
+{ mkDerivation, lib, fetchFromGitHub, fluxbox, xscreensaver, desktop_file_utils, numlockx,
+  xorg, qtbase, qtsvg, qtmultimedia, qtx11extras, qmake, qttools, oxygen-icons5
 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "lumina-${version}";
   version = "1.2.0-p1";
 
@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [
-    qmakeHook
+    qmake
     qttools
   ];
 
@@ -52,9 +52,7 @@ stdenv.mkDerivation rec {
 
   qmakeFlags = [ "LINUX_DISTRO=NixOS" "CONFIG+=WITH_I18N" ];
 
-  enableParallelBuilding = true;
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A lightweight, portable desktop environment";
     longDescription = ''
       The Lumina Desktop Environment is a lightweight system interface

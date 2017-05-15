@@ -1,7 +1,7 @@
-{ stdenv, lib, fetchgit, pkgconfig , libssh2
+{ mkDerivation, lib, fetchgit, pkgconfig , libssh2
 , qtbase, qtdeclarative, qtgraphicaleffects, qtimageformats, qtquickcontrols
 , qtsvg, qttools, qtquick1
-, makeQtWrapper, qmakeHook
+, makeQtWrapper, qmake
 }:
 
 let
@@ -13,7 +13,7 @@ let
 
 in
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "redis-desktop-manager-${version}";
   version = "0.8.3";
 
@@ -24,11 +24,11 @@ stdenv.mkDerivation rec {
     sha256 = "0a7xa39qp1q32zkypw32mm3wi8wbhxhvrm6l3xsa3k1jzih7hzxr";
   };
 
-  nativeBuildInputs = [ makeQtWrapper qmakeHook ];
+  nativeBuildInputs = [ makeQtWrapper qmake qttools ];
 
   buildInputs = [
     pkgconfig libssh2 qtbase qtdeclarative qtgraphicaleffects qtimageformats
-    qtquick1 qtquickcontrols qtsvg qttools
+    qtquick1 qtquickcontrols qtsvg
   ];
 
   dontUseQmakeConfigure = true;
