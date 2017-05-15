@@ -30,7 +30,7 @@ let
   packages = self: with self;
     let
       callPackage = self.newScope {
-        kdeFramework = import ./build-support/framework.nix {
+        mkDerivation = import ./build-support/framework.nix {
           inherit lib fetchurl;
           mkDerivation = libsForQt5.callPackage ({ mkDerivation }: mkDerivation) {};
         };
