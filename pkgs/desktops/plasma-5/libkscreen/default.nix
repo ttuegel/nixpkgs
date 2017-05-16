@@ -10,6 +10,6 @@ mkDerivation {
   propagatedBuildInputs = [ kwayland libXrandr qtx11extras ];
   patches = copyPathsToStore (lib.readPathsFromFile ./. ./series);
   preConfigure = ''
-    NIX_CFLAGS_COMPILE+=" -DNIXPKGS_LIBKSCREEN_BACKENDS=\"''${!outputLib}/lib/qt5/plugins/kf5/kscreen\""
+    NIX_CFLAGS_COMPILE+=" -DNIXPKGS_LIBKSCREEN_BACKENDS=\"''${!outputLib}/$qtPluginPrefix/kf5/kscreen\""
   '';
 }

@@ -16,7 +16,7 @@ mkDerivation {
 
   postPatch = ''
     sed -i "s,-lhunspell,-lhunspell-1.6," src/spellcheck/spellcheck.pri
-    sed -i "s,\$\$\[QT_INSTALL_PLUGINS\],$out/lib/qt5/plugins," src/src.pro
+    sed -i "s,\$\$\[QT_INSTALL_PLUGINS\],$out/$qtPluginPrefix," src/src.pro
   '';
 
   meta = with lib; {
