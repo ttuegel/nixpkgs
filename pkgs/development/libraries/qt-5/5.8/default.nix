@@ -135,9 +135,26 @@ let
 
       makeQtWrapper =
         makeSetupHook
-        { deps = [ makeWrapper ] ++ optionals (!stdenv.isDarwin) [ dconf.lib gtk3 ]; }
-        (if stdenv.isDarwin then ../make-qt-wrapper-darwin.sh else ../make-qt-wrapper.sh);
-
+        { deps = optional (!stdenv.isDarwin) makeWrapper; }
+        (if stdenv.isDarwin
+          # No need to wrap anything on Darwin
+          then ''
+            wrapQtProgram() {}
+            makeQtWrapper() {}
+          ''
+          # Only need to wrap for bits required by GTK integration
+          else ''
+            wrapQtProgram() {
+              wrapProgram "$@" \
+                --prefix XDG_DATA_DIRS : "${gtk3}/share/gsettings-schemas/${gtk3.name}" \
+                --prefix GIO_EXTRA_MODULES : "${dconf.lib}/lib/gio/modules"
+            }
+            makeQtWrapper() {
+              makeWrapper "$@" \
+                --prefix XDG_DATA_DIRS : "${gtk3}/share/gsettings-schemas/${gtk3.name}" \
+                --prefix GIO_EXTRA_MODULES : "${dconf.lib}/lib/gio/modules"
+            }
+          '');
 
       qmake = makeSetupHook {
         deps = [ self.qtbase.dev ];

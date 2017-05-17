@@ -148,8 +148,13 @@ let
 
       makeQtWrapper =
         makeSetupHook
-        { deps = [ makeWrapper ]; }
-        (if stdenv.isDarwin then ../make-qt-wrapper-darwin.sh else ../make-qt-wrapper.sh);
+        { deps = optional (!stdenv.isDarwin) makeWrapper; }
+        # No need to wrap anything
+        # GTK integration is disabled in this branch
+        ''
+          wrapQtProgram() {}
+          makeQtWrapper() {}
+        '';
 
       qmake = makeSetupHook {
         deps = [ self.qtbase.dev ];
