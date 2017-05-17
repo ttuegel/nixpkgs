@@ -14,7 +14,7 @@ kdeDerivation {
   propagatedBuildInputs = [ qtbase qtsvg ];
   meta = {
     shortDescription = "Libraries for creating business diagrams";
-    license = lib.licenses.gpl21;
+    license = lib.licenses.gpl2;
     platforms = qtbase.meta.platforms;
     maintainers = [ lib.maintainers.ttuegel ];
   };
