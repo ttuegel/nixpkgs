@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib,
+  mkDerivation, lib, kdepimTeam,
   extra-cmake-modules, kdoctools,
   shared_mime_info,
   akonadi, akonadi-calendar, akonadi-contacts, akonadi-mime, akonadi-notes,
@@ -12,7 +12,7 @@ mkDerivation {
   name = "kdepim-runtime";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];
-    maintainers = [ lib.maintainers.ttuegel ];
+    maintainers = kdepimTeam;
   };
   nativeBuildInputs = [ extra-cmake-modules kdoctools ];
   propagatedNativeBuildInputs = [ shared_mime_info ];

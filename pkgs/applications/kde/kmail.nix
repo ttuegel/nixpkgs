@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib,
+  mkDerivation, lib, kdepimTeam,
   extra-cmake-modules, kdoctools,
   kbookmarks, kcalutils, kcompletion, kconfig, kconfigwidgets, kcoreaddons,
   kdelibs4support, kdepim-runtime, kguiaddons, ki18n, kiconthemes, kinit, kio,
@@ -12,7 +12,7 @@ mkDerivation {
   name = "kmail";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];
-    maintainers = [ lib.maintainers.vandenoever ];
+    maintainers = kdepimTeam;
   };
   nativeBuildInputs = [ extra-cmake-modules kdoctools ];
   propagatedBuildInputs = [

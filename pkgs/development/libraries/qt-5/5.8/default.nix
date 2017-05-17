@@ -57,6 +57,10 @@ let
            (if debug then "-DCMAKE_BUILD_TYPE=Debug"
                      else "-DCMAKE_BUILD_TYPE=Release");
 
+      nativeBuildInputs =
+        (args.nativeBuildInputs or [])
+        ++ [ self.wrapQtGuiHook ];
+
       enableParallelBuilding = args.enableParallelBuilding or true;
 
     });
@@ -143,6 +147,14 @@ let
         { deps = [ self.qtbase.dev ]; }
         (if stdenv.isDarwin then ../qmake-hook-darwin.sh else ../qmake-hook.sh);
 
+      wrapQtGuiHook = makeSetupHook {
+        deps = [ makeWrapper ];
+        substitutions = {
+          gtk = gtk3;
+          gtk_name = gtk3.name;
+          dconf = dconf.lib;
+        };
+      } ../wrap-qtgui-hook.sh;
     };
 
    self = makeScope newScope addPackages;

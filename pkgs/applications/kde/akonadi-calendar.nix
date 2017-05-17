@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib,
+  mkDerivation, lib, kdepimTeam,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-contacts, kcalcore, kcalutils, kcontacts,
   kidentitymanagement, kio, kmailtransport,
@@ -9,7 +9,7 @@ mkDerivation {
   name = "akonadi-calendar";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 ];
-    maintainers = [ lib.maintainers.ttuegel ];
+    maintainers = kdepimTeam;
   };
   nativeBuildInputs = [ extra-cmake-modules kdoctools ];
   propagatedBuildInputs = [

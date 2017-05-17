@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib,
+  mkDerivation, lib, kdepimTeam,
   extra-cmake-modules, kdoctools,
   akonadi, calendarsupport, kcalutils, kdiagram, libkdepim, qtbase,
 }:
@@ -8,7 +8,7 @@ mkDerivation {
   name = "eventviews";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];
-    maintainers = [ lib.maintainers.ttuegel ];
+    maintainers = kdepimTeam;
   };
   nativeBuildInputs = [ extra-cmake-modules kdoctools ];
   propagatedBuildInputs = [

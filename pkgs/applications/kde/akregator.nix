@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib,
+  mkDerivation, lib, kdepimTeam,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-mime, grantlee5, grantleetheme, kcmutils, kcrash,
   knotifyconfig, kontactinterface, kparts, ktexteditor, libkdepim, libkleo,
@@ -10,7 +10,7 @@ mkDerivation {
   name = "akregator";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];
-    maintainers = [ lib.maintainers.vandenoever ];
+    maintainers = kdepimTeam;
   };
   nativeBuildInputs = [ extra-cmake-modules kdoctools ];
   propagatedBuildInputs = [
