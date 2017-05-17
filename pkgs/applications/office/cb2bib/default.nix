@@ -1,6 +1,6 @@
-{ stdenv, fetchurl, qmakeHook, qtbase, qtwebkit, qtx11extras, lzo, libX11 }:
+{ mkDerivation, lib, fetchurl, qmake, qtbase, qtwebkit, qtx11extras, lzo, libX11 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = pname + "-" + version;
   pname = "cb2bib";
   version = "1.9.2";
@@ -9,7 +9,7 @@ stdenv.mkDerivation rec {
     sha256 = "0yz79v023w1229wzck3gij0iqah1xg8rg4a352q8idvg7bdmyfin";
   };
   buildInputs = [ qtbase qtwebkit qtx11extras lzo libX11 ];
-  nativeBuildInputs = [ qmakeHook ];
+  nativeBuildInputs = [ qmake ];
 
   configurePhase = ''
     runHook preConfigure
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
     runHook postConfigure
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Rapidly extract unformatted, or unstandardized bibliographic references from email alerts, journal Web pages and PDF files";
     homepage = http://www.molspaces.com/d_cb2bib-overview.php;
     maintainers = with maintainers; [ edwtjo ];

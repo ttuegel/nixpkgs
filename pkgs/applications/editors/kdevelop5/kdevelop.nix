@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, cmake, gettext, pkgconfig, extra-cmake-modules, makeQtWrapper
+{ mkDerivation, lib, fetchurl, cmake, gettext, pkgconfig, extra-cmake-modules, wrapGAppsHook
 , qtquickcontrols, qtwebkit, qttools, kde-cli-tools
 , kconfig, kdeclarative, kdoctools, kiconthemes, ki18n, kitemmodels, kitemviews
 , kjobwidgets, kcmutils, kio, knewstuff, knotifyconfig, kparts, ktexteditor
@@ -13,7 +13,7 @@ let
   dirVersion = "5.0.4";
 
 in
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "${pname}-${version}";
 
   src = fetchurl {
@@ -22,24 +22,26 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [
-    cmake gettext pkgconfig extra-cmake-modules makeWrapper makeQtWrapper
+    cmake gettext pkgconfig extra-cmake-modules makeWrapper wrapGAppsHook
   ];
 
   buildInputs = [
+    kdevelop-pg-qt
+    llvmPackages.llvm llvmPackages.clang-unwrapped
+  ];
+
+  propagatedBuildInputs = [
     qtquickcontrols qtwebkit
     kconfig kdeclarative kdoctools kiconthemes ki18n kitemmodels kitemviews
     kjobwidgets kcmutils kio knewstuff knotifyconfig kparts ktexteditor
     threadweaver kxmlgui kwindowsystem grantlee plasma-framework krunner
-    kdevplatform kdevelop-pg-qt shared_mime_info libksysguard konsole.unwrapped
-    llvmPackages.llvm llvmPackages.clang-unwrapped
+    kdevplatform shared_mime_info libksysguard konsole
   ];
 
   postInstall = ''
-    wrapQtProgram "$out/bin/kdevelop"
-    
     # The kdevelop! script (shell environment) needs qdbus and kioclient5 in PATH.
     wrapProgram "$out/bin/kdevelop!" --prefix PATH ":" "${qttools}/bin:${kde-cli-tools}/bin"
-    
+
     # Fix the (now wrapped) kdevelop! to find things in right places:
     # - Make KDEV_BASEDIR point to bin directory of kdevplatform.
     kdev_fixup_sed="s|^export KDEV_BASEDIR=.*$|export KDEV_BASEDIR=${kdevplatform}/bin|"
@@ -48,7 +50,7 @@ stdenv.mkDerivation rec {
     sed -E -i "$kdev_fixup_sed" "$out/bin/.kdevelop!-wrapped"
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     maintainers = [ maintainers.ambrop72 ];
     platforms = platforms.linux;
     description = "KDE official IDE";
@@ -61,6 +63,6 @@ stdenv.mkDerivation rec {
         libraries and is under development since 1998.
       '';
     homepage = https://www.kdevelop.org;
-    license = with stdenv.lib.licenses; [ gpl2Plus lgpl2Plus ];
+    license = with licenses; [ gpl2Plus lgpl2Plus ];
   };
 }

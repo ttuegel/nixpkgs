@@ -1,7 +1,7 @@
-{ stdenv, fetchFromGitHub
-, qtbase, qtmultimedia, qtquick1, qmakeHook }:
+{ mkDerivation, lib, fetchFromGitHub
+, qtbase, qtmultimedia, qtquick1, qmake }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "libqtelegram-aseman-edition-${meta.version}";
 
   src = fetchFromGitHub {
@@ -12,15 +12,14 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ qtbase qtmultimedia qtquick1 ];
-  nativeBuildInputs = [ qmakeHook ];
-  enableParallelBuilding = true;
+  nativeBuildInputs = [ qmake ];
 
   patchPhase = ''
     substituteInPlace libqtelegram-ae.pro --replace "/libqtelegram-ae" ""
     substituteInPlace libqtelegram-ae.pro --replace "/\$\$LIB_PATH" ""
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     version = "6.1";
     description = "A fork of libqtelegram by Aseman, using qmake";
     homepage = src.meta.homepage;

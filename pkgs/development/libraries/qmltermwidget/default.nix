@@ -1,6 +1,6 @@
-{ stdenv, fetchgit, qtbase, qtquick1, qmakeHook, qtmultimedia }:
+{ mkDerivation, lib, fetchgit, qtbase, qtquick1, qmake, qtmultimedia }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   version = "0.1.0";
   name = "qmltermwidget-${version}";
 
@@ -11,22 +11,20 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ qtbase qtquick1 qtmultimedia ];
-  nativeBuildInputs = [ qmakeHook ];
+  nativeBuildInputs = [ qmake ];
 
   patchPhase = ''
     substituteInPlace qmltermwidget.pro \
-      --replace '$$[QT_INSTALL_QML]' "/lib/qt5/qml/"
+      --replace '$$[QT_INSTALL_QML]' "/$qtQmlPrefix/"
   '';
 
   installFlags = [ "INSTALL_ROOT=$(out)" ];
 
-  enableParallelBuilding = true;
-
-  meta = {
+  meta = with lib; {
     description = "A QML port of qtermwidget";
     homepage = "https://github.com/Swordfish90/qmltermwidget";
-    license = stdenv.lib.licenses.gpl2;
-    platforms = stdenv.lib.platforms.linux;
-    maintainers = with stdenv.lib.maintainers; [ skeidel ];
+    license = licenses.gpl2;
+    platforms = platforms.linux;
+    maintainers = with maintainers; [ skeidel ];
   };
 }

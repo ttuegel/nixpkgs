@@ -1,4 +1,5 @@
-{ stdenv, fetchFromGitHub, fftw, freeglut, mesa_glu, qtbase, qtmultimedia, qmakeHook
+{ mkDerivation, lib, fetchFromGitHub
+, fftw, freeglut, mesa_glu, qtbase, qtmultimedia, qmake
 , alsaSupport ? true, alsaLib ? null
 , jackSupport ? false, libjack2 ? null
 , portaudioSupport ? false, portaudio ? null }:
@@ -7,9 +8,9 @@ assert alsaSupport -> alsaLib != null;
 assert jackSupport -> libjack2 != null;
 assert portaudioSupport -> portaudio != null;
 
-with stdenv.lib;
+with lib;
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "fmit-${version}";
   version = "1.1.11";
 
@@ -20,7 +21,7 @@ stdenv.mkDerivation rec {
     owner = "gillesdegottex";
   };
 
-  nativeBuildInputs = [ qmakeHook ];
+  nativeBuildInputs = [ qmake ];
   buildInputs = [ fftw qtbase qtmultimedia ]
     ++ optionals alsaSupport [ alsaLib ]
     ++ optionals jackSupport [ libjack2 ]
@@ -30,15 +31,14 @@ stdenv.mkDerivation rec {
     substituteInPlace fmit.pro --replace '$$FMITVERSIONGITPRO' '${version}'
   '';
 
-  preConfigure = ''
-    qmakeFlags="$qmakeFlags \
-      CONFIG+=${optionalString alsaSupport "acs_alsa"} \
-      CONFIG+=${optionalString jackSupport "acs_jack"} \
-      CONFIG+=${optionalString portaudioSupport "acs_portaudio"} \
-      PREFIXSHORTCUT=$out"
-  '';
+  qmakeFlags =
+    optional alsaSupport "CONFIG+=acs_alsa"
+    ++ optional jackSupport "CONFIG+=acs_jack"
+    ++ optional portaudioSupport "CONFIG+=acs_portaudio";
 
-  enableParallelBuilding = true;
+  preConfigure = ''
+    qmakeFlags="$qmakeFlags PREFIXSHORTCUT=$out"
+  '';
 
   meta = {
     description = "Free Musical Instrument Tuner";

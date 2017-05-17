@@ -25,7 +25,7 @@ existing packages here and modify it as necessary.
 */
 
 {
-  libsForQt5, kdeDerivation, lib, fetchurl,
+  libsForQt5, lib, fetchurl,
   gconf,
   debug ? false,
 }:
@@ -34,8 +34,9 @@ let
   packages = self: with self;
     let
       callPackage = self.newScope {
-        plasmaPackage = import ./build-support/package.nix {
-          inherit kdeDerivation lib fetchurl;
+        mkDerivation = import ./build-support/package.nix {
+          inherit lib fetchurl;
+          mkDerivation = libsForQt5.callPackage ({ mkDerivation }: mkDerivation) {};
         };
       };
     in {

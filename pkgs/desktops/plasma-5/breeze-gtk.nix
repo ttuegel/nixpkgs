@@ -1,11 +1,6 @@
-{ plasmaPackage, lib
-, extra-cmake-modules
-, gtk2, qtbase
-}:
+{ mkDerivation , extra-cmake-modules , qtbase }:
 
-let inherit (lib) getLib; in
-
-plasmaPackage {
+mkDerivation {
   name = "breeze-gtk";
   nativeBuildInputs = [ extra-cmake-modules ];
   cmakeFlags = [ "-DWITH_GTK3_VERSION=3.22" ];

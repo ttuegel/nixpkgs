@@ -1,6 +1,6 @@
-{ stdenv, fetchFromGitHub, libudev, pkgconfig, qtbase, qmakeHook, zlib }:
+{ mkDerivation, lib, fetchFromGitHub, libudev, pkgconfig, qtbase, qmake, zlib }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   version = "0.2.6";
   name = "ckb-${version}";
 
@@ -19,7 +19,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [
     pkgconfig
-    qmakeHook
+    qmake
   ];
 
   patches = [
@@ -33,7 +33,7 @@ stdenv.mkDerivation rec {
     install -D --mode 0755 --target-directory $out/libexec/ckb-animations bin/ckb-animations/*
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Driver and configuration tool for Corsair keyboards and mice";
     homepage = https://github.com/ccMSC/ckb;
     license = licenses.gpl2;

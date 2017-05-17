@@ -1,21 +1,21 @@
 {
-  kdeApp, lib, makeQtWrapper,
-  extra-cmake-modules, kdoctools, ki18n,
+  mkDerivation, lib,
+  extra-cmake-modules, kdoctools, ki18n, wrapGAppsHook,
   akonadi-contacts, gnupg1, gpgme, karchive, kcodecs, kcontacts, kcoreaddons, kcrash,
   kdbusaddons, kiconthemes, kjobwidgets, kio, knotifications, kservice,
   ktextwidgets, kxmlgui, kwidgetsaddons, kwindowsystem
 }:
 
-kdeApp {
+mkDerivation {
   name = "kgpg";
-  nativeBuildInputs = [ extra-cmake-modules kdoctools ki18n ];
+  nativeBuildInputs = [ extra-cmake-modules kdoctools ki18n wrapGAppsHook ];
   buildInputs = [
     akonadi-contacts gnupg1 gpgme karchive kcodecs kcontacts kcoreaddons kcrash kdbusaddons
     kiconthemes kjobwidgets kio knotifications kservice ktextwidgets kxmlgui
-    kwidgetsaddons kwindowsystem makeQtWrapper
+    kwidgetsaddons kwindowsystem
   ];
-  postInstall = ''
-    wrapQtProgram $out/bin/kgpg --suffix PATH : ${lib.makeBinPath [ gnupg1 ]}
+  preFixup = ''
+    gappsWrapperArgs+=(--suffix PATH : ${lib.makeBinPath [ gnupg1 ]})
   '';
   meta = {
     license = [ lib.licenses.gpl2 ];

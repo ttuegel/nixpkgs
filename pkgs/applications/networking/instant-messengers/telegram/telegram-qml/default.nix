@@ -1,8 +1,8 @@
-{ stdenv, fetchFromGitHub
-, qtbase, qtmultimedia, qtquick1, qmakeHook
+{ mkDerivation, lib, fetchFromGitHub
+, qtbase, qtmultimedia, qtquick1, qmake
 , libqtelegram-aseman-edition }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "telegram-qml-${meta.version}";
 
   src = fetchFromGitHub {
@@ -13,8 +13,7 @@ stdenv.mkDerivation rec {
   };
 
   propagatedBuildInputs = [ qtbase qtmultimedia qtquick1 libqtelegram-aseman-edition ];
-  nativeBuildInputs = [ qmakeHook ];
-  enableParallelBuilding = true;
+  nativeBuildInputs = [ qmake ];
 
   patchPhase = ''
     substituteInPlace telegramqml.pro --replace "/\$\$LIB_PATH" ""
@@ -23,7 +22,7 @@ stdenv.mkDerivation rec {
 
   qmakeFlags = [ "BUILD_MODE+=lib" ];
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     version = "0.9.2";
     description = "Telegram API tools for QtQml and Qml";
     homepage = src.meta.homepage;

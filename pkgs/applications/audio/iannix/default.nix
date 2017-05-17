@@ -1,7 +1,7 @@
-{ stdenv, fetchFromGitHub, alsaLib, pkgconfig, qtbase, qtscript, qmakeHook
+{ mkDerivation, lib, fetchFromGitHub, alsaLib, pkgconfig, qtbase, qtscript, qmake
 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "iannix-${version}";
   version = "2016-01-31";
   src = fetchFromGitHub {
@@ -11,19 +11,18 @@ stdenv.mkDerivation rec {
     sha256 = "184ydb9f1303v332k5k3f1ki7cb6nkxhh6ij0yn72v7dp7figrgj";
   };
 
-  buildInputs = [ alsaLib pkgconfig qtbase qtscript qmakeHook ];
+  nativeBuildInputs = [ qmake ];
+  buildInputs = [ alsaLib pkgconfig qtbase qtscript ];
 
   qmakeFlags = [ "PREFIX=/" ];
 
   installFlags = [ "INSTALL_ROOT=$(out)" ];
 
-  enableParallelBuilding = true;
-
-  meta = {
+  meta = with lib; {
     description = "Graphical open-source sequencer,";
     homepage = http://www.iannix.org/;
-    license = stdenv.lib.licenses.lgpl3;
-    platforms = stdenv.lib.platforms.linux;
-    maintainers = [ stdenv.lib.maintainers.nico202 ];
+    license = licenses.lgpl3;
+    platforms = platforms.linux;
+    maintainers = [ maintainers.nico202 ];
   };
 }

@@ -1,6 +1,6 @@
-{ stdenv, fetchFromGitHub, qtbase, qmakeHook, exiv2 }:
+{ mkDerivation, lib, fetchFromGitHub, qtbase, qmake, exiv2 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "phototonic-${version}";
   version = "1.7.1";
 
@@ -14,13 +14,13 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ qtbase exiv2 ];
-  nativeBuildInputs = [ qmakeHook ];
+  nativeBuildInputs = [ qmake ];
 
   preConfigure = ''
     sed -i 's;/usr;$$PREFIX/;g' phototonic.pro
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "An image viewer and organizer";
     homepage = http://oferkv.github.io/phototonic/;
     license = licenses.gpl3;

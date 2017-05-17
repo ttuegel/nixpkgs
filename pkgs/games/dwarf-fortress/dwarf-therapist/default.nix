@@ -1,6 +1,6 @@
-{ stdenv, fetchFromGitHub, coreutils, qtbase, qtdeclarative, qmakeHook, texlive }:
+{ mkDerivation, lib, fetchFromGitHub, coreutils, qtbase, qtdeclarative, qmake, texlive }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "dwarf-therapist-original-${version}";
   version = "37.0.0";
 
@@ -13,7 +13,7 @@ stdenv.mkDerivation rec {
 
   outputs = [ "out" "layouts" ];
   buildInputs = [ qtbase qtdeclarative ];
-  nativeBuildInputs = [ texlive qmakeHook ];
+  nativeBuildInputs = [ texlive qmake ];
 
   enableParallelBuilding = false;
 
@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
     rm $out/bin/dwarftherapist
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Tool to manage dwarves in in a running game of Dwarf Fortress";
     maintainers = with maintainers; [ the-kenny abbradar ];
     license = licenses.mit;

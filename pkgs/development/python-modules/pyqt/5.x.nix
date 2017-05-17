@@ -1,5 +1,5 @@
 { lib, fetchurl, pythonPackages, pkgconfig, qtbase, qtsvg, qtwebkit, qtwebengine, dbus_libs
-, lndir, makeWrapper, qmakeHook }:
+, lndir, makeWrapper, qmake }:
 
 let
   version = "5.8.1";
@@ -23,7 +23,7 @@ in buildPythonPackage {
 
   buildInputs = [
     pkgconfig makeWrapper lndir
-    qtbase qtsvg qtwebkit qtwebengine dbus_libs qmakeHook
+    qtbase qtsvg qtwebkit qtwebengine dbus_libs qmake
   ];
 
   propagatedBuildInputs = [ sip ];

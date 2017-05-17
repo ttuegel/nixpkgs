@@ -1,6 +1,7 @@
-{ stdenv, fetchFromGitHub, qt5, qmakeHook, makeQtWrapper, pkgconfig, sqlite }:
+{ mkDerivation, lib, fetchFromGitHub
+, qtbase, qmake, qttools, qtwebkit, makeQtWrapper, pkgconfig, sqlite }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "quiterss-${version}";
   version = "0.18.4";
 
@@ -11,13 +12,14 @@ stdenv.mkDerivation rec {
     sha256 = "0gk4s41npg8is0jf4yyqpn8ksqrhwxq97z40iqcbd7dzsiv7bkvj";
   };
 
-  buildInputs = [ qt5.qtbase qt5.qttools qt5.qtwebkit qmakeHook makeQtWrapper pkgconfig sqlite.dev ];
+  nativeBuildInputs = [ makeQtWrapper pkgconfig qmake qttools ];
+  buildInputs = [ qtbase qtwebkit sqlite.dev ];
 
   postInstall = ''
     wrapQtProgram "$out/bin/quiterss"
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A Qt-based RSS/Atom news feed reader";
     longDescription = ''
       QuiteRSS is a open-source cross-platform RSS/Atom news feeds reader

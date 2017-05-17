@@ -1,6 +1,6 @@
-{ stdenv, fetchFromGitHub, qmakeHook, qtbase, qttools, makeQtWrapper }:
+{ mkDerivation, lib, fetchFromGitHub, qmake, qtbase, qttools, makeQtWrapper }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "gpxsee-${version}";
   version = "4.3";
 
@@ -11,7 +11,7 @@ stdenv.mkDerivation rec {
     sha256 = "15f686frxlrmdvh5cc837kx62g0ihqj4vb87i8433g7l5vqkv3lf";
   };
 
-  nativeBuildInputs = [ qmakeHook qttools makeQtWrapper ];
+  nativeBuildInputs = [ qmake qttools makeQtWrapper ];
 
   preConfigure = ''
     substituteInPlace src/config.h --replace /usr/share/gpxsee $out/share/gpxsee
@@ -26,7 +26,7 @@ stdenv.mkDerivation rec {
     cp pkg/maps.txt $out/share/gpxsee
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     homepage = http://tumic.wz.cz/gpxsee;
     description = "GPX viewer and analyzer";
     license = licenses.gpl3;

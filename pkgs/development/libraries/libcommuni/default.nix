@@ -1,7 +1,6 @@
-{ stdenv, fetchFromGitHub, qtbase, qtdeclarative, qmakeHook, which
-}:
+{ mkDerivation, lib, fetchFromGitHub, qtbase, qtdeclarative, qmake, which }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "libcommuni-${version}";
   version = "2016-08-17";
 
@@ -13,7 +12,7 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ qtbase qtdeclarative ];
-  nativeBuildInputs = [ qmakeHook which ];
+  nativeBuildInputs = [ qmake which ];
 
   enableParallelBuilding = true;
 
@@ -25,7 +24,7 @@ stdenv.mkDerivation rec {
 
   doCheck = true;
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "A cross-platform IRC framework written with Qt";
     homepage = https://communi.github.io;
     license = licenses.bsd3;

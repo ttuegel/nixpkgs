@@ -1,5 +1,5 @@
 {
-  kdeApp, copyPathsToStore, lib,
+  mkDerivation, copyPathsToStore, lib,
   extra-cmake-modules,
   kcompletion, kconfigwidgets, kdbusaddons, kdesignerplugin, kiconthemes,
   kio,
@@ -7,7 +7,7 @@
   mysql
 }:
 
-kdeApp {
+mkDerivation {
   name = "akonadi";
   meta = {
     license = [ lib.licenses.lgpl21 ];

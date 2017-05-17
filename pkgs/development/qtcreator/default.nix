@@ -1,16 +1,16 @@
-{ stdenv, fetchurl, makeWrapper
-, qtbase, makeQtWrapper, qtquickcontrols, qtscript, qtdeclarative, qmakeHook
+{ mkDerivation, lib, fetchurl, makeWrapper
+, qtbase, makeQtWrapper, qtquickcontrols, qtscript, qtdeclarative, qmake
 , withDocumentation ? false
 }:
 
-with stdenv.lib;
+with lib;
 
 let
   baseVersion = "4.2";
   revision = "1";
 in
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   name = "qtcreator-${version}";
   version = "${baseVersion}.${revision}";
 
@@ -21,18 +21,16 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ qtbase qtscript qtquickcontrols qtdeclarative ];
 
-  nativeBuildInputs = [ qmakeHook makeQtWrapper makeWrapper ];
+  nativeBuildInputs = [ qmake makeQtWrapper makeWrapper ];
 
   doCheck = true;
-
-  enableParallelBuilding = true;
 
   buildFlags = optional withDocumentation "docs";
 
   installFlags = [ "INSTALL_ROOT=$(out)" ] ++ optional withDocumentation "install_docs";
 
   preBuild = optional withDocumentation ''
-    ln -s ${qtbase}/share/doc $NIX_QT5_TMP/share
+    ln -s ${qtbase}/$qtDocPrefix $NIX_QT5_TMP/share
   '';
 
   postInstall = ''
