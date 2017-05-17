@@ -1,5 +1,5 @@
 {
-  kdeApp, lib,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   shared_mime_info,
   akonadi, akonadi-calendar, akonadi-contacts, akonadi-mime, akonadi-notes,
@@ -8,7 +8,7 @@
   qtwebengine,
 }:
 
-kdeApp {
+mkDerivation {
   name = "kdepim-runtime";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

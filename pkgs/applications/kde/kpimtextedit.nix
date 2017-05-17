@@ -1,10 +1,11 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   grantlee5, kcodecs, kconfigwidgets, kemoticons, kiconthemes, kio,
   kdesignerplugin, syntax-highlighting
 }:
-kdeApp {
+
+mkDerivation {
   name = "kpimtextedit";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

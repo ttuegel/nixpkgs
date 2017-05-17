@@ -1,9 +1,10 @@
 {
-  kdeApp, copyPathsToStore, lib, kdeWrapper,
+  mkDerivation, copyPathsToStore, lib,
   extra-cmake-modules, kdoctools,
   grantlee5, kiconthemes, knewstuff
 }:
-kdeApp {
+
+mkDerivation {
   name = "grantleetheme";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

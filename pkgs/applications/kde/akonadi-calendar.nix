@@ -1,11 +1,11 @@
 {
-  kdeApp, lib,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-contacts, kcalcore, kcalutils, kcontacts,
   kidentitymanagement, kio, kmailtransport,
 }:
 
-kdeApp {
+mkDerivation {
   name = "akonadi-calendar";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 ];

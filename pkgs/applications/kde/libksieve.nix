@@ -1,10 +1,11 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   akonadi, kcompletion, kidentitymanagement, kio, kmailtransport, kxmlgui,
   pimcommon, qtwebengine
 }:
-kdeApp {
+
+mkDerivation {
   name = "libksieve";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

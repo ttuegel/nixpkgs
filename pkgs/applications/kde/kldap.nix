@@ -1,9 +1,10 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   cyrus_sasl, kio, kmbox, openldap
 }:
-kdeApp {
+
+mkDerivation {
   name = "kldap";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

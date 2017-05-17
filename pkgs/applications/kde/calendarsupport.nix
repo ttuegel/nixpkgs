@@ -1,11 +1,11 @@
 {
-  kdeApp, lib,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-calendar, akonadi-mime, kcalutils, kdepim-apps-libs,
   kholidays, kmime, pimcommon,
 }:
 
-kdeApp {
+mkDerivation {
   name = "calendarsupport";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

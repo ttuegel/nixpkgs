@@ -1,9 +1,10 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   kiconthemes, kparts, kxmlgui
 }:
-kdeApp {
+
+mkDerivation {
   name = "kontactinterface";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

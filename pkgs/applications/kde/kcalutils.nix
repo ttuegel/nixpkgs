@@ -1,10 +1,11 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   grantlee5, kcalcore, kconfig, kontactinterface, kcoreaddons, kdelibs4support,
   kidentitymanagement
 }:
-kdeApp {
+
+mkDerivation {
   name = "kcalutils";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

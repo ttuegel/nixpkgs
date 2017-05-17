@@ -1,9 +1,10 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   kconfig, kio, ktextwidgets, kwidgetsaddons, pimcommon
 }:
-kdeApp {
+
+mkDerivation {
   name = "libgravatar";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

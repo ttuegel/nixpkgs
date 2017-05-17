@@ -1,10 +1,10 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   akonadi, kcompletion, kmime, kxmlgui
 }:
 
-kdeApp {
+mkDerivation {
   name = "akonadi-notes";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

@@ -1,4 +1,4 @@
-{ mkDerivation , extra-cmake-modules , qtbase }:
+{ mkDerivation, lib, extra-cmake-modules, gtk2, qtbase }:
 
 mkDerivation {
   name = "breeze-gtk";
@@ -7,6 +7,6 @@ mkDerivation {
   buildInputs = [ qtbase ];
   postPatch = ''
     sed -i cmake/FindGTKEngine.cmake \
-      -e "s|\''${KDE_INSTALL_FULL_LIBDIR}|${getLib gtk2}/lib|"
+      -e "s|\''${KDE_INSTALL_FULL_LIBDIR}|${lib.getLib gtk2}/lib|"
   '';
 }

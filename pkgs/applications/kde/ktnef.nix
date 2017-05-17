@@ -1,9 +1,10 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   kcalcore, kcalutils, kcontacts, kdelibs4support
 }:
-kdeApp {
+
+mkDerivation {
   name = "ktnef";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

@@ -1,9 +1,10 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   kcompletion, kcoreaddons, kemoticons, kio, kpimtextedit, ktextwidgets, kxmlgui
 }:
-kdeApp {
+
+mkDerivation {
   name = "kidentitymanagement";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

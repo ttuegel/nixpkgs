@@ -1,5 +1,5 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   kbookmarks, kcalutils, kcompletion, kconfig, kconfigwidgets, kcoreaddons,
   kdelibs4support, kdepim-runtime, kguiaddons, ki18n, kiconthemes, kinit, kio,
@@ -8,26 +8,19 @@
   mailcommon, messagelib, pim-sieve-editor, qtscript, qtwebengine,
 }:
 
-let
-  unwrapped =
-    kdeApp {
-      name = "kmail";
-      meta = {
-        license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];
-        maintainers = [ lib.maintainers.vandenoever ];
-      };
-      nativeBuildInputs = [ extra-cmake-modules kdoctools ];
-      propagatedBuildInputs = [
-        kbookmarks kcalutils kcompletion kconfig kconfigwidgets kcoreaddons
-        kdelibs4support kguiaddons ki18n kiconthemes kinit kio
-        kmail-account-wizard knotifications knotifyconfig kparts kpty kservice
-        ktextwidgets ktnef kwidgetsaddons kwindowsystem kxmlgui libksieve
-        mailcommon messagelib pim-sieve-editor qtscript qtwebengine
-      ];
-      propagatedUserEnvPkgs = [ kdepim-runtime kwallet ];
-    };
-in
-kdeWrapper {
-  inherit unwrapped;
-  targets = [ "bin/kmail" ];
+mkDerivation {
+  name = "kmail";
+  meta = {
+    license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];
+    maintainers = [ lib.maintainers.vandenoever ];
+  };
+  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
+  propagatedBuildInputs = [
+    kbookmarks kcalutils kcompletion kconfig kconfigwidgets kcoreaddons
+    kdelibs4support kguiaddons ki18n kiconthemes kinit kio
+    kmail-account-wizard knotifications knotifyconfig kparts kpty kservice
+    ktextwidgets ktnef kwidgetsaddons kwindowsystem kxmlgui libksieve
+    mailcommon messagelib pim-sieve-editor qtscript qtwebengine
+  ];
+  propagatedUserEnvPkgs = [ kdepim-runtime kwallet ];
 }

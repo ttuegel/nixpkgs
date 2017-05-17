@@ -1,10 +1,11 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-mime, kcodecs, kcompletion, kconfigwidgets, kiconthemes, kio,
   kitemmodels, kldap, kmailtransport, mailimporter, messagelib
 }:
-kdeApp {
+
+mkDerivation {
   name = "mailcommon";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

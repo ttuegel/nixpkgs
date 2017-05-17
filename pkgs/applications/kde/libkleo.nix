@@ -1,10 +1,11 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   boost, qgpgme, kcodecs, kcompletion, kconfig, kcoreaddons, kitemmodels,
   kpimtextedit, kwidgetsaddons, kwindowsystem
 }:
-kdeApp {
+
+mkDerivation {
   name = "libkleo";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

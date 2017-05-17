@@ -1,11 +1,12 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-contacts, akonadi-mime, kcodecs, kcompletion, kconfigwidgets,
   kcontacts, kdbusaddons, kiconthemes, kimap, kio, kitemmodels, kjobwidgets,
   knewstuff, kpimtextedit, libkdepim, qtwebengine
 }:
-kdeApp {
+
+mkDerivation {
   name = "pimcommon";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

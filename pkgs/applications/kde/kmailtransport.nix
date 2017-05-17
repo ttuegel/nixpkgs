@@ -1,9 +1,10 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-mime, cyrus_sasl, kcmutils, kmime
 }:
-kdeApp {
+
+mkDerivation {
   name = "kmailtransport";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

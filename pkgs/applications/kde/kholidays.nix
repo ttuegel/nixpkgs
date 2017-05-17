@@ -1,9 +1,9 @@
 {
-  kdeApp, lib,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
 }:
 
-kdeApp {
+mkDerivation {
   name = "kholidays";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

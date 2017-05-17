@@ -1,12 +1,13 @@
 {
-  kdeApp, lib, kdeWrapper,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-mime, akonadi-notes, gpgme, grantlee5, kcodecs, kconfig,
   kconfigwidgets, kcontacts, kdepim-apps-libs, kiconthemes, kidentitymanagement,
   kio, kjobwidgets, kmailtransport, kmime, libgravatar, libkleo, qtwebengine,
   qtwebkit, syntax-highlighting
 }:
-kdeApp {
+
+mkDerivation {
   name = "messagelib";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

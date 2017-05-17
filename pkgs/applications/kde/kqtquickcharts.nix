@@ -1,10 +1,10 @@
 {
-  kdeApp, lib,
+  mkDerivation, lib,
   extra-cmake-modules,
   qtbase, qtdeclarative,
 }:
 
-kdeApp {
+mkDerivation {
   name = "kqtquickcharts";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

@@ -1,10 +1,10 @@
 {
-  kdeDerivation, fetchurl, lib,
+  mkDerivation, fetchurl, lib,
   extra-cmake-modules, qttools,
   qtbase, qtsvg,
 }:
 
-kdeDerivation {
+mkDerivation {
   name = "kdiagram-2.6.0";
   src = fetchurl {
     url = "https://download.kde.org/stable/kdiagram/2.6.0/src/kdiagram-2.6.0.tar.xz";

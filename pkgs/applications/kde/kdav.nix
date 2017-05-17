@@ -1,10 +1,10 @@
 {
-  kdeApp, lib,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools,
   kcoreaddons, kio,
 }:
 
-kdeApp {
+mkDerivation {
   name = "kdav";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];

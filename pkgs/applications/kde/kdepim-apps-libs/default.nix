@@ -1,10 +1,11 @@
 {
-  kdeApp, copyPathsToStore, lib, kdeWrapper,
+  mkDerivation, copyPathsToStore, lib,
   extra-cmake-modules, kdoctools,
   akonadi, akonadi-contacts, grantleetheme, kconfig, kconfigwidgets, kcontacts,
   kiconthemes, kio, libkleo, pimcommon
 }:
-kdeApp {
+
+mkDerivation {
   name = "kdepim-apps-libs";
   meta = {
     license = with lib.licenses; [ gpl2 lgpl21 fdl12 ];
