@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, cmake, gettext, pkgconfig, extra-cmake-modules, makeQtWrapper
+{ stdenv, fetchurl, cmake, gettext, pkgconfig, extra-cmake-modules
 , boost, subversion, apr, aprutil
 , qtscript, qtwebkit, grantlee, karchive, kconfig, kcoreaddons, kguiaddons, kiconthemes, ki18n
 , kitemmodels, kitemviews, kio, kparts, sonnet, kcmutils, knewstuff, knotifications
@@ -12,15 +12,14 @@ let
 in
 stdenv.mkDerivation rec {
   name = "${pname}-${version}";
-  
+
   src = fetchurl {
     url = "mirror://kde/stable/kdevelop/${dirVersion}/src/${name}.tar.xz";
     sha256 = "01abfcd71383048d017fe989ccce0e7590010a3975bbe6e161f55ababe2ad471";
   };
 
-  nativeBuildInputs = [ cmake gettext pkgconfig extra-cmake-modules makeQtWrapper ];
+  nativeBuildInputs = [ cmake gettext pkgconfig extra-cmake-modules ];
 
-  propagatedBuildInputs = [ ];
   buildInputs = [
     boost subversion apr aprutil
     qtscript qtwebkit grantlee karchive kconfig kcoreaddons kguiaddons kiconthemes

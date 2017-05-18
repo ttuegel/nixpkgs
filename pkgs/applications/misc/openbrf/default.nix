@@ -1,4 +1,4 @@
-{ mkDerivation, lib, stdenv, fetchFromGitHub, qtbase, vcg, glew, qmake, makeQtWrapper, mesa }:
+{ mkDerivation, lib, stdenv, fetchFromGitHub, qtbase, vcg, glew, qmake, mesa }:
 
 
 mkDerivation {
@@ -12,7 +12,7 @@ mkDerivation {
   };
 
   buildInputs = [ qtbase vcg glew ];
-  nativeBuildInputs = [ qmake makeQtWrapper ];
+  nativeBuildInputs = [ qmake ];
 
   qmakeFlags = [ "openBrf.pro" ];
 
@@ -29,7 +29,7 @@ mkDerivation {
       --set-rpath "${lib.makeLibraryPath [ qtbase glew stdenv.cc.cc mesa ]}" \
       $out/share/openBrf/openBrf
 
-    makeQtWrapper "$out/share/openBrf/openBrf" "$out/bin/openBrf"
+    ln -s "$out/share/openBrf/openBrf" "$out/bin/openBrf"
   '';
 
   dontPatchELF = true;

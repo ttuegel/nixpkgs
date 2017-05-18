@@ -1,11 +1,11 @@
-{ mkDerivation, lib, fetchFromGitHub, qtbase, qmake, makeQtWrapper, libXrandr }:
+{ mkDerivation, lib, fetchFromGitHub, qtbase, qmake, libXrandr }:
 
 mkDerivation rec {
 
   name = "radeon-profile-${version}";
   version = "20161221";
 
-  nativeBuildInputs = [ qmake makeQtWrapper ];
+  nativeBuildInputs = [ qmake ];
   buildInputs = [ qtbase libXrandr ];
 
   src = (fetchFromGitHub {
@@ -18,7 +18,6 @@ mkDerivation rec {
   postInstall = ''
     mkdir -p $out/bin
     cp ./radeon-profile $out/bin/radeon-profile
-    wrapQtProgram  $out/bin/radeon-profile
   '';
 
   meta = with lib; {

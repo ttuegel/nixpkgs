@@ -134,29 +134,6 @@ let
       ] ++ optional (!stdenv.isDarwin) qtwayland
         ++ optional (stdenv.isDarwin) qtmacextras);
 
-      makeQtWrapper =
-        makeSetupHook
-        { deps = optional (!stdenv.isDarwin) makeWrapper; }
-        (if stdenv.isDarwin
-          # No need to wrap anything on Darwin
-          then ''
-            wrapQtProgram() {}
-            makeQtWrapper() {}
-          ''
-          # Only need to wrap for bits required by GTK integration
-          else ''
-            wrapQtProgram() {
-              wrapProgram "$@" \
-                --prefix XDG_DATA_DIRS : "${gtk3}/share/gsettings-schemas/${gtk3.name}" \
-                --prefix GIO_EXTRA_MODULES : "${dconf.lib}/lib/gio/modules"
-            }
-            makeQtWrapper() {
-              makeWrapper "$@" \
-                --prefix XDG_DATA_DIRS : "${gtk3}/share/gsettings-schemas/${gtk3.name}" \
-                --prefix GIO_EXTRA_MODULES : "${dconf.lib}/lib/gio/modules"
-            }
-          '');
-
       qmake = makeSetupHook {
         deps = [ self.qtbase.dev ];
         substitutions = { inherit (stdenv) isDarwin; };

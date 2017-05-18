@@ -1,5 +1,5 @@
 { mkDerivation, lib, fetchpatch, fetchFromGitHub
-, makeQtWrapper, qmake, pkgconfig
+, qmake, pkgconfig
 , qtbase, qtsvg, qtserialport, boost, libgit2
 }:
 
@@ -29,18 +29,12 @@ mkDerivation rec {
 
   buildInputs = [ qtbase qtsvg qtserialport boost libgit2 ];
 
-  nativeBuildInputs = [ qmake makeQtWrapper pkgconfig ];
+  nativeBuildInputs = [ qmake pkgconfig ];
 
   qmakeFlags = [ "phoenix.pro" ];
 
-  enableParallelBuilding = true;
-
   preConfigure = ''
     ln -s "$parts" parts
-  '';
-
-  postInstall = ''
-    wrapQtProgram $out/bin/Fritzing
   '';
 
   meta = with lib; {

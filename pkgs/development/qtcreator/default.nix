@@ -1,5 +1,5 @@
 { mkDerivation, lib, fetchurl, makeWrapper
-, qtbase, makeQtWrapper, qtquickcontrols, qtscript, qtdeclarative, qmake
+, qtbase, qtquickcontrols, qtscript, qtdeclarative, qmake
 , withDocumentation ? false
 }:
 
@@ -21,7 +21,7 @@ mkDerivation rec {
 
   buildInputs = [ qtbase qtscript qtquickcontrols qtdeclarative ];
 
-  nativeBuildInputs = [ qmake makeQtWrapper makeWrapper ];
+  nativeBuildInputs = [ qmake makeWrapper ];
 
   doCheck = true;
 
@@ -46,7 +46,6 @@ mkDerivation rec {
     Type=Application
     Categories=Qt;Development;IDE;
     __EOF__
-    wrapQtProgram $out/bin/qtcreator
   '';
 
   meta = {

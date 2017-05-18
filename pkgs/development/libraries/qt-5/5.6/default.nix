@@ -146,16 +146,6 @@ let
         qtwebchannel qtwebengine qtwebkit qtwebsockets qtx11extras qtxmlpatterns
       ];
 
-      makeQtWrapper =
-        makeSetupHook
-        { deps = optional (!stdenv.isDarwin) makeWrapper; }
-        # No need to wrap anything
-        # GTK integration is disabled in this branch
-        ''
-          wrapQtProgram() {}
-          makeQtWrapper() {}
-        '';
-
       qmake = makeSetupHook {
         deps = [ self.qtbase.dev ];
         substitutions = { inherit (stdenv) isDarwin; };
