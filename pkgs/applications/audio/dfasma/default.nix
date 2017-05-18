@@ -1,4 +1,4 @@
-{ mkDerivation, lib, fetchFromGitHub, fftw, libsndfile, qtbase, qtmultimedia, qmake, makeQtWrapper }:
+{ mkDerivation, lib, fetchFromGitHub, fftw, libsndfile, qtbase, qtmultimedia, qmake }:
 
 let
 
@@ -39,7 +39,7 @@ in mkDerivation rec {
 
   buildInputs = [ fftw libsndfile qtbase qtmultimedia ];
 
-  nativeBuildInputs = [ makeQtWrapper qmake ];
+  nativeBuildInputs = [ qmake ];
 
   postPatch = ''
     substituteInPlace dfasma.pro --replace '$$DFASMAVERSIONGITPRO' '${version}'
@@ -49,12 +49,6 @@ in mkDerivation rec {
 
   preConfigure = ''
     qmakeFlags="$qmakeFlags PREFIXSHORTCUT=$out"
-  '';
-
-  enableParallelBuilding = true;
-
-  postInstall = ''
-    wrapQtProgram "$out/bin/dfasma"
   '';
 
   meta = with lib; {

@@ -1,4 +1,4 @@
-{ mkDerivation, lib, fetchgit, makeQtWrapper, qtbase, qtquick1, qmltermwidget,
+{ mkDerivation, lib, fetchgit, qtbase, qtquick1, qmltermwidget,
 qtquickcontrols, qtgraphicaleffects, qmake }:
 
 mkDerivation rec {
@@ -17,7 +17,7 @@ mkDerivation rec {
   '';
 
   buildInputs = [ qtbase qtquick1 qmltermwidget qtquickcontrols qtgraphicaleffects ];
-  nativeBuildInputs = [ makeQtWrapper qmake ];
+  nativeBuildInputs = [ qmake ];
 
   installFlags = [ "INSTALL_ROOT=$(out)" ];
 
@@ -25,8 +25,6 @@ mkDerivation rec {
     mv $out/usr/share $out/share
     mv $out/usr/bin $out/bin
     rmdir $out/usr
-
-    wrapQtProgram $out/bin/cool-retro-term
   '';
 
   enableParallelBuilding = true;

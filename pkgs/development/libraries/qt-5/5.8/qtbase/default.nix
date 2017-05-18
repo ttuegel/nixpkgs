@@ -7,7 +7,7 @@
   # darwin support
   darwin, libiconv, libcxx,
 
-  dbus, fontconfig, freetype, glib, gtk3, harfbuzz, icu, libX11, libXcomposite,
+  dbus, dconf, fontconfig, freetype, glib, gtk3, harfbuzz, icu, libX11, libXcomposite,
   libXcursor, libXext, libXi, libXrender, libinput, libjpeg, libpng, libtiff,
   libxcb, libxkbcommon, libxml2, libxslt, openssl, pcre16, sqlite, udev,
   xcbutil, xcbutilimage, xcbutilkeysyms, xcbutilrenderutil, xcbutilwm, xlibs,
@@ -76,7 +76,7 @@ stdenv.mkDerivation {
     [ bison flex gperf lndir perl pkgconfig python2 ]
     ++ lib.optional (!stdenv.isDarwin) patchelf;
 
-  outputs = [ "out" "dev" ];
+  outputs = [ "out" "dev" "bin" ];
 
   patches =
     copyPathsToStore (lib.readPathsFromFile ./. ./series);
@@ -146,6 +146,12 @@ stdenv.mkDerivation {
 
     ++ lib.optional mesaSupported
        ''-DNIXPKGS_MESA_GL="${mesa.out}/lib/libGL"''
+
+    ++ lib.optionals (!stdenv.isDarwin)
+    [
+      ''-DNIXPKGS_QGTK3_XDG_DATA_DIRS="${gtk3}/share/gsettings-schemas/${gtk3.name}"''
+      ''-DNIXPKGS_QGTK3_GIO_EXTRA_MODULES="${dconf.lib}/lib/gio/modules"''
+    ]
 
     ++ lib.optionals stdenv.isDarwin
     [
@@ -258,29 +264,32 @@ stdenv.mkDerivation {
 
   enableParallelBuilding = true;
 
-  postInstall = ''
-    find "$out" -name "*.cmake" | while read file; do
-        substituteInPlace "$file" \
-            --subst-var-by NIX_OUT "$out" \
-            --subst-var-by NIX_DEV "$dev"
-    done
-  '';
+  postInstall =
+    # Hardcode some CMake module paths.
+    ''
+      find "$out" -name "*.cmake" | while read file; do
+          substituteInPlace "$file" \
+              --subst-var-by NIX_OUT "$out" \
+              --subst-var-by NIX_DEV "$dev"
+      done
+    '';
 
-  preFixup = ''
-    # We cannot simply set these paths in configureFlags because libQtCore retains
-    # references to the paths it was built with.
-    moveToOutput "bin" "$dev"
-    moveToOutput "include" "$dev"
-    moveToOutput "mkspecs" "$dev"
+  preFixup =
+    # Move selected outputs.
+    ''
+      moveToOutput "bin" "$dev"
+      moveToOutput "include" "$dev"
+      moveToOutput "mkspecs" "$dev"
 
-    # The destination directory must exist or moveToOutput will do nothing
-    mkdir -p "$dev/share"
-    moveToOutput "share/doc" "$dev"
-  '';
+      mkdir -p "$dev/share"
+      moveToOutput "share/doc" "$dev"
+
+      moveToOutput "$qtPluginPrefix" "$bin"
+    '';
 
   postFixup =
+    # Don't retain build-time dependencies like gdb.
     ''
-      # Don't retain build-time dependencies like gdb.
       sed '/QMAKE_DEFAULT_.*DIRS/ d' -i $dev/mkspecs/qconfig.pri
     ''
 

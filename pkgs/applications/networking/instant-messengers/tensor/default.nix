@@ -1,4 +1,4 @@
-{ mkDerivation, lib, fetchgit, qtbase, qtquickcontrols, qmake, makeQtWrapper, makeDesktopItem }:
+{ mkDerivation, lib, fetchgit, qtbase, qtquickcontrols, qmake, makeDesktopItem }:
 
 mkDerivation rec {
   name = "tensor-git-${version}";
@@ -12,7 +12,7 @@ mkDerivation rec {
   };
 
   buildInputs = [ qtbase qtquickcontrols ];
-  nativeBuildInputs = [ qmake makeQtWrapper ];
+  nativeBuildInputs = [ qmake ];
 
   desktopItem = makeDesktopItem {
     name        = "tensor";
@@ -33,8 +33,6 @@ mkDerivation rec {
                    $out/share/icons/hicolor/512x512/apps/tensor.png
     install -Dm644 ${desktopItem}/share/applications/tensor.desktop \
                    $out/share/applications/tensor.desktop
-
-    wrapQtProgram $out/bin/tensor
 
     substituteInPlace $out/share/applications/tensor.desktop \
       --subst-var-by bin $out/bin/tensor

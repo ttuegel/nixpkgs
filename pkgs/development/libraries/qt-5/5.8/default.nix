@@ -41,10 +41,6 @@ let
 
       outputs = args.outputs or [ "out" "dev" ];
 
-      propagatedUserEnvPkgs =
-        (args.propagatedUserEnvPkgs or [])
-        ++ map getBin (args.propagatedBuildInputs or []);
-
       qmakeFlags =
         (args.qmakeFlags or [])
         ++ optional (debug != null)
@@ -56,10 +52,6 @@ let
         ++ optional (debug != null)
            (if debug then "-DCMAKE_BUILD_TYPE=Debug"
                      else "-DCMAKE_BUILD_TYPE=Release");
-
-      nativeBuildInputs =
-        (args.nativeBuildInputs or [])
-        ++ [ self.wrapQtGuiHook ];
 
       enableParallelBuilding = args.enableParallelBuilding or true;
 
@@ -98,6 +90,7 @@ let
       qtbase = callPackage ./qtbase {
         inherit (srcs.qtbase) src version;
         inherit bison cups harfbuzz mesa;
+        inherit dconf gtk3;
         inherit developerBuild decryptSslTraffic;
       };
 
@@ -137,24 +130,10 @@ let
       ] ++ optional (!stdenv.isDarwin) qtwayland
         ++ optional (stdenv.isDarwin) qtmacextras);
 
-      makeQtWrapper =
-        makeSetupHook
-        { deps = [ makeWrapper ] ++ optionals (!stdenv.isDarwin) [ dconf.lib gtk3 ]; }
-        (if stdenv.isDarwin then ../make-qt-wrapper-darwin.sh else ../make-qt-wrapper.sh);
-
-      qmake =
-        makeSetupHook
-        { deps = [ self.qtbase.dev ]; }
-        (if stdenv.isDarwin then ../qmake-hook-darwin.sh else ../qmake-hook.sh);
-
-      wrapQtGuiHook = makeSetupHook {
-        deps = [ makeWrapper ];
-        substitutions = {
-          gtk = gtk3;
-          gtk_name = gtk3.name;
-          dconf = dconf.lib;
-        };
-      } ../wrap-qtgui-hook.sh;
+      qmake = makeSetupHook {
+        deps = [ self.qtbase.dev ];
+        substitutions = { inherit (stdenv) isDarwin; };
+      } ../qmake-hook.sh;
     };
 
    self = makeScope newScope addPackages;

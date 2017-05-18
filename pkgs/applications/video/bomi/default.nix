@@ -1,6 +1,7 @@
-{ mkDerivation, lib, fetchFromGitHub, fetchpatch, pkgconfig, perl, python, which
+{ mkDerivation, lib, fetchFromGitHub, fetchpatch
+, makeWrapper, pkgconfig, perl, python, which
 , libX11, libxcb, mesa
-, qtbase, qtdeclarative, qtquickcontrols, qttools, qtx11extras, qmake, makeQtWrapper
+, qtbase, qtdeclarative, qtquickcontrols, qttools, qtx11extras, qmake
 , libchardet
 , ffmpeg
 
@@ -89,7 +90,7 @@ mkDerivation rec {
   '';
 
   postInstall = ''
-    wrapQtProgram $out/bin/bomi \
+    wrapProgram $out/bin/bomi \
       ${optionalString youtubeSupport "--prefix PATH ':' '${youtube-dl}/bin'"}
   '';
 
@@ -102,9 +103,7 @@ mkDerivation rec {
                    ++ optional cddaSupport "--enable-cdda"
                    ;
 
-  nativeBuildInputs = [ pkgconfig perl python which qttools makeQtWrapper qmake ];
-
-  enableParallelBuilding = true;
+  nativeBuildInputs = [ makeWrapper pkgconfig perl python which qttools qmake ];
 
   meta = {
     description = "Powerful and easy-to-use multimedia player";

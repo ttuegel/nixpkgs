@@ -50,10 +50,6 @@ let
 
       outputs = args.outputs or [ "out" "dev" ];
 
-      propagatedUserEnvPkgs =
-        (args.propagatedUserEnvPkgs or [])
-        ++ map getBin (args.propagatedBuildInputs or []);
-
       qmakeFlags =
         (args.qmakeFlags or [])
         ++ optional (debug != null)
@@ -146,15 +142,10 @@ let
         qtwebchannel qtwebengine qtwebkit qtwebsockets qtx11extras qtxmlpatterns
       ];
 
-      makeQtWrapper =
-        makeSetupHook
-        { deps = [ makeWrapper ]; }
-        (if stdenv.isDarwin then ../make-qt-wrapper-darwin.sh else ../make-qt-wrapper.sh);
-
-      qmake =
-        makeSetupHook
-        { deps = [ self.qtbase.dev ]; }
-        (if stdenv.isDarwin then ../qmake-hook-darwin.sh else ../qmake-hook.sh);
+      qmake = makeSetupHook {
+        deps = [ self.qtbase.dev ];
+        substitutions = { inherit (stdenv) isDarwin; };
+      } ../qmake-hook.sh;
     };
 
    self = makeScope newScope addPackages;

@@ -3,7 +3,7 @@
 , qtimageformats, qtgraphicaleffects, qtwebkit
 , telegram-qml, libqtelegram-aseman-edition
 , gst_all_1
-, makeQtWrapper, qmake }:
+, makeWrapper, qmake }:
 
 mkDerivation rec {
   name = "cutegram-${meta.version}";
@@ -20,10 +20,10 @@ mkDerivation rec {
     telegram-qml libqtelegram-aseman-edition
   ] ++ (with gst_all_1; [ gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly ]);
 
-  nativeBuildInputs = [ makeQtWrapper qmake ];
+  nativeBuildInputs = [ makeWrapper qmake ];
 
   fixupPhase = ''
-    wrapQtProgram $out/bin/cutegram \
+    wrapProgram $out/bin/cutegram \
       --prefix GST_PLUGIN_SYSTEM_PATH_1_0 : "$GST_PLUGIN_SYSTEM_PATH_1_0"
   '';
 

@@ -1,5 +1,5 @@
 { mkDerivation, stdenv, lib, fetchurl
-, qmake, makeQtWrapper, qtbase, perl, python, php }:
+, qmake, qtbase, perl, python, php }:
 
 mkDerivation rec {
   name = "qcachegrind-${version}";
@@ -12,7 +12,7 @@ mkDerivation rec {
 
   buildInputs = [ qtbase perl python php ];
 
-  nativeBuildInputs = [ qmake makeQtWrapper ];
+  nativeBuildInputs = [ qmake ];
 
   postInstall = ''
      mkdir -p $out/bin
@@ -26,10 +26,8 @@ mkDerivation rec {
     mkdir -p $out/Applications
     cp cgview/cgview.app/Contents/MacOS/cgview $out/bin
     cp -a qcachegrind/qcachegrind.app $out/Applications
-    wrapQtProgram $out/Applications/qcachegrind.app/Contents/MacOS/qcachegrind
   '' else ''
     install qcachegrind/qcachegrind cgview/cgview -t "$out/bin"
-    wrapQtProgram "$out/bin/qcachegrind"
     install -Dm644 qcachegrind/qcachegrind.desktop -t "$out/share/applications"
     install -Dm644 kcachegrind/hi32-app-kcachegrind.png "$out/share/icons/hicolor/32x32/apps/kcachegrind.png"
     install -Dm644 kcachegrind/hi48-app-kcachegrind.png "$out/share/icons/hicolor/48x48/apps/kcachegrind.png"

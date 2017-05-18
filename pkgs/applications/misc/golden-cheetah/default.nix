@@ -1,6 +1,6 @@
 { mkDerivation, lib, fetchurl
 , qtbase, qtsvg, qtserialport, qtwebkit, qtmultimedia, qttools, qtconnectivity
-, yacc, flex, zlib, config, qmake, makeQtWrapper
+, yacc, flex, zlib, config, qmake, makeWrapper
 }:
 
 mkDerivation rec {
@@ -11,11 +11,11 @@ mkDerivation rec {
     url = "https://github.com/GoldenCheetah/GoldenCheetah/archive/V${version}.tar.gz";
     sha256 = "0fiz2pj155cd357kph50lc6rjyzwp045glfv4y68qls9j7m9ayaf";
   };
-  qtInputs = [
-    qtbase qtsvg qtserialport qtwebkit qtmultimedia qttools yacc flex zlib
+  buildInputs = [
+    qtbase qtsvg qtserialport qtwebkit qtmultimedia qttools zlib
     qtconnectivity
   ];
-  nativeBuildInputs = [ makeQtWrapper qmake ] ++ qtInputs;
+  nativeBuildInputs = [ flex makeWrapper qmake yacc ];
   preConfigure = ''
     cp src/gcconfig.pri.in src/gcconfig.pri
     cp qwt/qwtconfig.pri.in qwt/qwtconfig.pri
@@ -27,7 +27,7 @@ mkDerivation rec {
 
     mkdir -p $out/bin
     cp src/GoldenCheetah $out/bin
-    wrapQtProgram $out/bin/GoldenCheetah --set LD_LIBRARY_PATH "${zlib.out}/lib"
+    wrapProgram $out/bin/GoldenCheetah --set LD_LIBRARY_PATH "${zlib.out}/lib"
 
     runHook postInstall
   '';
