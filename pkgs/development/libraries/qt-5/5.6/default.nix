@@ -50,10 +50,6 @@ let
 
       outputs = args.outputs or [ "out" "dev" ];
 
-      propagatedUserEnvPkgs =
-        (args.propagatedUserEnvPkgs or [])
-        ++ map getBin (args.propagatedBuildInputs or []);
-
       qmakeFlags =
         (args.qmakeFlags or [])
         ++ optional (debug != null)
