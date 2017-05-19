@@ -102,7 +102,7 @@ fi
 # * Then ksmserver is started which takes control of the rest of the startup sequence
 
 # We need to create config folder so we can write startupconfigkeys
-configDir=$(qtpaths --writable-path GenericConfigLocation)
+configDir=$(@qtpaths@ --writable-path GenericConfigLocation)
 mkdir -p "$configDir"
 
 if ! [ -e $configDir/kcminputrc ]; then
