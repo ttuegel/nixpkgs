@@ -14,7 +14,7 @@ in mkDerivation (args // {
   name = "${name}-${version}";
   inherit src;
 
-  outputs = args.outputs or [ "out" "dev" ];
+  outputs = args.outputs or [ "out" "dev" "bin" ];
 
   meta = {
     license = with lib.licenses; [

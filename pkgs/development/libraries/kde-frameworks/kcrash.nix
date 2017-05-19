@@ -4,5 +4,5 @@ mkDerivation {
   name = "kcrash";
   meta = { maintainers = [ lib.maintainers.ttuegel ]; };
   nativeBuildInputs = [ extra-cmake-modules ];
-  propagatedBuildInputs = [ kcoreaddons kwindowsystem qtx11extras ];
+  buildInputs = [ kcoreaddons kwindowsystem qtx11extras ];
 }

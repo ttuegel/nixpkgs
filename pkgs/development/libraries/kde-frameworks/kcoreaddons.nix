@@ -7,5 +7,5 @@ mkDerivation {
     broken = builtins.compareVersions qtbase.version "5.6.0" < 0;
   };
   nativeBuildInputs = [ extra-cmake-modules qttools ];
-  propagatedBuildInputs = [ qtbase shared_mime_info ];
+  buildInputs = [ qtbase shared_mime_info ];
 }

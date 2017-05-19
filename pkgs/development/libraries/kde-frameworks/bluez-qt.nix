@@ -10,7 +10,7 @@ mkDerivation {
     broken = builtins.compareVersions qtbase.version "5.6.0" < 0;
   };
   nativeBuildInputs = [ extra-cmake-modules ];
-  propagatedBuildInputs = [ qtdeclarative ];
+  buildInputs = [ qtdeclarative ];
   preConfigure = ''
     substituteInPlace CMakeLists.txt \
       --replace /lib/udev/rules.d "$out/lib/udev/rules.d"

@@ -7,7 +7,7 @@ mkDerivation {
   name = "kross";
   meta = { maintainers = [ lib.maintainers.ttuegel ]; };
   nativeBuildInputs = [ extra-cmake-modules kdoctools ];
-  propagatedBuildInputs = [
+  buildInputs = [
     kcompletion kcoreaddons ki18n kiconthemes kio kparts kwidgetsaddons kxmlgui
     qtscript
   ];

@@ -1,17 +1,60 @@
-_ecmSetXdgDirs() {
-    addToSearchPath XDG_DATA_DIRS "$1/share"
-    addToSearchPath XDG_CONFIG_DIRS "$1/etc/xdg"
+_ecmXdgRuntimeDirs=( \
+    "etc/xdg" \
+    "share/doc/HTML" \
+    "share/config.kcfg" \
+    "share/kconf_update" \
+    "share/kservices5" \
+    "share/kservicetypes5" \
+    "share/kxmlgui5" \
+    "share/knotifications5" \
+    "share/icons" \
+    "share/locale" \
+    "share/sounds" \
+    "share/templates" \
+    "share/wallpapers" \
+    "share/applications" \
+    "share/desktop-directories" \
+    "share/mime" \
+    "share/appdata" \
+)
+
+providesXdgRuntime() {
+    for dir in "${_ecmXdgRuntimeDirs[@]}"; do
+        if [ -d "$1/$dir" ]; then
+            return 0
+        fi
+    done
+    return 1
 }
 
-envHooks+=(_ecmSetXdgDirs)
+_ecmCrossEnvHook() {
+    if providesXdgRuntime "$1"; then
+        propagatedBuildInputs+=" $1"
+        propagatedUserEnvPkgs+=" $1"
+    fi
+}
+crossEnvHooks+=(_ecmCrossEnvHook)
 
-_ecmConfig() {
+_ecmEnvHook() {
+    addToSearchPath XDG_DATA_DIRS "$1/share"
+    addToSearchPath XDG_CONFIG_DIRS "$1/etc/xdg"
+
+    if providesXdgRuntime "$1"; then
+        propagatedNativeBuildInputs+=" $1"
+        if [ -z "$crossConfig" ]; then
+        propagatedUserEnvPkgs+=" $1"
+        fi
+    fi
+}
+envHooks+=(_ecmEnvHook)
+
+_ecmPreConfigureHook() {
     # Because we need to use absolute paths here, we must set *all* the paths.
     cmakeFlags+=" -DKDE_INSTALL_EXECROOTDIR=${!outputBin}"
     cmakeFlags+=" -DKDE_INSTALL_BINDIR=${!outputBin}/bin"
     cmakeFlags+=" -DKDE_INSTALL_SBINDIR=${!outputBin}/sbin"
     cmakeFlags+=" -DKDE_INSTALL_LIBDIR=${!outputLib}/lib"
-    cmakeFlags+=" -DKDE_INSTALL_LIBEXECDIR=${!outputBin}/lib/libexec"
+    cmakeFlags+=" -DKDE_INSTALL_LIBEXECDIR=${!outputLib}/lib/libexec"
     cmakeFlags+=" -DKDE_INSTALL_CMAKEPACKAGEDIR=${!outputDev}/lib/cmake"
     cmakeFlags+=" -DKDE_INSTALL_INCLUDEDIR=${!outputInclude}/include"
     cmakeFlags+=" -DKDE_INSTALL_LOCALSTATEDIR=/var"
@@ -52,5 +95,4 @@ _ecmConfig() {
         cmakeFlags+=" -DKDE_INSTALL_QMLDIR=${!outputBin}/$qtQmlPrefix"
     fi
 }
-
-preConfigureHooks+=(_ecmConfig)
+preConfigureHooks+=(_ecmPreConfigureHook)

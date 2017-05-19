@@ -1,7 +1,7 @@
 {
   mkDerivation, lib, copyPathsToStore,
   extra-cmake-modules,
-  karchive, kconfigwidgets, ki18n, breeze-icons, kitemviews, qtsvg
+  breeze-icons, karchive, kcoreaddons, kconfigwidgets, ki18n, kitemviews, qtsvg,
 }:
 
 mkDerivation {
@@ -9,5 +9,7 @@ mkDerivation {
   meta = { maintainers = [ lib.maintainers.ttuegel ]; };
   patches = copyPathsToStore (lib.readPathsFromFile ./. ./series);
   nativeBuildInputs = [ extra-cmake-modules ];
-  propagatedBuildInputs = [ breeze-icons kconfigwidgets karchive ki18n kitemviews qtsvg ];
+  buildInputs = [
+    breeze-icons karchive kcoreaddons kconfigwidgets ki18n kitemviews qtsvg
+  ];
 }
