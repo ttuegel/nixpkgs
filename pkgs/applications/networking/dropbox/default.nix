@@ -1,4 +1,5 @@
-{ mkDerivation, stdenv, lib, fetchurl, makeDesktopItem, patchelf
+{ mkDerivation, stdenv, lib, fetchurl, makeDesktopItem
+, makeWrapper, patchelf
 , dbus_libs, fontconfig, freetype, gcc, glib
 , libdrm, libffi, libICE, libSM
 , libX11, libXcomposite, libXext, libXmu, libXrender, libxcb
@@ -68,7 +69,7 @@ in mkDerivation {
 
   sourceRoot = ".dropbox-dist";
 
-  nativeBuildInputs = [ patchelf ];
+  nativeBuildInputs = [ makeWrapper patchelf ];
   dontStrip = true; # already done
 
   installPhase = ''
@@ -94,7 +95,7 @@ in mkDerivation {
 
     mkdir -p "$out/bin"
     RPATH="${ldpath}:$out/${appdir}"
-    makeQtWrapper "$out/${appdir}/dropbox" "$out/bin/dropbox" \
+    makeWrapper "$out/${appdir}/dropbox" "$out/bin/dropbox" \
       --prefix LD_LIBRARY_PATH : "$RPATH"
 
     chmod 755 $out/${appdir}/dropbox
