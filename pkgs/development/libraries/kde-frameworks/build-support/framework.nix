@@ -14,6 +14,8 @@ in mkDerivation (args // {
   name = "${name}-${version}";
   inherit src;
 
+  outputs = args.outputs or [ "out" "dev" ];
+
   meta = {
     license = with lib.licenses; [
       lgpl21Plus lgpl3Plus bsd2 mit gpl2Plus gpl3Plus fdl12
