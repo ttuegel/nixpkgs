@@ -9,18 +9,13 @@ let
 
   env = {
     inherit (stdenv) shell;
-    bins = builtins.map (pkg: pkg.out or pkg)
+    bins = builtins.map lib.getBin
       [
         dbus qttools socat
         gnugrep gnused
         kconfig kinit kservice
         plasma-workspace
         xmessage xprop xsetroot
-      ];
-    libs = builtins.map (pkg: pkg.out or pkg)
-      [
-        qtbase qtdeclarative qtgraphicaleffects qtquickcontrols qtquickcontrols2
-        qtscript qtsvg qtx11extras qtxmlpatterns
       ];
   };
 
