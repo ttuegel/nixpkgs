@@ -8235,6 +8235,7 @@ with pkgs;
   hyena = callPackage ../development/libraries/hyena { };
 
   icu = callPackage ../development/libraries/icu { };
+  icu_54 = callPackage ../development/libraries/icu/54.nix { };
 
   id3lib = callPackage ../development/libraries/id3lib { };
 
