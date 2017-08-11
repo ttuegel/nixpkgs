@@ -36,6 +36,15 @@ mkDerivation {
   postPatch = ''
     substituteInPlace startkde/kstartupconfig/kstartupconfig.cpp \
         --replace kdostartupconfig5 ''${!outputBin}/bin/kdostartupconfig5
+
+    sed -i krunner/dbus/org.kde.krunner.service.in \
+        -e "s|@CMAKE_INSTALL_PREFIX@|''${!outputBin}|"
+
+    sed -i kuiserver/org.kde.kuiserver.service.in \
+        -e "s|@CMAKE_INSTALL_PREFIX@|''${!outputBin}|"
+
+    sed -i startkde/waitforname/org.kde.plasma.Notifications.service.in \
+        -e "s|@CMAKE_INSTALL_PREFIX@|''${!outputBin}|"
   '';
 
   postInstall = ''
