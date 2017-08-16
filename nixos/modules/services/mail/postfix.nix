@@ -76,7 +76,7 @@ let
   // optionalAttrs (cfg.relayDomains != null) { relay_domains = cfg.relayDomains; }
   // optionalAttrs (cfg.recipientDelimiter != "") { recipient_delimiter = cfg.recipientDelimiter; }
   // optionalAttrs haveAliases { alias_maps = "${cfg.aliasMapType}:/etc/postfix/aliases"; }
-  // optionalAttrs haveTransport { transport_maps = "hash:/etc/postfx/transport"; }
+  // optionalAttrs haveTransport { transport_maps = "hash:/etc/postfix/transport"; }
   // optionalAttrs haveVirtual { virtual_alias_maps = "${cfg.virtualMapType}:/etc/postfix/virtual"; }
   // optionalAttrs (cfg.dnsBlacklists != []) { smtpd_client_restrictions = clientRestrictions; }
   // optionalAttrs cfg.enableHeaderChecks { header_checks = "regexp:/etc/postfix/header_checks"; }
@@ -213,8 +213,8 @@ let
         wakeupDefined = options.wakeup.isDefined;
         wakeupUCDefined = options.wakeupUnusedComponent.isDefined;
         finalValue = toString config.wakeup
-                   + optionalString (!config.wakeupUnusedComponent) "?";
-      in if wakeupDefined && wakeupUCDefined then finalValue else "-";
+                   + optionalString (wakeupUCDefined && !config.wakeupUnusedComponent) "?";
+      in if wakeupDefined then finalValue else "-";
 
     in [
       config.name

@@ -218,7 +218,7 @@ stdenv.mkDerivation ({
     configureFlags="${concatStringsSep " " defaultConfigureFlags} $configureFlags"
 
     # nativePkgs defined in stdenv/setup.hs
-    for p in $nativePkgs; do
+    for p in "''${nativePkgs[@]}"; do
       if [ -d "$p/lib/${ghc.name}/package.conf.d" ]; then
         cp -f "$p/lib/${ghc.name}/package.conf.d/"*.conf $packageConfDir/
         continue
@@ -231,10 +231,10 @@ stdenv.mkDerivation ({
       fi
     done
   '' + (optionalString stdenv.isDarwin ''
-    # Work around a limit in the Mac OS X Sierra linker on the number of paths
+    # Work around a limit in the macOS Sierra linker on the number of paths
     # referenced by any one dynamic library:
     #
-    # Create a local directory with symlinks of the *.dylib (Mac OS X shared
+    # Create a local directory with symlinks of the *.dylib (macOS shared
     # libraries) from all the dependencies.
     local dynamicLinksDir="$out/lib/links"
     mkdir -p $dynamicLinksDir
@@ -318,7 +318,7 @@ stdenv.mkDerivation ({
     ${optionalString isGhcjs ''
       for exeDir in "$out/bin/"*.jsexe; do
         exe="''${exeDir%.jsexe}"
-        printf '%s\n' '#!${nodejs}/bin/node' > "$exe"
+        printWords '#!${nodejs}/bin/node' > "$exe"
         cat "$exeDir/all.js" >> "$exe"
         chmod +x "$exe"
       done

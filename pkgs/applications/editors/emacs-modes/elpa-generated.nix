@@ -752,10 +752,10 @@
       }) {};
     exwm = callPackage ({ elpaBuild, fetchurl, lib, xelb }: elpaBuild {
         pname = "exwm";
-        version = "0.14";
+        version = "0.15";
         src = fetchurl {
-          url = "https://elpa.gnu.org/packages/exwm-0.14.tar";
-          sha256 = "14hjjpbasm84p54fxy73fg7g1fdwqkvisdw8dwwgzkflmd647mkx";
+          url = "https://elpa.gnu.org/packages/exwm-0.15.tar";
+          sha256 = "1y7nqry9y0a99bsdqkk9f554vczfw4sz6raadw3138835qy697jg";
         };
         packageRequires = [ xelb ];
         meta = {
@@ -1446,10 +1446,10 @@
       }) {};
     org = callPackage ({ elpaBuild, fetchurl, lib }: elpaBuild {
         pname = "org";
-        version = "20170724";
+        version = "20170807";
         src = fetchurl {
-          url = "https://elpa.gnu.org/packages/org-20170724.tar";
-          sha256 = "1f1szds6642427hrzagxgkr05z66sf57n5l2acvmpgw4z358ms0n";
+          url = "https://elpa.gnu.org/packages/org-20170807.tar";
+          sha256 = "185pyc0v4vwzvkygqhpld14lk62ygvfb9ycz609n99m0wqlamwz3";
         };
         packageRequires = [];
         meta = {
@@ -1785,10 +1785,10 @@
       }) {};
     sokoban = callPackage ({ elpaBuild, fetchurl, lib }: elpaBuild {
         pname = "sokoban";
-        version = "1.4.4";
+        version = "1.4.5";
         src = fetchurl {
-          url = "https://elpa.gnu.org/packages/sokoban-1.4.4.tar";
-          sha256 = "0lz0qxgs71yh23iayv50rb6qgqvgbz2bg2sgfxcps8wag643ns20";
+          url = "https://elpa.gnu.org/packages/sokoban-1.4.5.tar";
+          sha256 = "1hh35g1p2f5al88jsbgiz35bvhn7iw5sf9zhsjimiig5isv7khip";
         };
         packageRequires = [];
         meta = {

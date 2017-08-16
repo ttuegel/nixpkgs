@@ -12,15 +12,16 @@ with stdenv.lib;
 let
   buildKernel = any (n: n == configFile) [ "kernel" "all" ];
   buildUser = any (n: n == configFile) [ "user" "all" ];
+
 in stdenv.mkDerivation rec {
   name = "zfs-${configFile}-${version}${optionalString buildKernel "-${kernel.version}"}";
-  version = "0.7.0";
+  version = "0.7.1";
 
   src = fetchFromGitHub {
     owner = "zfsonlinux";
     repo = "zfs";
     rev = "zfs-${version}";
-    sha256 = "16z0fl282rsmvgk608ii7n410swivkrisp112n2fhhjc1fs0zall";
+    sha256 = "0czal6lpl8igrhwmqh5jcgx07rlcgnrfg6ywzf681vsyh3gaxj9n";
   };
 
   patches = [
@@ -44,7 +45,6 @@ in stdenv.mkDerivation rec {
     substituteInPlace ./module/zfs/zfs_ctldir.c   --replace "mount -t zfs"            "${utillinux}/bin/mount -t zfs"
     substituteInPlace ./lib/libzfs/libzfs_mount.c --replace "/bin/umount"             "${utillinux}/bin/umount"
     substituteInPlace ./lib/libzfs/libzfs_mount.c --replace "/bin/mount"              "${utillinux}/bin/mount"
-    substituteInPlace ./udev/rules.d/*            --replace "/lib/udev/vdev_id"       "$out/lib/udev/vdev_id"
     substituteInPlace ./cmd/ztest/ztest.c         --replace "/usr/sbin/ztest"         "$out/sbin/ztest"
     substituteInPlace ./cmd/ztest/ztest.c         --replace "/usr/sbin/zdb"           "$out/sbin/zdb"
     substituteInPlace ./config/user-systemd.m4    --replace "/usr/lib/modules-load.d" "$out/etc/modules-load.d"
@@ -54,6 +54,12 @@ in stdenv.mkDerivation rec {
     substituteInPlace ./module/Makefile.in        --replace "/bin/cp"                 "cp"
     substituteInPlace ./etc/systemd/system/zfs-share.service.in \
       --replace "@bindir@/rm " "${coreutils}/bin/rm "
+
+    for f in ./udev/rules.d/*
+    do
+      substituteInPlace "$f" --replace "/lib/udev/vdev_id" "$out/lib/udev/vdev_id"
+    done
+
     ./autogen.sh
   '';
 
@@ -100,6 +106,8 @@ in stdenv.mkDerivation rec {
     # Remove tests because they add a runtime dependency on gcc
     rm -rf $out/share/zfs/zfs-tests
   '';
+
+  outputs = [ "out" ] ++ optionals buildUser [ "lib" "dev" ];
 
   meta = {
     description = "ZFS Filesystem Linux Kernel module";
