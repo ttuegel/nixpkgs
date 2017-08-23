@@ -7,7 +7,7 @@ stdenv.mkDerivation rec {
     sha256 = "0dlcy0hn0j6cj9qj5x6hpb0axifnvzzmv5jqq0wq14fygw0c7w2l";
   };
 
-  outputs = [ "out" "dev" "man" "doc" ];
+  outputs = [ "out" "dev" "doc" ];
 
   # Fix some wrong hardcoded paths
   preConfigure = ''

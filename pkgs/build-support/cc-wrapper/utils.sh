@@ -24,7 +24,7 @@ badPath() {
 }
 
 expandResponseParams() {
-    declare -ga params=("$@")
+    declare -g params=("$@")
     local arg
     for arg in "$@"; do
         if [[ "$arg" == @* ]]; then

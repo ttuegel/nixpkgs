@@ -11,7 +11,7 @@ let
       inherit sha256;
     };
 
-    outputs = [ "out" "man" "doc" ];
+    outputs = [ "out" "doc" ];
 
     buildInputs = [ libuuid zlib ];
     nativeBuildInputs = [ autoreconfHook ];

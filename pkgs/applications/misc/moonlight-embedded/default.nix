@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
     sha256 = "0khdbwfclvpjgyk5ar1fs4j66zsjikaj422wlvrvqhyzi1v5arpr";
   };
 
-  outputs = [ "out" "man" ];
+  outputs = [ "out" "doc" ];
 
   nativeBuildInputs = [ cmake perl ];
   buildInputs = [

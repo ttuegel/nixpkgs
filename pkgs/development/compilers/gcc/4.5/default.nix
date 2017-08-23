@@ -344,7 +344,8 @@ stdenv.mkDerivation ({
 
     # On GNU/Hurd glibc refers to Mach & Hurd
     # headers.
-    ++ optionals (libcCross != null && libcCross ? propagatedBuildInputs)
+    ++ optionals (libcCross != null &&
+                  hasAttr "propagatedBuildInputs" libcCross)
                  libcCross.propagatedBuildInputs);
 
   LIBRARY_PATH = makeLibraryPath ([]

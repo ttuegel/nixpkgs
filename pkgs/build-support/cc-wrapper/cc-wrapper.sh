@@ -34,7 +34,7 @@ cppInclude=1
 expandResponseParams "$@"
 declare -i n=0
 nParams=${#params[@]}
-while (( "$n" < "$nParams" )); do
+while [ "$n" -lt "$nParams" ]; do
     p=${params[n]}
     p2=${params[n+1]:-} # handle `p` being last one
     if [ "$p" = -c ]; then
@@ -83,7 +83,7 @@ if [[ "${NIX_ENFORCE_PURITY:-}" = 1 && -n "$NIX_STORE" ]]; then
     rest=()
     nParams=${#params[@]}
     declare -i n=0
-    while (( "$n" < "$nParams" )); do
+    while [ "$n" -lt "$nParams" ]; do
         p=${params[n]}
         p2=${params[n+1]:-} # handle `p` being last one
         if [ "${p:0:3}" = -L/ ] && badPath "${p:2}"; then
@@ -101,24 +101,21 @@ if [[ "${NIX_ENFORCE_PURITY:-}" = 1 && -n "$NIX_STORE" ]]; then
         fi
         n+=1
     done
-    # Old bash empty array hack
-    params=(${rest+"${rest[@]}"})
+    params=("${rest[@]}")
 fi
 
 
 # Clear march/mtune=native -- they bring impurity.
 if [ "$NIX_@infixSalt@_ENFORCE_NO_NATIVE" = 1 ]; then
     rest=()
-    # Old bash empty array hack
-    for p in ${params+"${params[@]}"}; do
+    for p in "${params[@]}"; do
         if [[ "$p" = -m*=native ]]; then
             skip "$p"
         else
             rest+=("$p")
         fi
     done
-    # Old bash empty array hack
-    params=(${rest+"${rest[@]}"})
+    params=("${rest[@]}")
 fi
 
 if [[ "$isCpp" = 1 ]]; then
@@ -166,13 +163,14 @@ fi
 
 # Optionally print debug info.
 if [ -n "${NIX_DEBUG:-}" ]; then
-    # Old bash workaround, see ld-wrapper for explanation.
+    set +u # Old bash workaround, see ld-wrapper for explanation.
     echo "extra flags before to @prog@:" >&2
-    printf "  %q\n" ${extraBefore+"${extraBefore[@]}"}  >&2
+    printf "  %q\n" "${extraBefore[@]}"  >&2
     echo "original flags to @prog@:" >&2
-    printf "  %q\n" ${params+"${params[@]}"} >&2
+    printf "  %q\n" "${params[@]}" >&2
     echo "extra flags after to @prog@:" >&2
-    printf "  %q\n" ${extraAfter+"${extraAfter[@]}"} >&2
+    printf "  %q\n" "${extraAfter[@]}" >&2
+    set -u
 fi
 
 if [ -n "$NIX_CC_WRAPPER_@infixSalt@_EXEC_HOOK" ]; then
@@ -180,8 +178,5 @@ if [ -n "$NIX_CC_WRAPPER_@infixSalt@_EXEC_HOOK" ]; then
 fi
 
 PATH="$path_backup"
-# Old bash workaround, see above.
-exec @prog@ \
-    ${extraBefore+"${extraBefore[@]}"} \
-    ${params+"${params[@]}"} \
-    ${extraAfter+"${extraAfter[@]}"}
+set +u # Old bash workaround, see above.
+exec @prog@ "${extraBefore[@]}" "${params[@]}" "${extraAfter[@]}"

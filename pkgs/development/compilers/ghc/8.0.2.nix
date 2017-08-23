@@ -27,7 +27,7 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  outputs = [ "out" "man" "doc" ];
+  outputs = [ "out" "doc" ];
 
   preConfigure = ''
     sed -i -e 's|-isysroot /Developer/SDKs/MacOSX10.5.sdk||' configure

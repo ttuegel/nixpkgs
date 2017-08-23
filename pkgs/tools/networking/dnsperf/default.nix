@@ -10,7 +10,7 @@ stdenv.mkDerivation rec {
     sha256 = "03kfc65s5a9csa5i7xjsv0psq144k8d9yw7xlny61bg1h2kg1db4";
   };
 
-  outputs = [ "out" "man" "doc" ];
+  outputs = [ "out" "doc" ];
 
   buildInputs = [ bind libseccomp zlib ];
 

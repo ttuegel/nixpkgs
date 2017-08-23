@@ -30,7 +30,7 @@ let self = _self // overrides; _self = with self; {
       url = "mirror://cpan/authors/id/P/PE/PETDANCE/${name}.tar.gz";
       sha256 = "0ifbmbfvagfi76i7vjpggs2hrbqqisd14f5zizan6cbdn8dl5z2g";
     };
-    outputs = ["out" "man"];
+    outputs = ["out" "doc"];
     # use gnused so that the preCheck command passes
     buildInputs = stdenv.lib.optional stdenv.isDarwin gnused;
     propagatedBuildInputs = [ FileNext ];
@@ -7241,11 +7241,11 @@ let self = _self // overrides; _self = with self; {
 
   ImageExifTool = buildPerlPackage rec {
     name = "Image-ExifTool-${version}";
-    version = "10.60";
+    version = "10.55";
 
     src = fetchurl {
       url = "http://www.sno.phy.queensu.ca/~phil/exiftool/${name}.tar.gz";
-      sha256 = "1ymcnxf8miw0c1nadpxmvzabmaz837afrwp1k5khhv0s1vv8h2fz";
+      sha256 = "0z8zwjjfvyllnhsafhddbybywpgqv0pl1dbn1g034cs27yj836q2";
     };
 
     meta = with stdenv.lib; {
@@ -7266,7 +7266,7 @@ let self = _self // overrides; _self = with self; {
 
       license = with licenses; [ gpl1Plus /* or */ artistic2 ];
 
-      maintainers = [ maintainers.kiloreux ];
+      maintainers = [ ];
       platforms = platforms.unix;
     };
   };
@@ -13577,18 +13577,6 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
-  TestNeeds = buildPerlPackage rec {
-    name = "Test-Needs-0.002005";
-    src = fetchurl {
-      url = "mirror://cpan/authors/id/H/HA/HAARG/${name}.tar.gz";
-      sha256 = "5a4f33983586edacdbe00a3b429a9834190140190dab28d0f873c394eb7df399";
-    };
-    meta = {
-      description = "Skip tests when modules not available";
-      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
-    };
-  };
-
   TestNoTabs = buildPerlPackage {
     name = "Test-NoTabs-1.3";
     src = fetchurl {
@@ -15155,16 +15143,15 @@ let self = _self // overrides; _self = with self; {
   };
 
   URI = buildPerlPackage rec {
-    name = "URI-1.72";
+    name = "URI-1.71";
     src = fetchurl {
       url = "mirror://cpan/authors/id/E/ET/ETHER/${name}.tar.gz";
-      sha256 = "35f14431d4b300de4be1163b0b5332de2d7fbda4f05ff1ed198a8e9330d40a32";
+      sha256 = "9c8eca0d7f39e74bbc14706293e653b699238eeb1a7690cc9c136fb8c2644115";
     };
-    buildInputs = [ TestNeeds ];
     meta = {
-      homepage = https://github.com/libwww-perl/URI;
       description = "Uniform Resource Identifiers (absolute and relative)";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+      maintainers = [ maintainers.rycee ];
     };
   };
 

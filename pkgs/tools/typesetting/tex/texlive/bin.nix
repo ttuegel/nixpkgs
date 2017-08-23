@@ -132,7 +132,8 @@ core = stdenv.mkDerivation rec {
         '')
   + /* doc location identical with individual TeX pkgs */ ''
     mkdir -p "$doc/doc"
-    mv "$out"/share/{man,info} "$doc"/doc
+    mv "$doc"/share/{man,info} "$doc"/doc
+    rmdir "$doc"/share
   '' + cleanBrokenLinks;
 
   setupHook = ./setup-hook.sh; # TODO: maybe texmf-nix -> texmf (and all references)

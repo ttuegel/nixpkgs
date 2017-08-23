@@ -5,12 +5,12 @@
 }:
 
 stdenv.mkDerivation rec {
-  version = "3.5.0";
+  version = "3.3.0";
   name = "calibre-${version}";
 
   src = fetchurl {
     url = "https://download.calibre-ebook.com/${version}/${name}.tar.xz";
-    sha256 = "1al0vy11zvlxlrf03i631p6b419hy47pbzmgydswrii4prndj4xv";
+    sha256 = "1zq3aihnyxdczdz8b0w02xfw4b0l9i23f6ljpmsmm69jyh4j3m0c";
   };
 
   patches = [
@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
 
     # Remove unneeded files and libs
     rm -rf resources/calibre-portable.* \
-           src/odf
+           src/{chardet,cherrypy,html5lib,odf,routes}
   '';
 
   dontUseQmakeConfigure = true;
@@ -49,11 +49,12 @@ stdenv.mkDerivation rec {
     poppler_utils libpng imagemagick libjpeg
     fontconfig podofo qtbase chmlib icu sqlite libusb1 libmtp xdg_utils wrapGAppsHook
   ] ++ (with python2Packages; [
-    apsw cssselect cssutils dateutil html5-parser lxml mechanize netifaces pillow
+    html5lib_0_9999999 # needs to be before mechanize ?
+    apsw cssselect cssutils dateutil lxml mechanize netifaces pillow
     python pyqt5 sip
     regex msgpack
     # the following are distributed with calibre, but we use upstream instead
-    odfpy
+    chardet cherrypy odfpy routes
   ]);
 
   installPhase = ''
@@ -89,9 +90,6 @@ stdenv.mkDerivation rec {
     for entry in $out/share/applications/*.desktop; do
       substituteAllInPlace $entry
     done
-
-    mkdir -p $out/share
-    cp -a man-pages $out/share/man
 
     runHook postInstall
   '';

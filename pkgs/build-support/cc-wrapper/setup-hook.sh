@@ -139,6 +139,7 @@ export ${role}CC=@named_cc@
 export ${role}CXX=@named_cxx@
 
 for CMD in \
+    cpp \
     ar as nm objcopy ranlib strip strings size ld windres
 do
     if

@@ -10,7 +10,7 @@ stdenv.mkDerivation rec {
   };
   patches = [ ./absolute-paths.diff ];
 
-  outputs = [ "out" "man" "doc" "info" ];
+  outputs = [ "out" "doc" ];
 
   # FIXME stackprotector needs gcc 4.9 in bootstrap tools
   hardeningDisable = [ "format" "stackprotector" ];

@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   name = "zziplib-${version}";
-  version = "0.13.67";
+  version = "0.13.66";
 
   src = fetchurl {
-    url = "https://github.com/gdraheim/zziplib/archive/v${version}.tar.gz";
-    sha256 = "0802kdxwxx9zanpwb4w4wfi3blwhv0ri05mzdgd35j5sva5ify0j";
+    url = "mirror://sourceforge/zziplib/zziplib13/${version}/${name}.tar.gz";
+    sha256 = "0zdx0s19slzv79xplnr6jx0xjb01dd71jzpscf6vlj6k9ry8rcar";
   };
 
   patchPhase = ''

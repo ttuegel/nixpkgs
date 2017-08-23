@@ -41,7 +41,7 @@ stdenv.mkDerivation rec {
     inherit sha256;
   };
 
-  outputs = [ "out" "man" "doc" ];
+  outputs = [ "out" "doc" ];
 
   enableParallelBuilding = true;
 

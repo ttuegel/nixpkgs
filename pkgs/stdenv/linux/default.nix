@@ -299,22 +299,13 @@ in
         shellPackage = prevStage.bash;
       };
 
-      # Mainly avoid reference to bootstrap tools
-      allowedRequisites = with prevStage; with lib;
-        # Simple executable tools
-        concatMap (p: [ (getBin p) (getLib p) ])
-          [ gzip bzip2 xz bash binutils coreutils diffutils findutils gawk
-            gnumake gnused gnutar gnugrep gnupatch patchelf ed paxctl
-          ]
-        # Library dependencies
-        ++ map getLib [ attr acl zlib pcre libsigsegv ]
-        # More complicated cases
-        ++ [
-            glibc.out glibc.dev glibc.bin/*propagated from .dev*/ linuxHeaders
-            gcc gcc.cc gcc.cc.lib gcc.expandResponseParams
-          ]
-          ++ lib.optionals (system == "aarch64-linux")
-            [ prevStage.updateAutotoolsGnuConfigScriptsHook prevStage.gnu-config ];
+      /* outputs TODO
+      allowedRequisites = with prevStage;
+        [ gzip bzip2 xz bash binutils coreutils diffutils findutils gawk
+          glibc gnumake gnused gnutar gnugrep gnupatch patchelf attr acl
+          paxctl zlib pcre linuxHeaders ed gcc gcc.cc libsigsegv
+        ] ++ lib.optional (system == "aarch64-linux") prevStage.updateAutotoolsGnuConfigScriptsHook;
+        */
 
       overrides = self: super: {
         inherit (prevStage)

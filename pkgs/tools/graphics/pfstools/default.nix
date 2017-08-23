@@ -9,7 +9,7 @@ stdenv.mkDerivation rec {
     sha256 = "1fyc2c7jzr7k797c2dqyyvapzc3szxwcp48r382yxz2yq558xgd9";
   };
 
-  outputs = [ "out" "dev" "man"];
+  outputs = [ "out" "dev" "doc"];
 
   cmakeFlags = ''
     -DWITH_MATLAB=false 
