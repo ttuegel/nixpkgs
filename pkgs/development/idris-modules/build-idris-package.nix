@@ -1,8 +1,13 @@
 # Build an idris package
 #
-# args: Additional arguments to pass to mkDerivation. Generally should include at least
-#       name and src.
-{ stdenv, idris, gmp }: args: stdenv.mkDerivation ({
+{ stdenv, idris, linkIdrisLibs, gmp }:
+
+# args:
+# Additional arguments to pass to mkDerivation.
+# Generally should include at least `name' and `src'.
+args:
+
+stdenv.mkDerivation ({
   preHook = ''
     # Library import path
     export IDRIS_LIBRARY_PATH=$PWD/idris-libs
@@ -12,10 +17,8 @@
     export IBCSUBDIR=$out/lib/${idris.name}
     mkdir -p $IBCSUBDIR
 
-    addIdrisLibs () {
-      if [ -d $1/lib/${idris.name} ]; then
-        ln -sv $1/lib/${idris.name}/* $IDRIS_LIBRARY_PATH
-      fi
+    addIdrisLibs() {
+      ${linkIdrisLibs}
     }
 
     envHooks+=(addIdrisLibs)

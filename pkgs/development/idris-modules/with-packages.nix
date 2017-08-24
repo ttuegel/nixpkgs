@@ -1,17 +1,22 @@
-# Build a version of idris with a set of packages visible
-# packages: The packages visible to idris
-{ stdenv, idris }: packages: stdenv.mkDerivation {
+# Wrap Idris so that only a particular set of packages is visible.
+# The builtin packages are _not_ included by default.
+{ stdenv, idris, linkIdrisLibs }:
+
+# packages:
+# A list of packages which will be visible to Idris.
+packages:
+
+stdenv.mkDerivation {
   inherit (idris) name;
 
   buildInputs = packages;
 
   preHook = ''
-    mkdir -p $out/lib/${idris.name}
+    IDRIS_LIBRARY_PATH="$out/lib/${idris.name}"
+    mkdir -p "$IDRIS_LIBRARY_PATH"
 
     installIdrisLib () {
-      if [ -d $1/lib/${idris.name} ]; then
-        ln -sv $1/lib/${idris.name}/* $out/lib/${idris.name}
-      fi
+      ${linkIdrisLibs}
     }
 
     envHooks+=(installIdrisLib)
