@@ -1,10 +1,15 @@
-# Build one of the packages that come with idris
-# name: The name of the package
-# deps: The dependencies of the package
-{ idris, build-idris-package, lib }: name: deps:
-let
-  inherit (builtins.parseDrvName idris.name) version;
-in
+# Build one of the packages that come with Idris.
+{ idris, build-idris-package, lib }:
+
+# name:
+# The name of the package; the version will be added automatically.
+name:
+# deps:
+# The dependencies of the builtin package.
+deps:
+
+let inherit (builtins.parseDrvName idris.name) version; in
+
 build-idris-package {
   name = "${name}-${version}";
 
