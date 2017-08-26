@@ -10,12 +10,10 @@ args:
 stdenv.mkDerivation ({
   preHook = ''
     # Library import path
-    export IDRIS_LIBRARY_PATH=$PWD/idris-libs
-    mkdir -p $IDRIS_LIBRARY_PATH
-
     # Library install path
     export IBCSUBDIR=$out/lib/${idris.name}
     mkdir -p $IBCSUBDIR
+    export IDRIS_LIBRARY_PATH=$(mktemp --tmpdir -d idris-libs.XXXXXXXXXX)
 
     addIdrisLibs() {
       ${linkIdrisLibs}
