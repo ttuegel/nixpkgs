@@ -10,9 +10,6 @@ args:
 stdenv.mkDerivation ({
   preHook = ''
     # Library import path
-    # Library install path
-    export IBCSUBDIR=$out/lib/${idris.name}
-    mkdir -p $IBCSUBDIR
     export IDRIS_LIBRARY_PATH=$(mktemp --tmpdir -d idris-libs.XXXXXXXXXX)
 
     addIdrisLibs() {
@@ -23,6 +20,10 @@ stdenv.mkDerivation ({
   '';
 
   buildPhase = ''
+    # Library install path
+    export IBCSUBDIR=$out/lib/${idris.name}
+    mkdir -p $IBCSUBDIR
+
     ${idris}/bin/idris --build *.ipkg
   '';
 
