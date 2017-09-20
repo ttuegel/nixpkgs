@@ -49,8 +49,6 @@ buildRustPackage rec {
   postPatch = ''
     substituteInPlace copypasta/src/x11.rs \
       --replace Command::new\(\"xclip\"\) Command::new\(\"${xclip}/bin/xclip\"\)
-
-    runHook postPatch
   '';
 
   installPhase = ''
