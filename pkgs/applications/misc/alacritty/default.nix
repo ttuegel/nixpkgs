@@ -46,9 +46,7 @@ buildRustPackage rec {
     pkgconfig
   ] ++ rpathLibs;
 
-  patchPhase = ''
-    runHook prePatch
-
+  postPatch = ''
     substituteInPlace copypasta/src/x11.rs \
       --replace Command::new\(\"xclip\"\) Command::new\(\"${xclip}/bin/xclip\"\)
 
