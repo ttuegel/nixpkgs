@@ -47,7 +47,7 @@ in
             ${getBin config.hardware.pulseaudio.package}/bin/pactl load-module module-device-manager "do_routing=1"
           ''}
 
-          exec "${plasma5.startkde}"
+          exec "${getBin plasma5.plasma-workspace}/bin/startkde"
         '';
       };
 
@@ -142,7 +142,8 @@ in
 
           kde-gtk-config breeze-gtk
 
-          phonon-backend-gstreamer
+          libsForQt56.phonon-backend-gstreamer
+          libsForQt5.phonon-backend-gstreamer
         ]
 
         ++ lib.optionals cfg.enableQt4Support [ breeze-qt4 pkgs.phonon-backend-gstreamer ]

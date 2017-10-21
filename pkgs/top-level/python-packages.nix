@@ -60,7 +60,7 @@ let
 
   buildPythonApplication = args: buildPythonPackage ({namePrefix="";} // args );
 
-  graphiteVersion = "0.9.15";
+  graphiteVersion = "1.0.2";
 
   fetchPypi = makeOverridable( {format ? "setuptools", ... } @attrs:
     let
@@ -290,6 +290,8 @@ in {
   simpleeval = callPackage ../development/python-modules/simpleeval { };
 
   sip = callPackage ../development/python-modules/sip { };
+
+  supervise_api = callPackage ../development/python-modules/supervise_api { };
 
   tables = callPackage ../development/python-modules/tables {
     hdf5 = pkgs.hdf5.override { zlib = pkgs.zlib; };
@@ -1474,7 +1476,10 @@ in {
 
   # Build boost for this specific Python version
   # TODO: use separate output for libboost_python.so
-  boost = pkgs.boost.override {inherit python;};
+  boost = pkgs.boost.override {
+    inherit (self) python numpy;
+    enablePython = true;
+  };
 
   buttersink = buildPythonPackage rec {
     name = "buttersink-0.6.8";
@@ -1529,7 +1534,6 @@ in {
     python = self.python;
     boost = self.boost;
     numpy = self.numpy;
-    pythonSupport = true;
   };
 
   capstone = buildPythonPackage rec {
@@ -2091,7 +2095,8 @@ in {
     buildInputs = [ pkgs.db ];
 
     # Judging from SyntaxError in test
-    disabled = isPy3k;
+#    disabled = isPy3k;
+    doCheck = false; # test suite breaks python3 compatibility
 
     # Path to database need to be set.
     # Somehow the setup.py flag is not propagated.
@@ -2571,6 +2576,27 @@ in {
       description = "CDDB and FreeDB audio CD track info access";
       license = licenses.gpl2Plus;
     };
+  };
+
+  cntk = buildPythonPackage rec {
+    inherit (pkgs.cntk) name version src meta;
+
+    buildInputs = [ pkgs.cntk pkgs.swig pkgs.openmpi ];
+    propagatedBuildInputs = with self; [ numpy scipy enum34 protobuf pip ];
+
+    CNTK_LIB_PATH = "${pkgs.cntk}/lib";
+    CNTK_COMPONENT_VERSION = pkgs.cntk.version;
+
+    postPatch = ''
+      cd bindings/python
+    '';
+
+    postInstall = ''
+      rm -rf $out/${python.sitePackages}/cntk/libs
+      ln -s ${pkgs.cntk}/lib $out/${python.sitePackages}/cntk/libs
+      # It's not installed for some reason.
+      cp cntk/cntk_py.py $out/${python.sitePackages}/cntk
+    '';
   };
 
   celery = buildPythonPackage rec {
@@ -6161,13 +6187,13 @@ in {
       sha256 = "0i14bc67200zhzxc41g5dfp2m0pr1zaa2gv59p2va1xw0ji2dc0f";
     };
 
+    nativeBuildInputs = [ pkgs.pkgconfig ];
     buildInputs = with self; [
       nose
       pkgs.libjpeg
       pkgs.libpng
       pkgs.libtiff
       pkgs.libwebp
-      pkgs.pkgconfig
     ];
     propagatedBuildInputs = with self; [ numpy ];
 
@@ -6309,6 +6335,8 @@ in {
       maintainers = with maintainers; [ luispedro ];
     };
   };
+
+  jsmin = callPackage ../development/python-modules/jsmin { };
 
   jsonpatch = callPackage ../development/python-modules/jsonpatch { };
 
@@ -6989,27 +7017,6 @@ in {
     };
   };
 
-  pew = buildPythonPackage rec {
-    name = "pew-0.1.14";
-    namePrefix = "";
-
-    disabled = pythonOlder "3.4"; # old versions require backported libraries
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/p/pew/${name}.tar.gz";
-      sha256 = "0p188ah80l0rzbib2srahj2sswz8rcpqwbrbajyv2r5c1m5k6r4b";
-    };
-
-    propagatedBuildInputs = with self; [ virtualenv virtualenv-clone ];
-
-    meta = {
-      description = "Tools to manage multiple virtualenvs written in pure python, a virtualenvwrapper rewrite";
-      license = licenses.mit;
-      platforms = platforms.all;
-      maintainers = with maintainers; [ berdario ];
-    };
-  };
-
   pex = buildPythonPackage rec {
     name = "pex-${version}";
     version = "1.2.7";
@@ -7042,6 +7049,8 @@ in {
   plaster-pastedeploy = callPackage ../development/python-modules/plaster-pastedeploy {};
 
   plotly = callPackage ../development/python-modules/plotly { };
+
+  plyfile = callPackage ../development/python-modules/plyfile { };
 
   podcastparser = callPackage ../development/python-modules/podcastparser { };
 
@@ -7203,7 +7212,8 @@ in {
     };
 
     NIX_CFLAGS_COMPILE="-I${pkgs.poppler.dev}/include/poppler/";
-    buildInputs = [ pkgs.pkgconfig pkgs.poppler.dev ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = [ pkgs.poppler.dev ];
     propagatedBuildInputs = with self; [ pycairo pygobject2 ];
 
     patches = [
@@ -8299,14 +8309,14 @@ in {
 
   django_tagging = callPackage ../development/python-modules/django_tagging { };
 
-  django_tagging_0_3 = self.django_tagging.overrideAttrs (attrs: rec {
-    name = "django-tagging-0.3.6";
+  django_tagging_0_4_3 = self.django_tagging.overrideAttrs (attrs: rec {
+    name = "django-tagging-0.4.3";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/d/django-tagging/${name}.tar.gz";
-      sha256 = "03zlbq13rydfh28wh0jk3x3cjk9x6jjmqnx1i3ngjmfwbxf8x6j1";
+      sha256 = "0617azpmp6jpg3d88v2ir97qrc9aqcs2s9gyvv9bgf2cp55khxhs";
     };
-    propagatedBuildInputs = with self; [ django ];
+    propagatedBuildInputs = with self; [ django_1_8 ];
   });
 
   django_classytags = buildPythonPackage rec {
@@ -9471,7 +9481,8 @@ in {
       sha256 = "06rmp1ap6flh64m81j0n3a357ij2vj9zwcvvw0p31y6hz1id9shi";
     };
 
-    buildInputs = with self; [ pkgs.pkgconfig pkgs.fuse ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = with self; [ pkgs.fuse ];
 
     meta = {
       description = "Python bindings for FUSE";
@@ -11139,14 +11150,12 @@ in {
     };
   });
 
-  libgpuarray-cuda = callPackage ../development/python-modules/libgpuarray/cuda/default.nix rec {
-    inherit (self) numpy scipy;
-    inherit (pkgs.linuxPackages) nvidia_x11;
-    cudatoolkit = pkgs.cudatoolkit75;
-    clblas = pkgs.clblas-cuda;
+  libgpuarray = callPackage ../development/python-modules/libgpuarray {
+    clblas = pkgs.clblas.override { boost = self.boost; };
+    cudaSupport = pkgs.config.cudaSupport or false;
   };
 
-  libnacl = callPackage ../development/python-modules/libnacl/default.nix {
+  libnacl = callPackage ../development/python-modules/libnacl {
     inherit (pkgs) libsodium;
   };
 
@@ -11217,7 +11226,8 @@ in {
       sha256 = "1li7q04ljrvwharw4fblcbfhvk6s0l3lnv8yqb4c22lcgbkiqlps";
     };
 
-    buildInputs = with self; [ pytest pkgs.pkgconfig pkgs.fuse pkgs.attr pkgs.which ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = with self; [ pytest pkgs.fuse pkgs.attr pkgs.which ];
 
     propagatedBuildInputs = with self; [ contextlib2 ];
 
@@ -11607,25 +11617,7 @@ in {
     };
   });
 
-  MechanicalSoup = buildPythonPackage rec {
-    name = "MechanicalSoup-${version}";
-    version = "0.4.0";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/M/MechanicalSoup/${name}.zip";
-      sha256 = "02jkwly4gw1jqm55l4wwn0j0ggnysx55inw9j96bif5l49z5cacd";
-    };
-
-    propagatedBuildInputs = with self; [ requests beautifulsoup4 six ];
-
-    meta = {
-      description = "A Python library for automating interaction with websites";
-      homepage = https://github.com/hickford/MechanicalSoup;
-      license = licenses.mit;
-      maintainers = with maintainers; [ jgillich ];
-    };
-  };
-
+  MechanicalSoup = callPackage ../development/python-modules/MechanicalSoup/default.nix { };
 
   meld3 = buildPythonPackage rec {
     name = "meld3-1.0.0";
@@ -13163,7 +13155,8 @@ in {
         configure
     '';
 
-    buildInputs = with self; [ python pkgs.pkgconfig pkgs.libnotify pygobject2 pygtk pkgs.glib pkgs.gtk2 pkgs.dbus_glib ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = with self; [ python pkgs.libnotify pygobject2 pygtk pkgs.glib pkgs.gtk2 pkgs.dbus_glib ];
 
     postInstall = "cd $out/lib/python*/site-packages && ln -s gtk-*/pynotify .";
 
@@ -14990,6 +14983,8 @@ in {
 
   pandas = callPackage ../development/python-modules/pandas { };
 
+  pandas_0_17_1 = callPackage ../development/python-modules/pandas/0.17.1.nix { };
+
   xlrd = buildPythonPackage rec {
     name = "xlrd-${version}";
 
@@ -15594,6 +15589,8 @@ in {
 
   pika-pool = callPackage ../development/python-modules/pika-pool { };
   platformio = callPackage ../development/python-modules/platformio { };
+
+  kmsxx = callPackage ../development/libraries/kmsxx { };
 
   pylibconfig2 = buildPythonPackage rec {
     name = "pylibconfig2-${version}";
@@ -16442,7 +16439,8 @@ in {
       patchShebangs .
     '';
 
-    buildInputs = [ self.setuptools self.nose pkgs.pkgconfig pkgs.swig pkgs.libcdio ]
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = [ self.setuptools self.nose pkgs.swig pkgs.libcdio ]
       ++ stdenv.lib.optional stdenv.isDarwin pkgs.libiconv;
 
     patches = [ ../development/python-modules/pycdio/add-cdtext-toc.patch ];
@@ -17146,7 +17144,7 @@ in {
       PATH="${pkgs.parted}/sbin:$PATH"
     '';
 
-    buildInputs = with self; [ pkgs.pkgconfig ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
 
     propagatedBuildInputs = with self; [ pkgs.parted ];
 
@@ -17586,6 +17584,8 @@ in {
     };
   };
 
+  pypcap = callPackage ../development/python-modules/pypcap {};
+
   pyplatec = buildPythonPackage rec {
     name = "PyPlatec-${version}";
     version = "1.4.0";
@@ -17739,11 +17739,12 @@ in {
   };
 
   pyopenssl = buildPythonPackage rec {
-    name = "pyopenssl-${version}";
+    pname = "pyOpenSSL";
+    name = "${pname}-${version}";
     version = "17.2.0";
 
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/p/pyOpenSSL/pyOpenSSL-${version}.tar.gz";
+    src = self.fetchPypi {
+      inherit pname version;
       sha256 = "0d283g4zi0hr9papd24mjl70mi15gyzq6fx618rizi87dgipqqax";
     };
 
@@ -18113,8 +18114,9 @@ in {
       sha256 = "1svlwyl61rvbqbcbalkg6pbf38yjyv7qkq9sx4x35yk69lscaac2";
     };
 
+    nativeBuildInputs = [ pkgs.pkgconfig ];
     buildInputs = [
-      pkgs.pkgconfig pkgs.gtk2 self.pygtk pkgs.libxml2
+      pkgs.gtk2 self.pygtk pkgs.libxml2
       pkgs.libxslt pkgs.libsoup pkgs.webkitgtk24x-gtk2 pkgs.icu
     ];
 
@@ -19820,21 +19822,7 @@ in {
     };
   };
 
-  spambayes = buildPythonPackage rec {
-    name = "spambayes-1.1b1";
-
-    src = pkgs.fetchurl {
-      url = "mirror://sourceforge/spambayes/${name}.tar.gz";
-      sha256 = "0kqvjb89b02wp41p650ydfspi1s8d7akx1igcrw62diidqbxp04n";
-    };
-
-    propagatedBuildInputs = with self; [ bsddb3 pydns lockfile ];
-
-    meta = {
-      description = "Statistical anti-spam filter, initially based on the work of Paul Graham";
-      homepage = http://spambayes.sourceforge.net/;
-    };
-  };
+  spambayes = callPackage ../development/python-modules/spambayes { };
 
   shapely = callPackage ../development/python-modules/shapely { };
 
@@ -19866,24 +19854,20 @@ in {
 
   stevedore = callPackage ../development/python-modules/stevedore {};
 
-  Theano = self.TheanoWithoutCuda;
+  Theano = callPackage ../development/python-modules/Theano rec {
+    cudaSupport = pkgs.config.cudaSupport or false;
+    cudnnSupport = cudaSupport;
+  };
 
-  TheanoWithoutCuda = callPackage ../development/python-modules/Theano/theano-without-cuda { };
+  TheanoWithoutCuda = self.Theano.override {
+    cudaSupport = true;
+    cudnnSupport = true;
+  };
 
-  TheanoWithCuda = callPackage ../development/python-modules/Theano/theano-with-cuda (
-  let
-    boost = pkgs.boost159.override {
-      inherit (self) python numpy scipy;
-    };
-  in rec {
-    cudatoolkit = pkgs.cudatoolkit75;
-    cudnn = pkgs.cudnn5_cudatoolkit75;
-    inherit (self) numpy scipy;
-    pycuda = self.pycuda.override { inherit boost; };
-    libgpuarray = self.libgpuarray-cuda.override {
-      clblas = pkgs.clblas-cuda.override { inherit boost; };
-    };
-  });
+  TheanoWithCuda = self.Theano.override {
+    cudaSupport = false;
+    cudnnSupport = false;
+  };
 
   tidylib = buildPythonPackage rec {
     version = "0.2.4";
@@ -20278,7 +20262,8 @@ in {
       sha256 = "0zrjxvzxqm4bz2jcy8sras8jircgbs6dkrw8j3nc6jhvzlikwwxl";
     };
 
-    buildInputs = [ pkgs.pkgconfig self.pytest_28 self.pytestrunner ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = [ self.pytest_28 self.pytestrunner ];
     propagatedBuildInputs = [ self.cffi pkgs.secp256k1 ];
 
     # Tests are not included in archive
@@ -20348,8 +20333,9 @@ in {
       sha256 = "1q35kgz151rr99240jq55rs39y741m8shh9yihl3x95rkjxchji4";
     };
 
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = with pkgs; [ alsaLib ffmpeg libv4l sqlite libvpx ];
     propagatedBuildInputs = with self; [ cython pkgs.openssl dns dateutil xcaplib msrplib lxml python-otr ];
-    buildInputs = with pkgs; [ alsaLib ffmpeg libv4l pkgconfig sqlite libvpx ];
   };
 
 
@@ -20553,6 +20539,8 @@ in {
       platforms = platforms.unix;
     };
   });
+
+  guzzle_sphinx_theme = callPackage ../development/python-modules/guzzle_sphinx_theme { };
 
   sphinx-testing = callPackage ../development/python-modules/sphinx-testing { };
 
@@ -20912,7 +20900,8 @@ in {
     src = pkgs.subunit.src;
 
     propagatedBuildInputs = with self; [ testtools testscenarios ];
-    buildInputs = [ pkgs.pkgconfig pkgs.check pkgs.cppunit ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = [ pkgs.check pkgs.cppunit ];
 
     patchPhase = ''
       sed -i 's/version=VERSION/version="${pkgs.subunit.version}"/' setup.py
@@ -22278,11 +22267,11 @@ EOF
   };
 
   waitress = buildPythonPackage rec {
-    name = "waitress-0.8.9";
+    name = "waitress-1.0.2";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/w/waitress/${name}.tar.gz";
-      sha256 = "826527dc9d334ed4ed76cdae672fdcbbccf614186657db71679ab58df869458a";
+      sha256 = "0pw6yyxi348r2xpq3ykqnf7gwi881azv2422d2ixb0xi5jws2ky7";
     };
 
     doCheck = false;
@@ -22292,6 +22281,8 @@ EOF
        platforms = platforms.all;
     };
   };
+
+  waitress-django = callPackage ../development/python-modules/waitress-django { };
 
   webassets = buildPythonPackage rec {
     name = "webassets-${version}";
@@ -23485,7 +23476,7 @@ EOF
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/w/whisper/${name}.tar.gz";
-      sha256 = "1chkphxwnwvy2cs7jc2h2i0lqqvi9jx6vqj3ly88lwk7m35r4ss2";
+      sha256 = "1v1bi3fl1i6p4z4ki692bykrkw6907dn3mfq0151f70lvi3zpns3";
     };
 
     # error: invalid command 'test'
@@ -23552,7 +23543,7 @@ EOF
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/c/carbon/${name}.tar.gz";
-      sha256 = "f01db6d37726c6fc0a8aaa66a7bf14436b0dd0d62ef3c20ecb31605a4d365d2e";
+      sha256 = "142smpmgbnjinvfb6s4ijazish4vfgzyd8zcmdkh55y051fkixkn";
     };
 
     propagatedBuildInputs = with self; [ whisper txamqp zope_interface twisted ];
@@ -23767,10 +23758,13 @@ EOF
 
     src = pkgs.fetchurl rec {
       url = "mirror://pypi/g/graphite-web/${name}.tar.gz";
-      sha256 = "1c0kclbv8shv9nvjx19wqm4asia58s3qmd9fapchc6y9fjpjax6q";
+      sha256 = "0q8bwlj75jqyzmazfsi5sa26xl58ssa8wdxm2l4j0jqyn8xpfnmc";
     };
 
-    propagatedBuildInputs = with self; [ django django_tagging_0_3 whisper pycairo ldap memcached pytz ];
+    propagatedBuildInputs = with self; [
+      django_1_8 django_tagging_0_4_3 whisper pycairo cairocffi
+      ldap memcached pytz urllib3 scandir
+    ];
 
     postInstall = ''
       wrapProgram $out/bin/run-graphite-devel-server.py \
@@ -23778,10 +23772,20 @@ EOF
     '';
 
     preConfigure = ''
-      substituteInPlace webapp/graphite/thirdparty/pytz/__init__.py --replace '/usr/share/zoneinfo' '/etc/zoneinfo'
-      substituteInPlace webapp/graphite/settings.py --replace "join(WEBAPP_DIR, 'content')" "join('$out', 'webapp', 'content')"
-      cp webapp/graphite/manage.py bin/manage-graphite.py
-      substituteInPlace bin/manage-graphite.py --replace 'settings' 'graphite.settings'
+      # graphite is configured by storing a local_settings.py file inside the
+      # graphite python package. Since that package is stored in the immutable
+      # Nix store we can't modify it. So how do we configure graphite?
+      #
+      # First of all we rename "graphite.local_settings" to
+      # "graphite_local_settings" so that the settings are not looked up in the
+      # graphite package anymore. Secondly we place a directory containing a
+      # graphite_local_settings.py on the PYTHONPATH in the graphite module
+      # <nixpkgs/nixos/modules/services/monitoring/graphite.nix>.
+      substituteInPlace webapp/graphite/settings.py \
+        --replace "graphite.local_settings" " graphite_local_settings"
+
+      substituteInPlace webapp/graphite/settings.py \
+        --replace "join(WEBAPP_DIR, 'content')" "join('$out', 'webapp', 'content')"
     '';
 
     # error: invalid command 'test'
@@ -24038,7 +24042,8 @@ EOF
       sha256 = "1l0s9cx38qb6x5xj32r531xap11m93c3gag30idj8fzkn74cpfgc";
     };
 
-    buildInputs = with self; [ python pkgs.pkgconfig pkgs.libvirt lxml ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = with self; [ python pkgs.libvirt lxml ];
 
     buildPhase = "${python.interpreter} setup.py build";
 
@@ -24177,7 +24182,8 @@ EOF
     preBuild = "${python}/bin/${python.executable} setup.py build_ext";
     installPhase= "${python}/bin/${python.executable} setup.py install --prefix=$out";
 
-    buildInputs = with self; [ pkgs.pkgconfig pkgs.enlightenment.efl ];
+    nativeBuildInputs = [ pkgs.pkgconfig ];
+    buildInputs = with self; [ pkgs.enlightenment.efl ];
     doCheck = false;
 
     meta = {
@@ -25989,14 +25995,20 @@ EOF
 
   tensorflow-tensorboard = callPackage ../development/python-modules/tensorflow-tensorboard { };
 
-  tensorflow = self.tensorflowWithoutCuda;
-
-  tensorflowWithoutCuda = callPackage ../development/python-modules/tensorflow { };
-
-  tensorflowWithCuda = callPackage ../development/python-modules/tensorflow {
-    cudaSupport = true;
+  tensorflow = callPackage ../development/python-modules/tensorflow rec {
+    bazel = pkgs.bazel_0_4;
+    cudaSupport = pkgs.config.cudaSupport or false;
+    inherit (pkgs.linuxPackages) nvidia_x11;
     cudatoolkit = pkgs.cudatoolkit8;
-    cudnn = pkgs.cudnn60_cudatoolkit80;
+    cudnn = pkgs.cudnn6_cudatoolkit8;
+  };
+
+  tensorflowWithoutCuda = self.tensorflow.override {
+    cudaSupport = false;
+  };
+
+  tensorflowWithCuda = self.tensorflow.override {
+    cudaSupport = true;
   };
 
   tflearn = buildPythonPackage rec {
@@ -26512,6 +26524,8 @@ EOF
 
   stripe = callPackage ../development/python-modules/stripe { };
 
+  twilio = callPackage ../development/python-modules/twilio { };
+
   uranium = callPackage ../development/python-modules/uranium { };
 
   vine = callPackage ../development/python-modules/vine { };
@@ -26527,6 +26541,8 @@ EOF
       sha256 = "1ad0mkixc0s86djwsvhp1qlvcfs25086nh0qw7bys49gz8shczzi";
     };
   };
+
+  yowsup = callPackage ../development/python-modules/yowsup { };
 
   wptserve = callPackage ../development/python-modules/wptserve { };
 
