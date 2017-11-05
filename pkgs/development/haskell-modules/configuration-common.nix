@@ -98,7 +98,7 @@ self: super: {
       name = "git-annex-${drv.version}-src";
       url = "git://git-annex.branchable.com/";
       rev = "refs/tags/" + drv.version;
-      sha256 = "0ky3avbda1avccalkh7ifjnll37cjjmdyypw9m1glsrzgzmr5lbr";
+      sha256 = "0iz0yz0bwkmpza5qahsxr9plg1ylmkv7znp1a8f0z65px7f300an";
     };
   })).override {
     dbus = if pkgs.stdenv.isLinux then self.dbus else null;
@@ -892,7 +892,7 @@ self: super: {
   tailfile-hinotify = dontCheck super.tailfile-hinotify;
 
   # build liquidhaskell with the proper (new) aeson version
-  liquidhaskell = super.liquidhaskell.override { aeson = dontCheck self.aeson_1_2_2_0; };
+  liquidhaskell = super.liquidhaskell.override { aeson = dontCheck self.aeson_1_2_3_0; };
 
   # Test suite fails: https://github.com/lymar/hastache/issues/46.
   # Don't install internal mkReadme tool.
@@ -968,5 +968,14 @@ self: super: {
 
   # Depends on broken fluid.
   fluid-idl-http-client = markBroken super.fluid-idl-http-client;
+  fluid-idl-scotty = markBroken super.fluid-idl-scotty;
 
+  # depends on amqp >= 0.17
+  amqp-utils = super.amqp-utils.override { amqp = dontCheck super.amqp_0_18_1; };
+
+  # Build with gi overloading feature disabled.
+  ltk = super.ltk.overrideScope (self: super: { haskell-gi-overloading = self.haskell-gi-overloading_0_0; });
+
+  # missing dependencies: Glob >=0.7.14 && <0.8, data-fix ==0.0.4
+  stack2nix = doJailbreak super.stack2nix;
 }

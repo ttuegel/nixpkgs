@@ -13,7 +13,7 @@ stdenv.mkDerivation rec {
     description = "Build tool that builds code quickly and reliably";
     license = licenses.asl20;
     maintainers = with maintainers; [ cstrahan philandstuff ];
-    platforms = platforms.linux;
+    platforms = platforms.unix;
   };
 
   name = "bazel-${version}";
@@ -38,6 +38,15 @@ stdenv.mkDerivation rec {
     for f in $(grep -l -r '/usr/bin/env'); do
       substituteInPlace "$f" --replace '/usr/bin/env' '${coreutils}/bin/env'
     done
+  '' + lib.optionalString stdenv.isDarwin ''
+    sed -i 's,/usr/bin/xcrun clang,clang,g' \
+      scripts/bootstrap/compile.sh \
+      src/tools/xcode/realpath/BUILD \
+      src/tools/xcode/stdredirect/BUILD \
+      src/tools/xcode/xcrunwrapper/xcrunwrapper.sh
+    sed -i 's,/usr/bin/xcrun "''${TOOLNAME}","''${TOOLNAME}",g' \
+      src/tools/xcode/xcrunwrapper/xcrunwrapper.sh
+    sed -i 's/"xcrun", "clang"/"clang"/g' tools/osx/xcode_configure.bzl
   '';
 
   buildInputs = [
