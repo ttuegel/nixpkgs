@@ -83,6 +83,8 @@ stdenv.mkDerivation {
     [ bison flex gperf lndir perl pkgconfig python2 ]
     ++ lib.optional (!stdenv.isDarwin) patchelf;
 
+  propagatedNativeBuildInputs = [ lndir ];
+
   outputs = [ "bin" "dev" "out" ];
 
   inherit patches;
