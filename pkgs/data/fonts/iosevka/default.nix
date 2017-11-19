@@ -58,6 +58,8 @@ stdenv.mkDerivation {
 
   preConfigure = ''
     HOME=$TMPDIR
+    source "$installPackageLockPath";
+    npm --offline rebuild
   '';
 
   configurePhase = ''
@@ -66,11 +68,6 @@ stdenv.mkDerivation {
     ${optionalString custom ''make custom-config set=${set} ${config}''}
 
     runHook postConfigure
-  '';
-
-  preBuild = ''
-    source "$installPackageLockPath";
-    npm --offline rebuild
   '';
 
   buildPhase = ''
