@@ -55,6 +55,6 @@ stdenv.mkDerivation {
     '';
     license = licenses.ofl;
     platforms = platforms.all;
-    maintainers = with maintainers; [ cstrahan jfrankenau ];
+    maintainers = with maintainers; [ cstrahan jfrankenau ttuegel ];
   };
 }
