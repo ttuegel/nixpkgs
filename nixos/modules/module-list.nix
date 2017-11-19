@@ -193,6 +193,8 @@
   ./services/databases/stanchion.nix
   ./services/databases/virtuoso.nix
   ./services/desktops/accountsservice.nix
+  ./services/desktops/dleyna-renderer.nix
+  ./services/desktops/dleyna-server.nix
   ./services/desktops/geoclue2.nix
   ./services/desktops/gnome3/at-spi2-core.nix
   ./services/desktops/gnome3/evolution-data-server.nix
@@ -482,6 +484,7 @@
   ./services/networking/networkmanager.nix
   ./services/networking/nftables.nix
   ./services/networking/ngircd.nix
+  ./services/networking/nghttpx/default.nix
   ./services/networking/nix-serve.nix
   ./services/networking/nntp-proxy.nix
   ./services/networking/nsd.nix

@@ -106,6 +106,8 @@ in {
   # Left for backwards compatibility
   "3to2" = self.py3to2;
 
+  absl-py = callPackage ../development/python-modules/absl-py { };
+
   aenum = callPackage ../development/python-modules/aenum { };
 
   affinity = callPackage ../development/python-modules/affinity { };
@@ -267,6 +269,8 @@ in {
   pyqt5 = pkgs.libsForQt5.callPackage ../development/python-modules/pyqt/5.x.nix {
     pythonPackages = self;
   };
+
+  pysc2 = callPackage ../development/python-modules/pysc2 { };
 
   pyscard = callPackage ../development/python-modules/pyscard { inherit (pkgs.darwin.apple_sdk.frameworks) PCSC; };
 
@@ -3321,6 +3325,8 @@ in {
     };
   };
 
+  mpyq = callPackage ../development/python-modules/mpyq { };
+
   mxnet = buildPythonPackage rec {
     inherit (pkgs.mxnet) name version src meta;
 
@@ -3340,6 +3346,8 @@ in {
       ln -s ${pkgs.mxnet}/lib/libmxnet.so $out/${python.sitePackages}/mxnet
     '';
   };
+
+  portpicker = callPackage ../development/python-modules/portpicker { };
 
   pkginfo = buildPythonPackage rec {
     version = "1.3.2";
@@ -5437,6 +5445,7 @@ in {
   };
 
   google-cloud-sdk = callPackage ../tools/admin/google-cloud-sdk { };
+  google-cloud-sdk-gce = callPackage ../tools/admin/google-cloud-sdk { with-gce=true; };
 
   google-compute-engine = callPackage ../tools/virtualization/google-compute-engine { };
 
@@ -7178,6 +7187,7 @@ in {
     meta.broken = true; # Tests fail, and no reverse-dependencies anyway
   };
 
+  s2clientprotocol = callPackage ../development/python-modules/s2clientprotocol { };
 
   statsd = buildPythonPackage rec {
     name = "statsd-${version}";
@@ -8021,11 +8031,12 @@ in {
 
   hg-git = buildPythonPackage rec {
     name = "hg-git-${version}";
-    version = "0.8.5";
+    version = "0.8.10";
+    disabled = isPy3k;
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/h/hg-git/${name}.tar.gz";
-      sha256 = "10j7l1p2wx7s5nb6s35z1f3mcz2svz9ilcm26f3la9h9c76b7jpm";
+      sha256 = "03dzcs4l7hzq59sgjhngxgmi34xfyd7jcxyjl0f68rwq8b1yqrp3";
     };
 
     propagatedBuildInputs = with self; [ dulwich ];
@@ -8630,28 +8641,7 @@ in {
     buildInputs = with self; [ nose ];
   };
 
-  ConfigArgParse = buildPythonPackage rec {
-    name = "ConfigArgParse-${version}";
-    version = "0.9.3";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/C/ConfigArgParse/ConfigArgParse-${version}.tar.gz";
-      sha256 = "0a984pvv7370yz7zbkl6s6i7yyl9myahx0m9jkjvg3hz5q8mf70l";
-    };
-
-    # no tests in tarball
-    doCheck = false;
-    propagatedBuildInputs = with self; [
-
-    ];
-    buildInputs = with self; [
-
-    ];
-
-    meta = with stdenv.lib; {
-      homepage = "https://github.com/zorro3/ConfigArgParse";
-    };
-  };
+  ConfigArgParse = callPackage ../development/python-modules/configargparse { };
 
   jsonschema = callPackage ../development/python-modules/jsonschema { };
 
@@ -17113,7 +17103,11 @@ in {
     };
   };
 
+  qtawesome = callPackage ../development/python-modules/qtawesome { };
+
   qtconsole = callPackage ../development/python-modules/qtconsole { };
+
+  qtpy = callPackage ../development/python-modules/qtpy { };
 
   quantities = buildPythonPackage rec {
     name = "quantities-0.10.1";
@@ -17481,24 +17475,7 @@ in {
 
   rootpy = callPackage ../development/python-modules/rootpy { };
 
-  rope = buildPythonPackage rec {
-    version = "0.10.2";
-    name = "rope-${version}";
-
-    disabled = isPy3k;
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/r/rope/${name}.tar.gz";
-      sha256 = "0rdlvp8h74qs49wz1hx6qy8mgp2ddwlfs7z13h9139ynq04a3z7z";
-    };
-
-    meta = {
-      description = "Python refactoring library";
-      homepage = http://rope.sf.net;
-      maintainers = with maintainers; [ goibhniu ];
-      license = licenses.gpl2;
-    };
-  };
+  rope = callPackage ../development/python-modules/rope { };
 
   ropper = callPackage ../development/python-modules/ropper { };
 
@@ -19032,9 +19009,7 @@ in {
     };
   });
 
-  spyder = callPackage ../applications/science/spyder {
-    rope = if isPy3k then null else self.rope;
-  };
+  spyder = callPackage ../applications/science/spyder { };
 
   sqlalchemy = callPackage ../development/python-modules/sqlalchemy { };
 
@@ -22918,12 +22893,12 @@ EOF
   trollius = callPackage ../development/python-modules/trollius {};
 
   neovim = buildPythonPackage rec {
-    version = "0.1.13";
+    version = "0.2.0";
     name = "neovim-${version}";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/n/neovim/${name}.tar.gz";
-      sha256 = "0pzk5639jjjx46a6arkwy31falmk5w1061icbml8njm3rbrwwhgx";
+      sha256 = "1ywkgbrxd95cwlglihydmffcw2d2aji6562aqncymxs3ld5y02yn";
     };
 
     buildInputs = with self; [ nose ];
