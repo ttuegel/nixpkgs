@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib, copyPathsToStore,
+  mkDerivation, lib, fetchpatch,
   extra-cmake-modules, kdoctools,
   karchive, kbookmarks, kcompletion, kconfig, kconfigwidgets, kcoreaddons,
   kdbusaddons, ki18n, kiconthemes, kitemviews, kjobwidgets, knotifications,
@@ -19,5 +19,12 @@ mkDerivation {
     kbookmarks kcompletion kconfig kcoreaddons kitemviews kjobwidgets kservice
     kxmlgui qtbase solid
   ];
-  patches = (copyPathsToStore (lib.readPathsFromFile ./. ./series));
+  patches = [
+    (fetchpatch {
+      url = "https://cgit.kde.org/kio.git/patch/?id=2353119aae8f03565bc7779ed1d597d266f5afda";
+      sha256 = "19pidf98jm2hx1bga55r4jdjn96xdygasi004s97hpn9bn4nl1hj";
+    })
+    ./samba-search-path.patch
+    ./kio-debug-module-loader.patch
+  ];
 }
