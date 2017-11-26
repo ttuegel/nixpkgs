@@ -3,7 +3,7 @@
   src, patches, version, qtCompatVersion,
 
   coreutils, bison, flex, gdb, gperf, lndir, patchelf, perl, pkgconfig, python2,
-  ruby,
+  ruby, which,
   # darwin support
   darwin, libiconv, libcxx,
 
@@ -85,6 +85,7 @@ stdenv.mkDerivation {
 
   nativeBuildInputs =
     [ bison flex gperf lndir perl pkgconfig python2 ]
+    ++ lib.optional (compareVersion "5.9.3" >= 0) which
     ++ lib.optional (!stdenv.isDarwin) patchelf;
 
   propagatedNativeBuildInputs = [ lndir ];
