@@ -26,12 +26,14 @@ stdenv.mkDerivation rec {
     cp bin/release-x*/otfcc* $out/bin/
   '';
 
+  enableParallelBuilding = true;
+
   meta = with stdenv.lib; {
     description = "Optimized OpenType builder and inspector";
     homepage = https://github.com/caryll/otfcc;
-    license = licenses.apache2;
-    platforms = platforms.linux;
-    maintainers = with maintainers; [ jfrankenau ];
+    license = licenses.asl20;
+    platforms = [ "i686-linux" "x86_64-linux" "x86_64-darwin" ];
+    maintainers = with maintainers; [ jfrankenau ttuegel ];
   };
 
 }

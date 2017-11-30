@@ -6,7 +6,7 @@
 , cmake
 , python
 , libffi
-, binutils
+, libbfd
 , libxml2
 , valgrind
 , ncurses
@@ -23,6 +23,11 @@
 
 let
   src = fetch "llvm" "1nin64vz21hyng6jr19knxipvggaqlkl2l9jpd5czbc4c2pcnpg3";
+
+  aarch64Patch = fetchpatch {
+    url = https://reviews.llvm.org/file/data/2oqw5rhhklsapbjrhlpd/PHID-FILE-lvo4fcs6hjvkxb5wneg2/D40423.diff;
+    sha256 = "0b0h7n7lxw33pn2j061hm9050zn263gmiig937g5cmcvjimxlybb";
+  };
 
   # Used when creating a version-suffixed symlink of libLLVM.dylib
   shortVersion = with stdenv.lib;
@@ -75,6 +80,8 @@ in stdenv.mkDerivation rec {
 
     # Revert compiler-rt commit that makes codesign mandatory
     patch -p1 -i ${./compiler-rt-codesign.patch} -d projects/compiler-rt
+  '' + stdenv.lib.optionalString stdenv.isAarch64 ''
+    patch -p0 < ${aarch64Patch}
   '';
 
   # hacky fix: created binaries need to be run before installation
@@ -101,7 +108,7 @@ in stdenv.mkDerivation rec {
     "-DSPHINX_WARNINGS_AS_ERRORS=OFF"
   ]
   ++ stdenv.lib.optional (!isDarwin)
-    "-DLLVM_BINUTILS_INCDIR=${stdenv.lib.getDev binutils}/include"
+    "-DLLVM_BINUTILS_INCDIR=${libbfd.dev}/include"
   ++ stdenv.lib.optionals (isDarwin) [
     "-DLLVM_ENABLE_LIBCXX=ON"
     "-DCAN_TARGET_i386=false"

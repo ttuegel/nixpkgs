@@ -2,7 +2,7 @@
   stdenv, lib,
   fetchFromGitHub, fetchurl,
   runCommand, writeText,
-  nodejs, ttfautohint, otfcc,
+  nodejs, ttfautohint-nox, otfcc,
 
   # Custom font set options.
   # See https://github.com/be5invis/Iosevka#build-your-own-style
@@ -51,7 +51,7 @@ in
 stdenv.mkDerivation {
   inherit name pname version src;
 
-  nativeBuildInputs = [ nodejs ttfautohint otfcc ];
+  nativeBuildInputs = [ nodejs ttfautohint-nox otfcc ];
 
   passAsFile = [ "installPackageLock" ];
   installPackageLock = installPackageLock ./package-lock.json;
@@ -70,13 +70,7 @@ stdenv.mkDerivation {
     runHook postConfigure
   '';
 
-  buildPhase = ''
-    runHook preBuild
-
-    ${if custom then ''make custom set=${set}'' else ''make''}
-
-    runHook postBuild
-  '';
+  makeFlags = lib.optionals custom [ "custom" "set=${set}" ];
 
   installPhase = ''
     runHook preInstall
@@ -87,6 +81,8 @@ stdenv.mkDerivation {
 
     runHook postInstall
   '';
+
+  enableParallelBuilding = true;
 
   meta = with stdenv.lib; {
     homepage = https://be5invis.github.io/Iosevka/;
