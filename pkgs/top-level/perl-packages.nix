@@ -3402,6 +3402,19 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
+  DateTimeCalendarJulian = buildPerlPackage rec {
+    name = "DateTime-Calendar-Julian-0.04";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/P/PI/PIJLL/${name}.tar.gz";
+      sha256 = "03h0llkwsiw2d2ci1ah5x9sp8xrvnbgd471i5hnpgl5w32nnhndv";
+    };
+    propagatedBuildInputs = [ DateTime ];
+    meta = {
+      description = "Dates in the Julian calendar";
+      license = stdenv.lib.licenses.artistic2;
+    };
+  };
+
   DateTimeEventICal = buildPerlPackage rec {
     name = "DateTime-Event-ICal-0.13";
     src = fetchurl {
@@ -4836,6 +4849,7 @@ let self = _self // overrides; _self = with self; {
       url = "mirror://cpan/authors/id/J/JG/JGMYERS/${name}.tar.gz";
       sha256 = "834d893aa7db6ce3f158afbd0e432d6ed15a276e0940db0a74be13fd9c4bbbf1";
     };
+    nativeBuildInputs = [ pkgs.ld-is-cc-hook ];
     propagatedBuildInputs = [ ModuleBuild ];
     meta = {
       description = "An Encode::Encoding subclass that detects the encoding of data";
@@ -5149,6 +5163,7 @@ let self = _self // overrides; _self = with self; {
       url = "mirror://cpan/modules/by-module/ExtUtils/${name}.tar.gz";
       sha256 = "1a77hxf2pa8ia9na72rijv1yhpn2bjrdsybwk2dj2l938pl3xn0w";
     };
+    nativeBuildInputs = [ pkgs.ld-is-cc-hook ];
     propagatedBuildInputs = [ CaptureTiny ];
   };
 
@@ -5790,10 +5805,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   FileSlurper = buildPerlPackage rec {
-    name = "File-Slurper-0.010";
+    name = "File-Slurper-0.011";
     src = fetchurl {
       url = "mirror://cpan/authors/id/L/LE/LEONT/${name}.tar.gz";
-      sha256 = "a393364648c9d6be938e8a68c3094c5f8a37b19d3159141ec81ba49559343c16";
+      sha256 = "f6494844b9759b3d1dd8fc4ffa790f8e6e493c4eb58e88831a51e085f2e76010";
     };
     buildInputs = [ TestWarnings ];
     meta = {
@@ -8475,6 +8490,7 @@ let self = _self // overrides; _self = with self; {
       url = "mirror://cpan/modules/by-module/Math/${name}.tar.gz";
       sha256 = "0i9wzvig7ayijc9nvh5x5rryk1jrcj1hcvfmlcj449rnnxx24dav";
     };
+    nativeBuildInputs = [ pkgs.ld-is-cc-hook ];
     propagatedBuildInputs = [ ModuleBuildWithXSpp ExtUtilsXSpp ExtUtilsTypemapsDefault TestDeep ];
   };
 
@@ -12210,6 +12226,19 @@ let self = _self // overrides; _self = with self; {
     };
   };
 
+  SortKey = buildPerlPackage rec {
+    name = "Sort-Key-1.33";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/S/SA/SALVA/${name}.tar.gz";
+      sha256 = "1kqs10s2plj6c96srk0j8d7xj8dxk1704r7mck8rqk09mg7lqspd";
+    };
+    buildInputs = [ TestMore ];
+    meta = {
+      description = "Sort arrays by one or multiple calculated keys";
+      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+    };
+  };
+
   SortVersions = buildPerlPackage rec {
     name = "Sort-Versions-1.5";
     src = fetchurl {
@@ -15402,10 +15431,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   UnicodeCollate = buildPerlPackage rec {
-    name = "Unicode-Collate-1.14";
+    name = "Unicode-Collate-1.25";
     src = fetchurl {
       url = "mirror://cpan/authors/id/S/SA/SADAHIRO/${name}.tar.gz";
-      sha256 = "0ykncvhnwy8ync01ibv0524m0si9ya1ch2v8vx61s778nnrmp2k2";
+      sha256 = "1dpvck4saah8hqb9c82i25yimy9x2hkr1k3a2f1ly0k0ifhbiyyx";
     };
     meta = {
       description = "Unicode Collation Algorithm";
@@ -15430,10 +15459,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   UnicodeLineBreak = buildPerlPackage rec {
-    name = "Unicode-LineBreak-2015.07.16";
+    name = "Unicode-LineBreak-2017.004";
     src = fetchurl {
       url = "mirror://cpan/authors/id/N/NE/NEZUMI/${name}.tar.gz";
-      sha256 = "0fycsfc3jhnalad7zvx47f13dpxihdh9c8fy8w7psjlyd5svs6sb";
+      sha256 = "0xnb80na1ps1b5gmj3n70bk28brjzrn725kqv5q0gbb0rg2c6nv5";
     };
     propagatedBuildInputs = [ MIMECharset ];
     meta = {
