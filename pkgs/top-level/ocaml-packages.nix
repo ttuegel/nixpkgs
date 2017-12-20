@@ -128,7 +128,7 @@ let
 
     ocaml_cairo = callPackage ../development/ocaml-modules/ocaml-cairo { };
 
-    ocaml_cairo2 = callPackage ../development/ocaml-modules/ocaml-cairo2 { };
+    cairo2 = callPackage ../development/ocaml-modules/cairo2 { };
 
     cil = callPackage ../development/ocaml-modules/cil { };
 
@@ -969,10 +969,6 @@ let
     };
 
     matita_130312 = callPackage ../applications/science/logic/matita/130312.nix { };
-
-    ott = callPackage ../applications/science/logic/ott {
-      camlp5 = camlp5_transitional;
-    };
 
   };
     in (ocamlPackages.janeStreet // ocamlPackages);

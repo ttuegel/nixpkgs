@@ -286,6 +286,7 @@
   iblech = "Ingo Blechschmidt <iblech@speicherleck.de>";
   igsha = "Igor Sharonov <igor.sharonov@gmail.com>";
   ikervagyok = "Balázs Lengyel <ikervagyok@gmail.com>";
+  ilya-kolpakov = "Ilya Kolpakov <ilya.kolpakov@gmail.com>";
   infinisil = "Silvan Mosberger <infinisil@icloud.com>";
   ironpinguin = "Michele Catalano <michele@catalano.de>";
   ivan-tkatchev = "Ivan Tkatchev <tkatchev@gmail.com>";
@@ -648,6 +649,7 @@
   tex = "Milan Svoboda <milan.svoboda@centrum.cz>";
   thall = "Niclas Thall <niclas.thall@gmail.com>";
   thammers = "Tobias Hammerschmidt <jawr@gmx.de>";
+  thanegill = "Thane Gill <me@thanegill.com>";
   the-kenny = "Moritz Ulrich <moritz@tarn-vedra.de>";
   theuni = "Christian Theune <ct@flyingcircus.io>";
   ThomasMader = "Thomas Mader <thomas.mader@gmail.com>";
