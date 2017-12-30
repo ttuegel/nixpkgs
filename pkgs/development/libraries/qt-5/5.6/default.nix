@@ -124,6 +124,10 @@ let
         deps = [ self.qtbase.dev ];
         substitutions = { inherit (stdenv) isDarwin; };
       } ../hooks/qmake-hook.sh;
+
+      wrapQtAppsHook = makeSetupHook {
+        deps = [ self.qtbase.dev self.qtwayland.dev makeWrapper ];
+      } ../hooks/wrap-qt-apps-hook.sh;
     };
 
    self = makeScope newScope addPackages;
