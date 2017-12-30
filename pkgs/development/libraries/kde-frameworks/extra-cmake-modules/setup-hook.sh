@@ -10,7 +10,7 @@ _ecmPreConfigureHook() {
     cmakeFlags+=" -DKDE_INSTALL_BINDIR=${!outputBin}/bin"
     cmakeFlags+=" -DKDE_INSTALL_SBINDIR=${!outputBin}/sbin"
     cmakeFlags+=" -DKDE_INSTALL_LIBDIR=${!outputLib}/lib"
-    cmakeFlags+=" -DKDE_INSTALL_LIBEXECDIR=${!outputLib}/lib/libexec"
+    cmakeFlags+=" -DKDE_INSTALL_LIBEXECDIR=${!outputLib}/libexec"
     cmakeFlags+=" -DKDE_INSTALL_CMAKEPACKAGEDIR=${!outputDev}/lib/cmake"
     cmakeFlags+=" -DKDE_INSTALL_INCLUDEDIR=${!outputInclude}/include"
     cmakeFlags+=" -DKDE_INSTALL_LOCALSTATEDIR=/var"

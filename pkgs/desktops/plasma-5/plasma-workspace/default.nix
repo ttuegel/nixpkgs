@@ -33,7 +33,7 @@ mkDerivation {
 
     qtgraphicaleffects qtquickcontrols qtquickcontrols2 qtscript qtwayland qtx11extras
   ];
-  outputs = [ "bin" "dev" "out" ];
+  outputs = [ "out" "dev" ];
 
   cmakeFlags = [
     "-DNIXPKGS_XMESSAGE=${getBin xmessage}/bin/xmessage"
@@ -68,10 +68,6 @@ mkDerivation {
 
   preConfigure = ''
     NIX_CFLAGS_COMPILE+=" -DNIXPKGS_KDOSTARTUPCONFIG5=\"''${!outputBin}/bin/kdostartupconfig5\""
-    cmakeFlags+=" -DNIXPKGS_STARTPLASMA=''${!outputBin}/lib/libexec/startplasma"
-  '';
-
-  postInstall = ''
-    moveToOutput lib/libexec/startplasma ''${!outputBin}
+    cmakeFlags+=" -DNIXPKGS_STARTPLASMA=''${!outputBin}/libexec/startplasma"
   '';
 }
