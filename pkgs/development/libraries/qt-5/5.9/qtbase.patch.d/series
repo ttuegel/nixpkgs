@@ -5,7 +5,6 @@ TZDIR.patch
 libressl.patch
 QTCOMPOSE.patch
 gtk3-platform-theme.patch
-plugins-from-PATH.patch
 multiple-outputs-cmake.patch
 multiple-outputs-qmake.patch
 darwin-unset-RPATH-linker-flags.patch

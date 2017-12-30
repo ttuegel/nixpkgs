@@ -4,7 +4,6 @@ fallback-mesa-libGL.patch
 TZDIR.patch
 libressl.patch
 QTCOMPOSE.patch
-plugins-from-PATH.patch
 multiple-outputs-cmake.patch
 multiple-outputs-qmake.patch
 POSIX-command.patch

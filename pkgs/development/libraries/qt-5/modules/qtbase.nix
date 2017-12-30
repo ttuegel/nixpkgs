@@ -183,8 +183,6 @@ stdenv.mkDerivation {
         echo "Creating \`$cache'"
         createQmakeCache "$cache"
     done
-
-    NIX_CFLAGS_COMPILE+=" -DNIXPKGS_QT_PLUGIN_PREFIX=\"$qtPluginPrefix\""
   '';
 
 
