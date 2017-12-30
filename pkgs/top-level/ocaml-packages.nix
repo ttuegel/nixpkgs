@@ -192,13 +192,17 @@ let
       then callPackage ../development/ocaml-modules/csv { }
       else callPackage ../development/ocaml-modules/csv/1.5.nix { };
 
-    curses = callPackage ../development/ocaml-modules/curses { };
+    curses = callPackage ../development/ocaml-modules/curses {
+      ncurses = pkgs.ncurses5;
+    };
 
     custom_printf = callPackage ../development/ocaml-modules/custom_printf { };
 
     ctypes = callPackage ../development/ocaml-modules/ctypes { };
 
     decompress =  callPackage ../development/ocaml-modules/decompress { };
+
+    digestif =  callPackage ../development/ocaml-modules/digestif { };
 
     dolmen =  callPackage ../development/ocaml-modules/dolmen { };
 
@@ -230,6 +234,10 @@ let
     facile = callPackage ../development/ocaml-modules/facile { };
 
     faillib = callPackage ../development/ocaml-modules/faillib { };
+
+    faraday = callPackage ../development/ocaml-modules/faraday { };
+
+    farfadet = callPackage ../development/ocaml-modules/farfadet { };
 
     fieldslib_p4 = callPackage ../development/ocaml-modules/fieldslib { };
 
@@ -348,6 +356,8 @@ let
     logs = callPackage ../development/ocaml-modules/logs {
       lwt = ocaml_lwt;
     };
+
+    lru = callPackage ../development/ocaml-modules/lru { };
 
     lwt2 = callPackage ../development/ocaml-modules/lwt { };
 
@@ -499,6 +509,8 @@ let
 
     piqi = callPackage ../development/ocaml-modules/piqi { };
     piqi-ocaml = callPackage ../development/ocaml-modules/piqi-ocaml { };
+
+    psq = callPackage ../development/ocaml-modules/psq { };
 
     ptime = callPackage ../development/ocaml-modules/ptime { };
 

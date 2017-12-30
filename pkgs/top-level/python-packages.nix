@@ -185,6 +185,8 @@ in {
 
   bayespy = callPackage ../development/python-modules/bayespy { };
 
+  bitcoinlib = callPackage ../development/python-modules/bitcoinlib { };
+
   bitcoin-price-api = callPackage ../development/python-modules/bitcoin-price-api { };
 
   blivet = callPackage ../development/python-modules/blivet { };
@@ -274,6 +276,8 @@ in {
   pycryptodomex = callPackage ../development/python-modules/pycryptodomex { };
 
   PyChromecast = callPackage ../development/python-modules/pychromecast { };
+
+  pydbus = callPackage ../development/python-modules/pydbus { };
 
   pyexiv2 = disabledIf isPy3k (callPackage ../development/python-modules/pyexiv2 {});
 
@@ -3671,23 +3675,7 @@ in {
     doCheck = false;
   };
 
-  pytestquickcheck = buildPythonPackage rec {
-    name = "pytest-quickcheck-0.8.2";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/p/pytest-quickcheck/pytest-quickcheck-0.8.2.tar.gz";
-      sha256 = "047w4zwdsnlzmsc5f3rapzbzd2frlvz9nnp8v4b48fjmqmxassh3";
-    };
-
-    buildInputs = with self; [ pytest ];
-    propagatedBuildInputs = with self; [ pytestflakes pytestpep8 tox ];
-
-    meta = {
-      license = licenses.asl20;
-      homepage = "https://pypi.python.org/pypi/pytest-quickcheck";
-      description = "pytest plugin to generate random data inspired by QuickCheck";
-    };
-  };
+  pytestquickcheck = callPackage ../development/python-modules/pytest-quickcheck { };
 
   pytest-server-fixtures = buildPythonPackage rec {
     name = "${pname}-${version}";
@@ -4612,11 +4600,13 @@ in {
   edward = callPackage ../development/python-modules/edward { };
 
   elasticsearch = buildPythonPackage (rec {
-    name = "elasticsearch-1.9.0";
+    pname = "elasticsearch";
+    version = "6.0.0";
+    name = "${pname}-${version}";
 
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/e/elasticsearch/${name}.tar.gz";
-      sha256 = "091s60ziwhyl9kjfm833i86rcpjx46v9h16jkgjgkk5441dln3gb";
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "029q603g95fzkh87xkbxxmjfq5s9xkr9y27nfik6d4prsl0zxmlz";
     };
 
     # Check is disabled because running them destroy the content of the local cluster!
@@ -4632,7 +4622,6 @@ in {
       maintainers = with maintainers; [ desiderius ];
     };
   });
-
 
   elasticsearchdsl = buildPythonPackage (rec {
     name = "elasticsearch-dsl-0.0.9";
@@ -4655,6 +4644,8 @@ in {
       maintainers = with maintainers; [ desiderius ];
     };
   });
+
+  elasticsearch-curator = callPackage ../development/python-modules/elasticsearch-curator { };
 
   entrypoints = callPackage ../development/python-modules/entrypoints { };
 
@@ -4748,6 +4739,8 @@ in {
     };
 
     propagatedBuildInputs = with self; [ greenlet ];
+
+    doCheck = false;
 
     meta = {
       description = "Eventlib bindings for python";
@@ -6533,7 +6526,6 @@ in {
   pycuda = callPackage ../development/python-modules/pycuda rec {
     cudatoolkit = pkgs.cudatoolkit75;
     inherit (pkgs.stdenv) mkDerivation;
-    inherit pythonOlder;
   };
 
   pyphen = callPackage ../development/python-modules/pyphen {};
@@ -14342,26 +14334,6 @@ in {
     };
   };
 
-  pyelasticsearch = buildPythonPackage (rec {
-    name = "pyelasticsearch-1.4";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/p/pyelasticsearch/${name}.tar.gz";
-      sha256 = "18wp6llfjv6hvyhr3f6i8dm9wc5rf46wiqsfxwpvnf6mdrvk6xr7";
-    };
-
-    # Tests require a local instance of elasticsearch
-    doCheck = false;
-    propagatedBuildInputs = with self; [ elasticsearch six simplejson certifi ];
-    buildInputs = with self; [ nose mock ];
-
-    meta = {
-      description = "A clean, future-proof, high-scale API to elasticsearch";
-      homepage = https://pyelasticsearch.readthedocs.org;
-      license = licenses.bsd3;
-    };
-  });
-
   pyelftools = buildPythonPackage rec {
     pname = "pyelftools";
     version = "0.24";
@@ -16319,14 +16291,15 @@ in {
   routes = buildPythonPackage rec {
     pname = "Routes";
     version = "2.4.1";
-    name = "${pname}-${version}";
 
     src = fetchPypi {
       inherit pname version;
       sha256 = "1zamff3m0kc4vyfniyhxpkkcqv1rrgnmh37ykxv34nna1ws47vi6";
     };
 
-    propagatedBuildInputs = with self; [ paste webtest repoze_lru ];
+    propagatedBuildInputs = with self; [ repoze_lru six webob ];
+
+    checkInputs = with self; [ coverage webtest ];
 
     meta = {
       description = "A Python re-implementation of the Rails routes system for mapping URLs to application actions";
@@ -22870,15 +22843,7 @@ EOF
     doCheck = false;
   };
 
-  ansi = buildPythonPackage rec {
-    name = "ansi-${version}";
-    version = "0.1.3";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/a/ansi/${name}.tar.gz";
-      sha256 = "06y6470bzvlqys3zi2vc68rmk9n05v1ibral14gbfpgfa8fzy7pg";
-    };
-  };
+  ansi = callPackage ../development/python-modules/ansi { };
 
   pygments-markdown-lexer = buildPythonPackage rec {
     name = "pygments-markdown-lexer-${version}";
@@ -23006,11 +22971,11 @@ EOF
 
   more-itertools = buildPythonPackage rec {
     name = "more-itertools-${version}";
-    version = "2.4.1";
+    version = "4.0.1";
 
     src = pkgs.fetchurl {
       url = "mirror://pypi/m/more-itertools/${name}.tar.gz";
-      sha256 = "95a222d01df60c888d56d86f91219bfbd47106a534e89ca7f80fb555cfbe08c1";
+      sha256 = "0cadwsr97c80k18if7qy5d8j8l1zj3yhnkm6kbngk0lpl7pxq8ax";
     };
 
     buildInputs = with self; [ nose ];
@@ -23304,6 +23269,7 @@ EOF
 
   ephem = callPackage ../development/python-modules/ephem { };
 
+  voluptuous = callPackage ../development/python-modules/voluptuous { };
 });
 
 in fix' (extends overrides packages)
