@@ -150,9 +150,9 @@ stdenv.mkDerivation {
           ''
     );
 
-  qtPluginPrefix = "lib/qt-${qtCompatVersion}/plugins";
-  qtQmlPrefix = "lib/qt-${qtCompatVersion}/qml";
-  qtDocPrefix = "share/doc/qt-${qtCompatVersion}";
+  qtPluginPrefix = "lib/qt-5/plugins";
+  qtQmlPrefix = "lib/qt-5/qml";
+  qtDocPrefix = "share/doc/qt-5";
 
   setOutputFlags = false;
   preConfigure = ''
