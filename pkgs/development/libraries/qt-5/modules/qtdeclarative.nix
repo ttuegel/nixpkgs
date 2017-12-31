@@ -7,9 +7,6 @@ qtModule {
   qtInputs = [ qtbase qtsvg qtxmlpatterns ];
   nativeBuildInputs = [ python2 quilt ];
   outputs = [ "out" "dev" "bin" ];
-  preConfigure = ''
-    NIX_CFLAGS_COMPILE+=" -DNIXPKGS_QML2_IMPORT_PREFIX=\"$qtQmlPrefix\""
-  '';
   devTools = [
     "bin/qml"
     "bin/qmlcachegen"
