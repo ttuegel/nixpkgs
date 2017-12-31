@@ -1,4 +1,4 @@
-{ mkDerivation, lib, copyPathsToStore, cmake, pkgconfig }:
+{ mkDerivation, lib, copyPathsToStore, cmake, pkgconfig, wrapQtAppsHook }:
 
 mkDerivation {
   name = "extra-cmake-modules";
@@ -7,7 +7,7 @@ mkDerivation {
 
   outputs = [ "out" ];  # this package has no runtime components
 
-  propagatedBuildInputs = [ cmake pkgconfig ];
+  propagatedNativeBuildInputs = [ cmake pkgconfig wrapQtAppsHook ];
 
   setupHook = ./setup-hook.sh;
 

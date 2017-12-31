@@ -1,10 +1,10 @@
-_ecmEnvHook() {
+ecmEnvHook() {
     addToSearchPath XDG_DATA_DIRS "$1/share"
     addToSearchPath XDG_CONFIG_DIRS "$1/etc/xdg"
 }
-addEnvHooks "$targetOffset" _ecmEnvHook
+addEnvHooks "$targetOffset" ecmEnvHook
 
-_ecmPreConfigureHook() {
+ecmPostHook() {
     # Because we need to use absolute paths here, we must set *all* the paths.
     cmakeFlags+=" -DKDE_INSTALL_EXECROOTDIR=${!outputBin}"
     cmakeFlags+=" -DKDE_INSTALL_BINDIR=${!outputBin}/bin"
@@ -51,4 +51,46 @@ _ecmPreConfigureHook() {
         cmakeFlags+=" -DKDE_INSTALL_QMLDIR=${!outputBin}/$qtQmlPrefix"
     fi
 }
-preConfigureHooks+=(_ecmPreConfigureHook)
+postHooks+=(ecmPostHook)
+
+ecmXdgDataSubdirs=(
+    "doc" "config.kcfg" "kconf_update" "kservices5" "kservicetypes5" \
+    "kxmlgui5" "knotifications5" "icons" "locale" "sounds" "templates" \
+    "wallpapers" "applications" "desktop-directories" "mime" "appdata" "dbus-1" \
+)
+
+ecmHostPathsHook() {
+    local xdgConfigDir="$1/etc/xdg"
+    if [ -d "$xdgConfigDir" ]
+    then
+        qtWrapperArgs+=(--suffix XDG_CONFIG_DIRS : "$xdgConfigDir")
+    fi
+
+    local xdgDataDir="$1/share"
+    for subdir in "${ecmXdgDataSubdirs[@]}"
+    do
+        if [ -d "$xdgDataDir/$subdir" ]
+        then
+            qtWrapperArgs+=(--suffix XDG_DATA_DIRS : "$xdgDataDir")
+            break
+        fi
+    done
+
+    local mandir="$1/man"
+    if [ -d "$mandir" ]
+    then
+        qtWrapperArgs+=(--prefix MANPATH : "$mandir")
+    fi
+
+    local infodir="$1/info"
+    if [ -d "$infodir" ]
+    then
+        qtWrapperArgs+=(--prefix INFOPATH : "$infodir")
+    fi
+}
+if [ "$crossConfig" ]
+then
+    crossEnvHook+=(ecmHostPathsHook)
+else
+    envHook+=(ecmHostPathsHook)
+fi
