@@ -1,34 +1,39 @@
 {
-  mkDerivation, lib, config, makeWrapper,
+  mkDerivation, lib, config,
 
   extra-cmake-modules, kdoctools,
 
   karchive, kconfig, kcrash, kdbusaddons, ki18n, kiconthemes, kitemmodels,
-  khtml, kio, kparts, kpty, kservice, kwidgetsaddons, libarchive,
+  khtml, kio, kparts, kpty, kservice, kwidgetsaddons,
+
+  libarchive, libzip,
 
   # Archive tools
-  p7zip, unzip, zip,
+  p7zip, lrzip,
 
   # Unfree tools
   unfreeEnableUnrar ? false, unrar,
 }:
 
+let
+  extraTools = [ p7zip lrzip ] ++ lib.optional unfreeEnableUnrar unrar;
+in
+
 mkDerivation {
   name = "ark";
-  nativeBuildInputs = [ extra-cmake-modules kdoctools makeWrapper ];
+  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
+  buildInputs = [ libarchive libzip ] ++ extraTools;
   propagatedBuildInputs = [
     karchive kconfig kcrash kdbusaddons khtml ki18n kiconthemes kio kitemmodels
-    kparts kpty kservice kwidgetsaddons libarchive
+    kparts kpty kservice kwidgetsaddons
   ];
   outputs = [ "out" "dev" ];
-  postFixup =
-    let
-      PATH =
-        lib.makeBinPath
-        ([ p7zip unzip zip ] ++ lib.optional unfreeEnableUnrar unrar);
-    in ''
-      wrapProgram "$out/bin/ark" --prefix PATH : "${PATH}"
-    '';
+
+  dontWrapQtApps = true;
+  postFixup = ''
+    wrapQtApp "$out/bin/ark" --prefix PATH : "${lib.makeBinPath extraTools}"
+  '';
+
   meta = {
     license = with lib.licenses;
       [ gpl2 lgpl3 ] ++ lib.optional unfreeEnableUnrar unfree;
