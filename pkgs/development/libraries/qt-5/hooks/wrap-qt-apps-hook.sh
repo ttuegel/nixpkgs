@@ -48,7 +48,7 @@ wrapQtAppsHook() {
   fi
 
   if [[ -z "$dontWrapQtApps" ]]; then
-    local targetDirs=( "$prefix/bin" "$prefix/libexec" )
+    local targetDirs=( "$prefix/bin" )
     for targetDir in "${targetDirs[@]}"; do
       if [ -d "$targetDir" ]; then
         find -L "$targetDir" -type f -executable -print0 \
