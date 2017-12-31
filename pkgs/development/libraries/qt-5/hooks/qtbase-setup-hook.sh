@@ -19,12 +19,19 @@ export QMAKEPATH
 QMAKEMODULES=
 export QMAKEMODULES
 
-addToQMAKEPATH() {
-    if [ -d "$1/mkspecs" ]; then
+qmakePathHook() {
+    if [ -d "$1/mkspecs" ]
+    then
         QMAKEMODULES="${QMAKEMODULES}${QMAKEMODULES:+:}/mkspecs"
         QMAKEPATH="${QMAKEPATH}${QMAKEPATH:+:}$1"
     fi
 }
+if [ "$crossConfig" ]; then
+   crossEnvHooks+=(qmakePathHook)
+   envHooks+=(qmakePathHook)
+else
+   envHooks+=(qmakePathHook)
+fi
 
 # Propagate any runtime dependency of the building package.
 # Each dependency is propagated to the user environment and as a build
