@@ -14,6 +14,13 @@ let
       ++ optional (debug != null)
           (if debug then "CONFIG+=debug" else "CONFIG+=release");
 
+    NIX_CFLAGS_COMPILE =
+      let
+        inherited = args.NIX_CFLAGS_COMPILE or [];
+      in
+        optional (debug != null) "-DQT_NO_DEBUG"
+        ++ (if builtins.isList inherited then inherited else [inherited]);
+
     cmakeFlags =
       (args.cmakeFlags or [])
       ++ [ "-DBUILD_TESTING=OFF" ]
