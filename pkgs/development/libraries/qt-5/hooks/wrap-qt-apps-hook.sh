@@ -1,19 +1,17 @@
-host_QT_PLUGIN_PATH=
-host_QML2_IMPORT_PATH=
-
-qtWrapperArgs=(--unset QT_PLUGIN_PATH --unset QML2_IMPORT_PATH)
+# Inherit arguments given in mkDerivation
+qtWrapperArgs=( $qtWrapperArgs )
 
 qtHostPathHook() {
-    local pluginDir="$1/$qtPluginPrefix"
+    local pluginDir="$1/${qtPluginPrefix:?}"
     if [ -d "$pluginDir" ]
     then
-        qtWrapperArgs+=(--suffix QT_PLUGIN_PATH : "$pluginDir")
+        qtWrapperArgs+=(--prefix QT_PLUGIN_PATH : "$pluginDir")
     fi
 
-    local qmlDir="$1/$qtQmlDir"
+    local qmlDir="$1/${qtQmlPrefix:?}"
     if [ -d "$qmlDir" ]
     then
-        qtWrapperArgs+=(--suffix QML2_IMPORT_PATH : "$qmlDir")
+        qtWrapperArgs+=(--prefix QML2_IMPORT_PATH : "$qmlDir")
     fi
 }
 
@@ -46,6 +44,8 @@ wrapQtAppsHook() {
   if [ -d "$prefix/share" ]; then
     qtWrapperArgs+=(--prefix XDG_DATA_DIRS : "$prefix/share")
   fi
+
+  qtHostPathHook "$prefix"
 
   if [[ -z "$dontWrapQtApps" ]]; then
     local targetDirs=( "$prefix/bin" )
