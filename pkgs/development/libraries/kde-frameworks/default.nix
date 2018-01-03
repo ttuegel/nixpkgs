@@ -45,17 +45,34 @@ let
                 if [ "$hookName" != postHook ]; then
                     postHooks+=("source @dev@/nix-support/setup-hook")
                 else
-                    # Propagate $${out} output
-                    propagatedUserEnvPkgs="$propagatedUserEnvPkgs @${out}@"
 
-                    if [ -z "$outputDev" ]; then
-                        echo "error: \$outputDev is unset!" >&2
-                        exit 1
+                    if [ -d "@${out}@/etc/xdg" ]
+                    then
+                        qtWrapperArgs+=(--prefix XDG_CONFIG_DIRS : "@${out}@/etc/xdg")
+                    fi
+
+                    for subdir in "''${xdgDataSubdirs[@]}"
+                    do
+                        if [ -d "@${out}@/share/$subdir" ]
+                        then
+                            qtWrapperArgs+=(--prefix XDG_DATA_DIRS : "@${out}@/share")
+                            break
+                        fi
+                    done
+
+                    if [ -d "@${out}@/man" ]
+                    then
+                        qtWrapperArgs+=(--prefix MANPATH : "@${out}@/man")
+                    fi
+
+                    if [ -d "@${out}@/info" ]
+                    then
+                        qtWrapperArgs+=(--prefix INFOPATH : "@${out}@/info")
                     fi
 
                     # Propagate $dev so that this setup hook is propagated
                     # But only if there is a separate $dev output
-                    if [ "$outputDev" != out ]; then
+                    if [ "''${outputDev:?}" != out ]; then
                         propagatedBuildInputs="$propagatedBuildInputs @dev@"
                     fi
                 fi
@@ -75,10 +92,9 @@ let
             inherit (srcs."${name}") src version;
 
             outputs = args.outputs or [ "bin" "dev" "out" ];
-            hasBin = lib.elem "bin" outputs;
-            hasDev = lib.elem "dev" outputs;
+            hasSeparateDev = lib.elem "dev" outputs;
 
-            defaultSetupHook = if hasBin && hasDev then propagateBin else null;
+            defaultSetupHook = if hasSeparateDev then propagateBin else null;
             setupHook = args.setupHook or defaultSetupHook;
 
             meta = {
