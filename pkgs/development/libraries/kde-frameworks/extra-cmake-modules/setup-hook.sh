@@ -53,44 +53,8 @@ ecmPostHook() {
 }
 postHooks+=(ecmPostHook)
 
-ecmXdgDataSubdirs=(
+xdgDataSubdirs=(
     "doc" "config.kcfg" "kconf_update" "kservices5" "kservicetypes5" \
     "kxmlgui5" "knotifications5" "icons" "locale" "sounds" "templates" \
     "wallpapers" "applications" "desktop-directories" "mime" "appdata" "dbus-1" \
 )
-
-ecmHostPathsHook() {
-    local xdgConfigDir="$1/etc/xdg"
-    if [ -d "$xdgConfigDir" ]
-    then
-        qtWrapperArgs+=(--suffix XDG_CONFIG_DIRS : "$xdgConfigDir")
-    fi
-
-    local xdgDataDir="$1/share"
-    for subdir in "${ecmXdgDataSubdirs[@]}"
-    do
-        if [ -d "$xdgDataDir/$subdir" ]
-        then
-            qtWrapperArgs+=(--suffix XDG_DATA_DIRS : "$xdgDataDir")
-            break
-        fi
-    done
-
-    local mandir="$1/man"
-    if [ -d "$mandir" ]
-    then
-        qtWrapperArgs+=(--prefix MANPATH : "$mandir")
-    fi
-
-    local infodir="$1/info"
-    if [ -d "$infodir" ]
-    then
-        qtWrapperArgs+=(--prefix INFOPATH : "$infodir")
-    fi
-}
-if [ "$crossConfig" ]
-then
-    crossEnvHook+=(ecmHostPathsHook)
-else
-    envHook+=(ecmHostPathsHook)
-fi
