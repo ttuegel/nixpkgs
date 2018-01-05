@@ -53,24 +53,36 @@ qtOwnPathsHook() {
 
 preFixupPhases+=" qtOwnPathsHook"
 
+isEXEC() {
+    readelf -h "$1" 2>/dev/null | grep -q 'Type:[[:space:]]*EXEC'
+}
+
 # Note: $qtWrapperArgs still gets defined even if $dontWrapGApps is set.
 wrapQtAppsHook() {
-  # guard against running multiple times (e.g. due to propagation)
-  [ -z "$wrapQtAppsHookHasRun" ] || return 0
-  wrapQtAppsHookHasRun=1
+    # guard against running multiple times (e.g. due to propagation)
+    [ -z "$wrapQtAppsHookHasRun" ] || return 0
+    wrapQtAppsHookHasRun=1
 
-  if [[ -z "$dontWrapQtApps" ]]; then
-    local targetDirs=( "$prefix/bin" )
-    for targetDir in "${targetDirs[@]}"; do
-      if [ -d "$targetDir" ]; then
-        find -L "$targetDir" -type f -executable -print0 \
-          | while IFS= read -r -d '' file; do
-          echo "Wrapping program $file"
-          wrapQtApp "$file"
+    if [[ -z "$dontWrapQtApps" ]]; then
+        local targetDirs=( "$prefix/bin" )
+        for targetDir in "${targetDirs[@]}"; do
+            if [ -d "$targetDir" ]; then
+                find "$targetDir" -executable -print0 | while IFS= read -r -d '' file; do
+                    if [ -f "$file" ] && isEXEC "$file"
+                    then
+                        echo "Wrapping program $file"
+                        wrapQtApp "$file"
+                    elif [ -h "$file" ] && isEXEC "$file"
+                    then
+                        target="$(readlink -e "$file")"
+                        echo "Wrapping program $file"
+                        rm "$file"
+                        makeQtWrapper "$target" "$file"
+                    fi
+                done
+            fi
         done
-      fi
-    done
-  fi
+    fi
 }
 
 fixupOutputHooks+=(wrapQtAppsHook)
