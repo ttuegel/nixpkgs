@@ -35,17 +35,29 @@ wrapQtApp() {
     wrapProgram "$program" "${qtWrapperArgs[@]}" "$@"
 }
 
+qtOwnPathsHook() {
+    local xdgDataDir="${!outputBin}/share"
+    if [ -d "$xdgDataDir" ]
+    then
+        qtWrapperArgs+=(--prefix XDG_DATA_DIRS : "$xdgDataDir")
+    fi
+
+    local xdgConfigDir="${!outputBin}/etc/xdg"
+    if [ -d "$xdgConfigDir" ]
+    then
+        qtWrapperArgs+=(--prefix XDG_CONFIG_DIRS : "$xdgConfigDir")
+    fi
+
+    qtHostPathHook "${!outputBin}"
+}
+
+preFixupPhases+=" qtOwnPathsHook"
+
 # Note: $qtWrapperArgs still gets defined even if $dontWrapGApps is set.
 wrapQtAppsHook() {
   # guard against running multiple times (e.g. due to propagation)
   [ -z "$wrapQtAppsHookHasRun" ] || return 0
   wrapQtAppsHookHasRun=1
-
-  if [ -d "$prefix/share" ]; then
-    qtWrapperArgs+=(--prefix XDG_DATA_DIRS : "$prefix/share")
-  fi
-
-  qtHostPathHook "$prefix"
 
   if [[ -z "$dontWrapQtApps" ]]; then
     local targetDirs=( "$prefix/bin" )
