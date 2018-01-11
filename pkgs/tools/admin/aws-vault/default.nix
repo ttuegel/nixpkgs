@@ -1,4 +1,5 @@
 { buildGoPackage, lib, fetchFromGitHub }:
+
 buildGoPackage rec {
   name = "${pname}-${version}";
   pname = "aws-vault";
@@ -14,9 +15,9 @@ buildGoPackage rec {
   };
 
   meta = with lib; {
-    description = "A vault for securely storing and accessing AWS credentials in development environments"
+    description = "A vault for securely storing and accessing AWS credentials in development environments";
     homepage = "https://github.com/99designs/aws-vault";
     license = licenses.mit;
     maintainers = with maintainers; [ zimbatm ];
-  }
+  };
 }
