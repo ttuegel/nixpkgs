@@ -232,6 +232,7 @@ in rec {
   tests.atd = callTest tests/atd.nix {};
   tests.acme = callTest tests/acme.nix {};
   tests.avahi = callTest tests/avahi.nix {};
+  tests.beegfs = callTest tests/beegfs.nix {};
   tests.bittorrent = callTest tests/bittorrent.nix {};
   tests.blivet = callTest tests/blivet.nix {};
   tests.boot = callSubTests tests/boot.nix {};
@@ -254,7 +255,6 @@ in rec {
   tests.docker = hydraJob (import tests/docker.nix { system = "x86_64-linux"; });
   tests.docker-edge = hydraJob (import tests/docker-edge.nix { system = "x86_64-linux"; });
   tests.dovecot = callTest tests/dovecot.nix {};
-  tests.dnscrypt-proxy = callTest tests/dnscrypt-proxy.nix { system = "x86_64-linux"; };
   tests.ecryptfs = callTest tests/ecryptfs.nix {};
   tests.etcd = hydraJob (import tests/etcd.nix { system = "x86_64-linux"; });
   tests.ec2-nixops = hydraJob (import tests/ec2.nix { system = "x86_64-linux"; }).boot-ec2-nixops;
