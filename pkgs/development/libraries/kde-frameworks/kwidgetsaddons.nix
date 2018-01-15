@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib,
+  mkDerivation, lib, fetchpatch,
   extra-cmake-modules,
   qtbase, qttools
 }:
@@ -14,4 +14,11 @@ mkDerivation {
   buildInputs = [ qttools ];
   propagatedBuildInputs = [ qtbase ];
   outputs = [ "out" "dev" ];
+  patches = [
+    (fetchpatch {
+      url = "https://cgit.kde.org/kwidgetsaddons.git/patch/?id=ee34537ff55cccfb5282085e25065b86114fd856";
+      sha256 = "1hi91g0y5q1sfl0qbpkwyd9kwphnw801q25ahcpc6wm1462zvvmg";
+      name = "kwidgetsaddons-5.42-regression.patch";
+    })
+  ];
 }
