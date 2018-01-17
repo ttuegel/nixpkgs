@@ -1,6 +1,6 @@
 { mkDerivation, lib, fetchFromGitHub, fetchpatch
-, cmake, extra-cmake-modules, pkgconfig, libxcb, libpthreadstubs, lndir
-, libXdmcp, libXau, qtbase, qtdeclarative, qttools, pam, systemd
+, cmake, extra-cmake-modules, pkgconfig, qttools, wrapQtAppsHook
+, libpthreadstubs, libxcb, libXdmcp, libXau, qtbase, qtdeclarative, pam, systemd
 }:
 
 let
@@ -24,7 +24,7 @@ in mkDerivation rec {
       sed -i CMakeLists.txt -e '/find_package(Qt5/ s|)| Test)|'
     '';
 
-  nativeBuildInputs = [ cmake extra-cmake-modules pkgconfig qttools ];
+  nativeBuildInputs = [ cmake extra-cmake-modules pkgconfig qttools wrapQtAppsHook ];
 
   buildInputs = [
     libxcb libpthreadstubs libXdmcp libXau pam qtbase qtdeclarative systemd
