@@ -117,6 +117,10 @@ let
           fix_qt_builtin_paths = ../hooks/fix-qt-builtin-paths.sh;
         };
       } ../hooks/qmake-hook.sh;
+
+      wrapQtAppsHook = makeSetupHook {
+        deps = [ self.qtbase.dev self.qtwayland.dev makeWrapper ];
+      } ../hooks/wrap-qt-apps-hook.sh;
     };
 
    self = makeScope newScope addPackages;
