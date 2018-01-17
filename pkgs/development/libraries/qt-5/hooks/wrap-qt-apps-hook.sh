@@ -1,7 +1,19 @@
 # Inherit arguments given in mkDerivation
 qtWrapperArgs=( $qtWrapperArgs )
 
+qtHostPathHookSkip=( $qtHostPathHookSkip )
+
 qtHostPathHook() {
+    for pkg in "${qtHostPathHookSkip[@]}"
+    do
+        if [ "${pkg:?}" == "$1" ]
+        then
+            return
+        fi
+    done
+
+    qtHostPathHookSkip+=("$1")
+
     local pluginDir="$1/${qtPluginPrefix:?}"
     if [ -d "$pluginDir" ]
     then
@@ -14,13 +26,7 @@ qtHostPathHook() {
         qtWrapperArgs+=(--prefix QML2_IMPORT_PATH : "$qmlDir")
     fi
 }
-
-if [ "$crossConfig" ]
-then
-    crossEnvHooks+=(qtHostPathHook)
-else
-    envHooks+=(qtHostPathHook)
-fi
+addEnvHooks "$hostOffset" qtHostPathHook
 
 makeQtWrapper() {
     local original="$1"
@@ -57,7 +63,7 @@ isEXEC() {
     readelf -h "$1" 2>/dev/null | grep -q 'Type:[[:space:]]*EXEC'
 }
 
-# Note: $qtWrapperArgs still gets defined even if $dontWrapGApps is set.
+# Note: $qtWrapperArgs still gets defined even if $dontWrapQtApps is set.
 wrapQtAppsHook() {
     # guard against running multiple times (e.g. due to propagation)
     [ -z "$wrapQtAppsHookHasRun" ] || return 0
