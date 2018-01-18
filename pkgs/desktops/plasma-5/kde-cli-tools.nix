@@ -1,14 +1,14 @@
 {
-  mkDerivation, extra-cmake-modules, kdoctools,
+  mkDerivation, extra-cmake-modules, kdoctools, wrapQtAppsHook,
   kcmutils, kconfig, kdesu, ki18n, kiconthemes, kinit, kio, kwindowsystem,
   qtsvg, qtx11extras, kactivities
 }:
 
 mkDerivation {
   name = "kde-cli-tools";
-  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
+  nativeBuildInputs = [ extra-cmake-modules kdoctools wrapQtAppsHook ];
   buildInputs = [
-    kcmutils kconfig kdesu ki18n kiconthemes kinit kio kwindowsystem qtsvg
-    qtx11extras kactivities
+    kactivities kcmutils kconfig kdesu ki18n kiconthemes kinit kio kwindowsystem
+    qtsvg qtx11extras
   ];
 }
