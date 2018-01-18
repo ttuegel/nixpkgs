@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib, copyPathsToStore,
+  mkDerivation, lib,
   extra-cmake-modules,
   attr, ebook_tools, exiv2, ffmpeg, karchive, ki18n, poppler, qtbase, qtmultimedia, taglib
 }:
@@ -12,5 +12,5 @@ mkDerivation {
     attr ebook_tools exiv2 ffmpeg karchive ki18n poppler qtbase qtmultimedia
     taglib
   ];
-  patches = copyPathsToStore (lib.readPathsFromFile ./. ./series);
+  patches = [ ./cmake-install-paths.patch ];
 }
