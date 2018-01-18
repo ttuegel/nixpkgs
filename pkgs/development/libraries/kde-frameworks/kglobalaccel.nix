@@ -1,13 +1,13 @@
 {
   mkDerivation, lib,
-  extra-cmake-modules,
+  extra-cmake-modules, wrapQtAppsHook,
   kconfig, kcoreaddons, kcrash, kdbusaddons, kservice, kwindowsystem,
   qtbase, qttools, qtx11extras,
 }:
 
 mkDerivation {
   name = "kglobalaccel";
-  nativeBuildInputs = [ extra-cmake-modules ];
+  nativeBuildInputs = [ extra-cmake-modules wrapQtAppsHook ];
   buildInputs = [
     kconfig kcoreaddons kcrash kdbusaddons kservice kwindowsystem qttools
     qtx11extras
