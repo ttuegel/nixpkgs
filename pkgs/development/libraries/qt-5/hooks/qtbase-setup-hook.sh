@@ -43,6 +43,9 @@ qtEnvHostTargetHook() {
 envHostTargetHooks+=(qtEnvHostTargetHook)
 
 postPatchMkspecs() {
+    # Prevent this hook from running multiple times
+    dontPatchMkspecs=1
+
     local bin="${!outputBin}"
     local dev="${!outputDev}"
     local doc="${!outputDoc}"
