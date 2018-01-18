@@ -1,13 +1,13 @@
 {
   mkDerivation, lib, propagate,
-  extra-cmake-modules, kdoctools,
+  extra-cmake-modules, kdoctools, wrapQtAppsHook,
   kconfig, kcoreaddons, kcrash, kdbusaddons, kinit, kservice, qtbase,
 }:
 
 mkDerivation {
   name = "kded";
   meta = { maintainers = [ lib.maintainers.ttuegel ]; };
-  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
+  nativeBuildInputs = [ extra-cmake-modules kdoctools wrapQtAppsHook ];
   buildInputs = [
     kconfig kcoreaddons kcrash kdbusaddons kinit kservice qtbase
   ];
