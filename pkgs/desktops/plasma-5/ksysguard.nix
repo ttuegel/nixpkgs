@@ -1,6 +1,6 @@
 {
   mkDerivation,
-  extra-cmake-modules, kdoctools,
+  extra-cmake-modules, kdoctools, wrapQtAppsHook,
   lm_sensors,
   kconfig, kcoreaddons, kdelibs4support, ki18n, kiconthemes, kitemviews,
   knewstuff, libksysguard, qtwebkit
@@ -8,7 +8,7 @@
 
 mkDerivation {
   name = "ksysguard";
-  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
+  nativeBuildInputs = [ extra-cmake-modules kdoctools wrapQtAppsHook ];
   buildInputs = [
     kconfig kcoreaddons kitemviews knewstuff kiconthemes libksysguard
     kdelibs4support ki18n lm_sensors qtwebkit
