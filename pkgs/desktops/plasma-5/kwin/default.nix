@@ -1,6 +1,6 @@
 {
   mkDerivation, lib, copyPathsToStore,
-  extra-cmake-modules, kdoctools,
+  extra-cmake-modules, kdoctools, wrapQtAppsHook,
 
   epoxy,libICE, libSM, libinput, libxkbcommon, udev, wayland, xcb-util-cursor,
   xwayland,
@@ -16,7 +16,7 @@
 
 mkDerivation {
   name = "kwin";
-  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
+  nativeBuildInputs = [ extra-cmake-modules kdoctools wrapQtAppsHook ];
   buildInputs = [
     epoxy libICE libSM libinput libxkbcommon udev wayland xcb-util-cursor
     xwayland
