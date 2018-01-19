@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib, copyPathsToStore,
+  mkDerivation, lib,
   extra-cmake-modules, kdoctools, wrapQtAppsHook,
 
   epoxy,libICE, libSM, libinput, libxkbcommon, udev, wayland, xcb-util-cursor,
@@ -29,7 +29,7 @@ mkDerivation {
     kwayland kwidgetsaddons kwindowsystem kxmlgui plasma-framework
   ];
   outputs = [ "bin" "dev" "out" ];
-  patches = copyPathsToStore (lib.readPathsFromFile ./. ./series);
+  patches = [ ./follow-symlinks.patch ./xwayland.patch ];
   CXXFLAGS = [
     ''-DNIXPKGS_XWAYLAND=\"${lib.getBin xwayland}/bin/Xwayland\"''
   ];
