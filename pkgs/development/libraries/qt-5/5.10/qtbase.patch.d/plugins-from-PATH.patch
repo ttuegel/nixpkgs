@@ -1,0 +1,31 @@
+From efad4548aeeb7218600ca2188307bd9668c93d7c Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 06:59:29 -0500
+Subject: [PATCH 08/16] Deduce plugin paths from PATH
+
+On NixOS, Qt plugins are not installed in a global location. Instead, we deduce
+the locations of installed plugins from the PATH environment variable.
+---
+ src/corelib/kernel/qcoreapplication.cpp | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+Index: qtbase-everywhere-src-5.10.0/src/corelib/kernel/qcoreapplication.cpp
+===================================================================
+--- qtbase-everywhere-src-5.10.0.orig/src/corelib/kernel/qcoreapplication.cpp
++++ qtbase-everywhere-src-5.10.0/src/corelib/kernel/qcoreapplication.cpp
+@@ -2580,6 +2580,15 @@ QStringList QCoreApplication::libraryPat
+         QStringList *app_libpaths = new QStringList;
+         coreappdata()->app_libpaths.reset(app_libpaths);
+ 
++        // Add library paths derived from PATH
++        const QStringList paths = QFile::decodeName(qgetenv("PATH")).split(':');
++        const QString plugindir = QStringLiteral("../" NIXPKGS_QT_PLUGIN_PREFIX);
++        for (const QString &path: paths) {
++            if (!path.isEmpty()) {
++                app_libpaths->append(QDir::cleanPath(path + QDir::separator() + plugindir));
++            }
++        }
++
+         const QByteArray libPathEnv = qgetenv("QT_PLUGIN_PATH");
+         if (!libPathEnv.isEmpty()) {
+             QStringList paths = QFile::decodeName(libPathEnv).split(QDir::listSeparator(), QString::SkipEmptyParts);

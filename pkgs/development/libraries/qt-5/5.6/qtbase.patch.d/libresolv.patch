@@ -1,0 +1,39 @@
+From c784e3e067a3c34854b7310ef3b72653b931d8a1 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 06:53:13 -0500
+Subject: [PATCH 01/13] Fix path to libresolv
+
+---
+ src/network/kernel/qdnslookup_unix.cpp | 2 +-
+ src/network/kernel/qhostinfo_unix.cpp  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/network/kernel/qdnslookup_unix.cpp b/src/network/kernel/qdnslookup_unix.cpp
+index 584f0b0f0e..24d80063f2 100644
+--- a/src/network/kernel/qdnslookup_unix.cpp
++++ b/src/network/kernel/qdnslookup_unix.cpp
+@@ -83,7 +83,7 @@ static bool resolveLibraryInternal()
+     if (!lib.load())
+ #endif
+     {
+-        lib.setFileName(QLatin1String("resolv"));
++        lib.setFileName(QLatin1String(NIXPKGS_LIBRESOLV));
+         if (!lib.load())
+             return false;
+     }
+diff --git a/src/network/kernel/qhostinfo_unix.cpp b/src/network/kernel/qhostinfo_unix.cpp
+index dabf1913cc..53bb867e07 100644
+--- a/src/network/kernel/qhostinfo_unix.cpp
++++ b/src/network/kernel/qhostinfo_unix.cpp
+@@ -94,7 +94,7 @@ static bool resolveLibraryInternal()
+     if (!lib.load())
+ #endif
+     {
+-        lib.setFileName(QLatin1String("resolv"));
++        lib.setFileName(QLatin1String(NIXPKGS_LIBRESOLV));
+         if (!lib.load())
+             return false;
+     }
+-- 
+2.15.1
+

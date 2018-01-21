@@ -1,0 +1,32 @@
+From 0e1ac814cb7ec362d36e710c5e918d30c81fcf7a Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Tue, 2 Jan 2018 05:23:00 -0600
+Subject: [PATCH 15/16] Condition QTEST_ASSERT on QT_NO_DEBUG
+
+---
+ src/testlib/qtestassert.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/src/testlib/qtestassert.h b/src/testlib/qtestassert.h
+index 6498ea84ef..d821ced7fc 100644
+--- a/src/testlib/qtestassert.h
++++ b/src/testlib/qtestassert.h
+@@ -44,10 +44,13 @@
+ 
+ QT_BEGIN_NAMESPACE
+ 
+-
++#if defined(QT_NO_DEBUG) && !defined(QT_FORCE_ASSERTS)
++#define QTEST_ASSERT(cond) do { } while ((false) && (cond))
++#define QTEST_ASSERT_X(cond, where, what) do { } while ((false) && (cond))
++#else
+ #define QTEST_ASSERT(cond) do { if (!(cond)) qt_assert(#cond,__FILE__,__LINE__); } while (false)
+-
+ #define QTEST_ASSERT_X(cond, where, what) do { if (!(cond)) qt_assert_x(where, what,__FILE__,__LINE__); } while (false)
++#endif
+ 
+ QT_END_NAMESPACE
+ 
+-- 
+2.15.1
+

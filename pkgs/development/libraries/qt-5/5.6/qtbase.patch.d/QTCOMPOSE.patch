@@ -1,0 +1,30 @@
+From 3f77b444dace317ebf3ec75f07274035d6c6c69b Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 06:57:51 -0500
+Subject: [PATCH 06/13] Set fallback for QTCOMPOSE
+
+---
+ .../platforminputcontexts/compose/generator/qtablegenerator.cpp      | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/src/plugins/platforminputcontexts/compose/generator/qtablegenerator.cpp b/src/plugins/platforminputcontexts/compose/generator/qtablegenerator.cpp
+index 44f1d7e6ba..e24fe54326 100644
+--- a/src/plugins/platforminputcontexts/compose/generator/qtablegenerator.cpp
++++ b/src/plugins/platforminputcontexts/compose/generator/qtablegenerator.cpp
+@@ -251,12 +251,9 @@ void TableGenerator::initPossibleLocations()
+     // the QTCOMPOSE environment variable
+     if (qEnvironmentVariableIsSet("QTCOMPOSE"))
+         m_possibleLocations.append(QString::fromLocal8Bit(qgetenv("QTCOMPOSE")));
+-    m_possibleLocations.append(QStringLiteral("/usr/share/X11/locale"));
+-    m_possibleLocations.append(QStringLiteral("/usr/local/share/X11/locale"));
+-    m_possibleLocations.append(QStringLiteral("/usr/lib/X11/locale"));
+-    m_possibleLocations.append(QStringLiteral("/usr/local/lib/X11/locale"));
+     m_possibleLocations.append(QStringLiteral(X11_PREFIX "/share/X11/locale"));
+     m_possibleLocations.append(QStringLiteral(X11_PREFIX "/lib/X11/locale"));
++    m_possibleLocations.append(QLatin1String(NIXPKGS_QTCOMPOSE));
+ }
+ 
+ QString TableGenerator::findComposeFile()
+-- 
+2.15.1
+

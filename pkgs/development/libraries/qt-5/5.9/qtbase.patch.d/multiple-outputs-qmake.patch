@@ -1,0 +1,240 @@
+From 370aaf6ba5d4da0b8d002234a0b0628fbd1b7ea6 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 07:02:00 -0500
+Subject: [PATCH 10/16] Fix qmake paths for multiple outputs
+
+---
+ mkspecs/features/qml_module.prf          |  9 ++-------
+ mkspecs/features/qml_plugin.prf          |  9 ++-------
+ mkspecs/features/qt_app.prf              |  2 +-
+ mkspecs/features/qt_build_paths.prf      |  4 ++--
+ mkspecs/features/qt_common.prf           |  4 ++--
+ mkspecs/features/qt_docs.prf             | 10 +++++-----
+ mkspecs/features/qt_example_installs.prf |  2 +-
+ mkspecs/features/qt_functions.prf        |  2 +-
+ mkspecs/features/qt_installs.prf         | 22 ++++++++--------------
+ mkspecs/features/qt_plugin.prf           |  2 +-
+ 10 files changed, 25 insertions(+), 41 deletions(-)
+
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qml_module.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qml_module.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qml_module.prf
+@@ -23,13 +23,8 @@ for(qmlf, AUX_QML_FILES): fq_aux_qml_fil
+ 
+ load(qt_build_paths)
+ 
+-qml1_target {
+-    DESTDIR = $$MODULE_BASE_OUTDIR/imports/$$TARGETPATH
+-    instbase = $$[QT_INSTALL_IMPORTS]
+-} else {
+-    DESTDIR = $$MODULE_BASE_OUTDIR/qml/$$TARGETPATH
+-    instbase = $$[QT_INSTALL_QML]
+-}
++DESTDIR = $$MODULE_BASE_OUTDIR/qml/$$TARGETPATH
++instbase = $$NIX_OUTPUT_QML
+ 
+ !qml1_target:static: CONFIG += builtin_resources
+ 
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qml_plugin.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qml_plugin.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qml_plugin.prf
+@@ -48,13 +48,8 @@ exists($$QMLTYPEFILE): AUX_QML_FILES +=
+ 
+ load(qt_build_paths)
+ 
+-qml1_target {
+-    DESTDIR = $$MODULE_BASE_OUTDIR/imports/$$TARGETPATH
+-    instbase = $$[QT_INSTALL_IMPORTS]
+-} else {
+-    DESTDIR = $$MODULE_BASE_OUTDIR/qml/$$TARGETPATH
+-    instbase = $$[QT_INSTALL_QML]
+-}
++DESTDIR = $$MODULE_BASE_OUTDIR/qml/$$TARGETPATH
++instbase = $$NIX_OUTPUT_QML
+ 
+ target.path = $$instbase/$$TARGETPATH
+ INSTALLS += target
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qt_app.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qt_app.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qt_app.prf
+@@ -33,7 +33,7 @@ host_build:force_bootstrap {
+     target.path = $$[QT_HOST_BINS]
+ } else {
+     !build_pass:qtConfig(debug_and_release): CONFIG += release
+-    target.path = $$[QT_INSTALL_BINS]
++    target.path = $$NIX_OUTPUT_BIN/bin
+     CONFIG += relative_qt_rpath  # Qt's tools and apps should be relocatable
+ }
+ INSTALLS += target
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qt_build_paths.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qt_build_paths.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qt_build_paths.prf
+@@ -23,6 +23,6 @@ exists($$MODULE_BASE_INDIR/.git): \
+ !force_independent {
+     # If the module is not built independently, everything ends up in qtbase.
+     # This is the case in non-prefix builds, except for selected modules.
+-    MODULE_BASE_OUTDIR = $$[QT_HOST_PREFIX]
+-    MODULE_QMAKE_OUTDIR = $$[QT_HOST_PREFIX]
++    MODULE_BASE_OUTDIR = $$NIX_OUTPUT_OUT
++    MODULE_QMAKE_OUTDIR = $$NIX_OUTPUT_OUT
+ }
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qt_common.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qt_common.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qt_common.prf
+@@ -32,8 +32,8 @@ contains(TEMPLATE, .*lib) {
+         qqt_libdir = \$\$\$\$[QT_HOST_LIBS]
+         qt_libdir = $$[QT_HOST_LIBS]
+     } else {
+-        qqt_libdir = \$\$\$\$[QT_INSTALL_LIBS]
+-        qt_libdir = $$[QT_INSTALL_LIBS]
++        qqt_libdir = \$\$\$\$NIX_OUTPUT_OUT/lib
++        qt_libdir = $$NIX_OUTPUT_OUT/lib
+     }
+     contains(QMAKE_DEFAULT_LIBDIRS, $$qt_libdir) {
+         lib_replace.match = "[^ ']*$$rplbase/lib"
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qt_docs.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qt_docs.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qt_docs.prf
+@@ -45,7 +45,7 @@ QMAKE_DOCS_OUTPUTDIR = $$QMAKE_DOCS_BASE
+ 
+ QDOC += -outputdir $$shell_quote($$QMAKE_DOCS_OUTPUTDIR)
+ !build_online_docs: \
+-    QDOC += -installdir $$shell_quote($$[QT_INSTALL_DOCS])
++    QDOC += -installdir $$shell_quote($$NIX_OUTPUT_DOC)
+ PREP_DOC_INDEXES =
+ DOC_INDEXES =
+ !isEmpty(QTREPOS) {
+@@ -64,8 +64,8 @@ DOC_INDEXES =
+         DOC_INDEXES += -indexdir $$shell_quote($$qrep/doc)
+ } else {
+     prepare_docs: \
+-        PREP_DOC_INDEXES += -indexdir $$shell_quote($$[QT_INSTALL_DOCS/get])
+-    DOC_INDEXES += -indexdir $$shell_quote($$[QT_INSTALL_DOCS/get])
++        PREP_DOC_INDEXES += -indexdir $$shell_quote($$NIX_OUTPUT_DOC)
++    DOC_INDEXES += -indexdir $$shell_quote($$NIX_OUTPUT_DOC)
+ }
+ 
+ qtattributionsscanner.target = qtattributionsscanner
+@@ -88,12 +88,12 @@ prepare_docs {
+     qch_docs.commands = $$QHELPGENERATOR $$shell_quote($$QMAKE_DOCS_OUTPUTDIR/$${QMAKE_DOCS_TARGET}.qhp) -o $$shell_quote($$QMAKE_DOCS_BASE_OUTDIR/$${QMAKE_DOCS_TARGET}.qch)
+ 
+     inst_html_docs.files = $$QMAKE_DOCS_OUTPUTDIR
+-    inst_html_docs.path = $$[QT_INSTALL_DOCS]
++    inst_html_docs.path = $$NIX_OUTPUT_DOC
+     inst_html_docs.CONFIG += no_check_exist directory no_default_install no_build
+     INSTALLS += inst_html_docs
+ 
+     inst_qch_docs.files = $$QMAKE_DOCS_BASE_OUTDIR/$${QMAKE_DOCS_TARGET}.qch
+-    inst_qch_docs.path = $$[QT_INSTALL_DOCS]
++    inst_qch_docs.path = $$NIX_OUTPUT_DOC
+     inst_qch_docs.CONFIG += no_check_exist no_default_install no_build
+     INSTALLS += inst_qch_docs
+ 
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qt_example_installs.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qt_example_installs.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qt_example_installs.prf
+@@ -82,7 +82,7 @@ sourcefiles += \
+     $$SOURCES $$HEADERS $$FORMS $$RESOURCES $$TRANSLATIONS \
+     $$DBUS_ADAPTORS $$DBUS_INTERFACES
+ addInstallFiles(sources.files, $$sourcefiles)
+-sources.path = $$[QT_INSTALL_EXAMPLES]/$$probase
++sources.path = $$NIX_OUTPUT_DEV/$$probase
+ INSTALLS += sources
+ 
+ check_examples {
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qt_functions.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qt_functions.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qt_functions.prf
+@@ -69,7 +69,7 @@ defineTest(qtHaveModule) {
+ defineTest(qtPrepareTool) {
+     cmd = $$eval(QT_TOOL.$${2}.binary)
+     isEmpty(cmd) {
+-        cmd = $$[QT_HOST_BINS]/$$2
++        cmd = $$system("type -p $$2")
+         exists($${cmd}.pl) {
+             $${1}_EXE = $${cmd}.pl
+             cmd = perl -w $$system_path($${cmd}.pl)
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qt_installs.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qt_installs.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qt_installs.prf
+@@ -12,16 +12,10 @@
+ #library
+ !qt_no_install_library {
+     win32 {
+-       host_build: \
+-           dlltarget.path = $$[QT_HOST_BINS]
+-       else: \
+-           dlltarget.path = $$[QT_INSTALL_BINS]
++        dlltarget.path = $$NIX_OUTPUT_BIN/bin
+        INSTALLS += dlltarget
+     }
+-    host_build: \
+-        target.path = $$[QT_HOST_LIBS]
+-    else: \
+-        target.path = $$[QT_INSTALL_LIBS]
++    target.path = $$NIX_OUTPUT_OUT/lib
+     !static: target.CONFIG = no_dll
+     INSTALLS += target
+ }
+@@ -29,33 +23,33 @@
+ #headers
+ qt_install_headers {
+     class_headers.files = $$SYNCQT.HEADER_CLASSES
+-    class_headers.path = $$[QT_INSTALL_HEADERS]/$$MODULE_INCNAME
++    class_headers.path = $$NIX_OUTPUT_DEV/include/$$MODULE_INCNAME
+     INSTALLS += class_headers
+ 
+     targ_headers.files = $$SYNCQT.HEADER_FILES
+-    targ_headers.path = $$[QT_INSTALL_HEADERS]/$$MODULE_INCNAME
++    targ_headers.path = $$NIX_OUTPUT_DEV/include/$$MODULE_INCNAME
+     INSTALLS += targ_headers
+ 
+     private_headers.files = $$SYNCQT.PRIVATE_HEADER_FILES $$SYNCQT.INJECTED_PRIVATE_HEADER_FILES
+-    private_headers.path = $$[QT_INSTALL_HEADERS]/$$MODULE_INCNAME/$$VERSION/$$MODULE_INCNAME/private
++    private_headers.path = $$NIX_OUTPUT_DEV/include/$$MODULE_INCNAME/$$VERSION/$$MODULE_INCNAME/private
+     INSTALLS += private_headers
+ 
+     qpa_headers.files = $$SYNCQT.QPA_HEADER_FILES
+-    qpa_headers.path = $$[QT_INSTALL_HEADERS]/$$MODULE_INCNAME/$$VERSION/$$MODULE_INCNAME/qpa
++    qpa_headers.path = $$NIX_OUTPUT_DEV/include/$$MODULE_INCNAME/$$VERSION/$$MODULE_INCNAME/qpa
+     INSTALLS += qpa_headers
+ }
+ 
+ #module
+ qt_install_module {
+     !isEmpty(MODULE_PRI) {
+-        pritarget.path = $$[QT_HOST_DATA]/mkspecs/modules
++        pritarget.path = $$NIX_OUTPUT_DEV/mkspecs/modules
+         pritarget.files = $$MODULE_PRI
+         INSTALLS += pritarget
+     } else: isEmpty(MODULE_PRIVATE_PRI) {
+         warning("Project $$basename(_PRO_FILE_) is a module, but has not defined MODULE_PRI, which is required for Qt to expose the module to other projects.")
+     }
+     !isEmpty(MODULE_PRIVATE_PRI) {
+-        privpritarget.path = $$[QT_HOST_DATA]/mkspecs/modules
++        privpritarget.path = $$NIX_OUTPUT_DEV/mkspecs/modules
+         privpritarget.files = $$MODULE_PRIVATE_PRI
+         INSTALLS += privpritarget
+     }
+Index: qtbase-opensource-src-5.9.3/mkspecs/features/qt_plugin.prf
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/mkspecs/features/qt_plugin.prf
++++ qtbase-opensource-src-5.9.3/mkspecs/features/qt_plugin.prf
+@@ -88,7 +88,7 @@ CONFIG(static, static|shared)|prefix_bui
+     }
+ }
+ 
+-target.path = $$[QT_INSTALL_PLUGINS]/$$PLUGIN_TYPE
++target.path = $$NIX_OUTPUT_PLUGIN/$$PLUGIN_TYPE
+ INSTALLS += target
+ 
+ TARGET = $$qt5LibraryTarget($$TARGET)

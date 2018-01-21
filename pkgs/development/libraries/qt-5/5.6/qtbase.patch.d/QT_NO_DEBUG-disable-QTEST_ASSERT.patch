@@ -1,0 +1,34 @@
+From 63992824b930d3bf73597f8ff4909cee6796af25 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Tue, 2 Jan 2018 05:23:00 -0600
+Subject: [PATCH 12/13] Condition QTEST_ASSERT on QT_NO_DEBUG
+
+---
+ src/testlib/qtestassert.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/src/testlib/qtestassert.h b/src/testlib/qtestassert.h
+index ca3e02ca06..28dd73d772 100644
+--- a/src/testlib/qtestassert.h
++++ b/src/testlib/qtestassert.h
+@@ -38,10 +38,13 @@
+ 
+ QT_BEGIN_NAMESPACE
+ 
+-
+-#define QTEST_ASSERT(cond) do { if (!(cond)) qt_assert(#cond,__FILE__,__LINE__); } while (0)
+-
+-#define QTEST_ASSERT_X(cond, where, what) do { if (!(cond)) qt_assert_x(where, what,__FILE__,__LINE__); } while (0)
++#if defined(QT_NO_DEBUG) && !defined(QT_FORCE_ASSERTS)
++#define QTEST_ASSERT(cond) do { } while ((false) && (cond))
++#define QTEST_ASSERT_X(cond, where, what) do { } while ((false) && (cond))
++#else
++#define QTEST_ASSERT(cond) do { if (!(cond)) qt_assert(#cond,__FILE__,__LINE__); } while (false)
++#define QTEST_ASSERT_X(cond, where, what) do { if (!(cond)) qt_assert_x(where, what,__FILE__,__LINE__); } while (false)
++#endif
+ 
+ QT_END_NAMESPACE
+ 
+-- 
+2.15.1
+

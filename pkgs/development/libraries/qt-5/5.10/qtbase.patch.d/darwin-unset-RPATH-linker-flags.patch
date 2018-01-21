@@ -1,0 +1,25 @@
+From d23c71139edaf5b43a8f12156d8e049fb66a0da3 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sat, 14 Oct 2017 17:23:39 -0500
+Subject: [PATCH 11/16] Darwin: Unset RPATH linker flags
+
+---
+ mkspecs/common/mac.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mkspecs/common/mac.conf b/mkspecs/common/mac.conf
+index 5208379f9a..92fe29a0ac 100644
+--- a/mkspecs/common/mac.conf
++++ b/mkspecs/common/mac.conf
+@@ -23,7 +23,7 @@ QMAKE_INCDIR_OPENGL     = \
+ 
+ QMAKE_FIX_RPATH         = install_name_tool -id
+ 
+-QMAKE_LFLAGS_RPATH      = -Wl,-rpath,
++QMAKE_LFLAGS_RPATH      =
+ QMAKE_LFLAGS_GCSECTIONS = -Wl,-dead_strip
+ 
+ QMAKE_LFLAGS_REL_RPATH  =
+-- 
+2.15.1
+

@@ -1,0 +1,54 @@
+From 4c9f1b17b97eca299431de2cf4707402d8ff9b74 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 06:55:43 -0500
+Subject: [PATCH 04/13] Check TZDIR for zoneinfo
+
+NixOS sets the TZDIR environment variable to locate zoneinfo files. If the
+variable is set, it will be respected, otherwise we fall back to searching the
+standard locations.
+---
+ src/corelib/tools/qtimezoneprivate_tz.cpp | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/src/corelib/tools/qtimezoneprivate_tz.cpp b/src/corelib/tools/qtimezoneprivate_tz.cpp
+index c13c9a5223..6936851511 100644
+--- a/src/corelib/tools/qtimezoneprivate_tz.cpp
++++ b/src/corelib/tools/qtimezoneprivate_tz.cpp
+@@ -64,7 +64,11 @@ typedef QHash<QByteArray, QTzTimeZone> QTzTimeZoneHash;
+ // Parse zone.tab table, assume lists all installed zones, if not will need to read directories
+ static QTzTimeZoneHash loadTzTimeZones()
+ {
+-    QString path = QStringLiteral("/usr/share/zoneinfo/zone.tab");
++    // Try TZDIR first, in case we're running on NixOS.
++    QString path = QFile::decodeName(qgetenv("TZDIR")) + QStringLiteral("/zone.tab");
++    // Fallback to traditional paths in case we are not on NixOS.
++    if (!QFile::exists(path))
++        path = QStringLiteral("/usr/share/zoneinfo/zone.tab");
+     if (!QFile::exists(path))
+         path = QStringLiteral("/usr/lib/zoneinfo/zone.tab");
+ 
+@@ -636,12 +640,16 @@ void QTzTimeZonePrivate::init(const QByteArray &ianaId)
+         if (!tzif.open(QIODevice::ReadOnly))
+             return;
+     } else {
+-        // Open named tz, try modern path first, if fails try legacy path
+-        tzif.setFileName(QLatin1String("/usr/share/zoneinfo/") + QString::fromLocal8Bit(ianaId));
++        // Try TZDIR first, in case we're running on NixOS
++        tzif.setFileName(QFile::decodeName(qgetenv("TZDIR")) + QStringLiteral("/") + QString::fromLocal8Bit(ianaId));
+         if (!tzif.open(QIODevice::ReadOnly)) {
+-            tzif.setFileName(QLatin1String("/usr/lib/zoneinfo/") + QString::fromLocal8Bit(ianaId));
+-            if (!tzif.open(QIODevice::ReadOnly))
+-                return;
++            // Open named tz, try modern path first, if fails try legacy path
++            tzif.setFileName(QLatin1String("/usr/share/zoneinfo/") + QString::fromLocal8Bit(ianaId));
++            if (!tzif.open(QIODevice::ReadOnly)) {
++                tzif.setFileName(QLatin1String("/usr/lib/zoneinfo/") + QString::fromLocal8Bit(ianaId));
++                if (!tzif.open(QIODevice::ReadOnly))
++                    return;
++            }
+         }
+     }
+ 
+-- 
+2.15.1
+

@@ -1,0 +1,11 @@
+libresolv.patch
+libXcursor.patch
+fallback-mesa-libGL.patch
+TZDIR.patch
+libressl.patch
+QTCOMPOSE.patch
+plugins-from-PATH.patch
+multiple-outputs-cmake.patch
+multiple-outputs-qmake.patch
+POSIX-command.patch
+QT_NO_DEBUG-disable-QTEST_ASSERT.patch

@@ -1,0 +1,14 @@
+libresolv.patch
+libXcursor.patch
+fallback-mesa-libGL.patch
+TZDIR.patch
+libressl.patch
+QTCOMPOSE.patch
+gtk3-platform-theme.patch
+plugins-from-PATH.patch
+multiple-outputs-cmake.patch
+multiple-outputs-qmake.patch
+darwin-unset-RPATH-linker-flags.patch
+darwin-remove-unused-features.patch
+POSIX-command.patch
+QT_NO_DEBUG-disable-QTEST_ASSERT.patch
