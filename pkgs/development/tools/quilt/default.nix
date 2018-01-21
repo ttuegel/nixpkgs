@@ -21,6 +21,8 @@ stdenv.mkDerivation rec {
         wrapProgram $out/bin/quilt --prefix PATH : "${PATH}"
       '';
 
+  setupHook = ./setup-hook.sh;
+
   meta = {
     homepage = http://savannah.nongnu.org/projects/quilt;
     description = "Easily manage large numbers of patches";
