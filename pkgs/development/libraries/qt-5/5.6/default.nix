@@ -47,7 +47,7 @@ let
 
   patches = {
     qtbase = ./qtbase.patch.d;
-    qtdeclarative = [ ./qtdeclarative.patch ];
+    qtdeclarative = ./qtdeclarative.patch.d;
     qtscript = [ ./qtscript.patch ];
     qtserialport = [ ./qtserialport.patch ];
     qttools = [ ./qttools.patch ];
