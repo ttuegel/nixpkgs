@@ -39,13 +39,6 @@ rec {
       hardeningDisable = [ "fortify" ];
 
       buildInputs = [ removeReferencesTo go btrfs-progs ];
-
-      # This should go into the containerd derivation once 1.0.0 is out
-      preBuild = ''
-        export GOPATH=$(pwd)/vendor
-        mkdir $(pwd)/vendor/src
-        mv $(pwd)/vendor/{github.com,golang.org,google.golang.org} $(pwd)/vendor/src/
-      '' + oldAttrs.preBuild;
     });
 
     docker-tini = tini.overrideAttrs  (oldAttrs: rec {
@@ -208,6 +201,18 @@ rec {
     version = "17.12.0-ce";
     rev = "486a48d2701493bb65385788a291e36febb44ec1"; # git commit
     sha256 = "14kp7wrzf3s9crk8px1dc575lchyrcl2dqiwr3sgxb9mzjfiyqps";
+    runcRev = "b2567b37d7b75eb4cf325b77297b140ea686ce8f";
+    runcSha256 = "0zarsrbfcm1yp6mdl6rcrigdf7nb70xmv2cbggndz0qqyrw0mk0l";
+    containerdRev = "89623f28b87a6004d4b785663257362d1658a729";
+    containerdSha256 = "0irx7ps6rhq7z69cr3gspxdr7ywrv6dz62gkr1z2723cki9hsxma";
+    tiniRev = "949e6facb77383876aeff8a6944dde66b3089574";
+    tiniSha256 = "0zj4kdis1vvc6dwn4gplqna0bs7v6d1y2zc8v80s3zi018inhznw";
+  };
+
+  docker_18_01 = dockerGen rec {
+    version = "18.01.0-ce";
+    rev = "03596f51b120095326d2004d676e97228a21014d"; # git commit
+    sha256 = "1zffaxwkfz8ca76f5ql5z76mcjx37jbgv2kk75i68487yg16x0md";
     runcRev = "b2567b37d7b75eb4cf325b77297b140ea686ce8f";
     runcSha256 = "0zarsrbfcm1yp6mdl6rcrigdf7nb70xmv2cbggndz0qqyrw0mk0l";
     containerdRev = "89623f28b87a6004d4b785663257362d1658a729";

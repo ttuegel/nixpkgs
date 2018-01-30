@@ -79,7 +79,6 @@ mapAliases (rec {
   htmlTidy = html-tidy;  # added 2014-12-06
   iana_etc = iana-etc;  # added 2017-03-08
   idea = jetbrains; # added 2017-04-03
-  inherit (haskell.compiler) uhc;   # 2015-05-15
   inotifyTools = inotify-tools;
   joseki = apache-jena-fuseki; # added 2016-02-28
   jquery_ui = jquery-ui;  # added 2014-09-07
@@ -94,6 +93,7 @@ mapAliases (rec {
   libcap_manpages = libcap.doc; # added 2016-04-29
   libcap_pam = if stdenv.isLinux then libcap.pam else null; # added 2016-04-29
   libcap_progs = libcap.out; # added 2016-04-29
+  libgumbo = gumbo; # added 2018-01-21
   libjson_rpc_cpp = libjson-rpc-cpp; # added 2017-02-28
   libmysql = mysql.connector-c; # added # 2017-12-28, this was a misnomer refering to libmysqlclient
   libtidy = html-tidy;  # added 2014-12-21

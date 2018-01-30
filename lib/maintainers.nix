@@ -55,6 +55,7 @@
   antonxy = "Anton Schirg <anton.schirg@posteo.de>";
   apeschar = "Albert Peschar <albert@peschar.net>";
   apeyroux = "Alexandre Peyroux <alex@px.io>";
+  arcadio = "Arcadio Rubio García <arc@well.ox.ac.uk>";
   ardumont = "Antoine R. Dumont <eniotna.t@gmail.com>";
   aristid = "Aristid Breitkreuz <aristidb@gmail.com>";
   arobyn = "Alexei Robyn <shados@shados.net>";
@@ -118,6 +119,7 @@
   chaoflow = "Florian Friesdorf <flo@chaoflow.net>";
   chattered = "Phil Scott <me@philscotted.com>";
   ChengCat = "Yucheng Zhang <yu@cheng.cat>";
+  chiiruno = "Okina Matara <okinan@protonmail.com>";
   choochootrain = "Hurshal Patel <hurshal@imap.cc>";
   chpatrick = "Patrick Chilton <chpatrick@gmail.com>";
   chreekat = "Bryan Richter <b@chreekat.net>";
@@ -299,6 +301,7 @@
   ivan-tkatchev = "Ivan Tkatchev <tkatchev@gmail.com>";
   ixmatus = "Parnell Springmeyer <parnell@digitalmentat.com>";
   izorkin = "Yurii Izorkin <Izorkin@gmail.com>";
+  ixxie = "Matan Bendix Shenhav <matan@fluxcraft.net>";
   j-keck = "Jürgen Keck <jhyphenkeck@gmail.com>";
   jagajaga = "Arseniy Seroka <ars.seroka@gmail.com>";
   jammerful = "jammerful <jammerful@gmail.com>";
@@ -325,6 +328,7 @@
   joelmo = "Joel Moberg <joel.moberg@gmail.com>";
   joelteon = "Joel Taylor <me@joelt.io>";
   johbo = "Johannes Bornhold <johannes@bornhold.name>";
+  johnazoidberg = "Daniel Schäfer <git@danielschaefer.me>";
   johnmh = "John M. Harris, Jr. <johnmh@openblox.org>";
   johnramsden = "John Ramsden <johnramsden@riseup.net>";
   joko = "Ioannis Koutras <ioannis.koutras@gmail.com>";
@@ -384,6 +388,7 @@
   lovek323 = "Jason O'Conal <jason@oconal.id.au>";
   lowfatcomputing = "Andreas Wagner <andreas.wagner@lowfatcomputing.org>";
   lsix = "Lancelot SIX <lsix@lancelotsix.com>";
+  lschuermann = "Leon Schuermann <leon.git@is.currently.online>";
   ltavard = "Laure Tavard <laure.tavard@univ-grenoble-alpes.fr>";
   lucas8 = "Luc Chabassier <luc.linux@mailoo.org>";
   ludo = "Ludovic Courtès <ludo@gnu.org>";
@@ -442,6 +447,7 @@
   mjanczyk = "Marcin Janczyk <m@dragonvr.pl>";
   mjp = "Mike Playle <mike@mythik.co.uk>"; # github = "MikePlayle";
   mlieberman85 = "Michael Lieberman <mlieberman85@gmail.com>";
+  mmahut = "Marek Mahut <marek.mahut@gmail.com>";
   moaxcp = "John Mercier <moaxcp@gmail.com>";
   modulistic = "Pablo Costa <modulistic@gmail.com>";
   mog = "Matthew O'Gorman <mog-lists@rldn.net>";
@@ -482,6 +488,7 @@
   nico202 = "Nicolò Balzarotti <anothersms@gmail.com>";
   NikolaMandic = "Ratko Mladic <nikola@mandic.email>";
   nixy = "Andrew R. M. <nixy@nixy.moe>";
+  nmattia = "Nicolas Mattia <nicolas@nmattia.com>";
   nocoolnametom = "Tom Doggett <nocoolnametom@gmail.com>";
   notthemessiah = "Brian Cohen <brian.cohen.88@gmail.com>";
   np = "Nicolas Pouillard <np.nix@nicolaspouillard.fr>";
@@ -604,12 +611,14 @@
   schmitthenner = "Fabian Schmitthenner <development@schmitthenner.eu>";
   schneefux = "schneefux <schneefux+nixos_pkg@schneefux.xyz>";
   schristo = "Scott Christopher <schristopher@konputa.com>";
+  scode = "Peter Schuller <peter.schuller@infidyne.com>";
   scolobb = "Sergiu Ivanov <sivanov@colimite.fr>";
   sdll = "Sasha Illarionov <sasha.delly@gmail.com>";
   SeanZicari = "Sean Zicari <sean.zicari@gmail.com>";
   sellout = "Greg Pfeil <greg@technomadic.org>";
   sepi = "Raffael Mancini <raffael@mancini.lu>";
   seppeljordan = "Sebastian Jordan <sebastian.jordan.mail@googlemail.com>";
+  sfrijters = "Stefan Frijters <sfrijters@gmail.com>";
   shanemikel = "Shane Pearlman <shanemikel1@gmail.com>";
   shawndellysse = "Shawn Dellysse <sdellysse@gmail.com>";
   sheenobu = "Sheena Artrip <sheena.artrip@gmail.com>";
@@ -673,6 +682,7 @@
   ThomasMader = "Thomas Mader <thomas.mader@gmail.com>";
   thoughtpolice = "Austin Seipp <aseipp@pobox.com>";
   thpham = "Thomas Pham <thomas.pham@ithings.ch>";
+  tilpner = "Till Höppner <till@hoeppner.ws>";
   timbertson = "Tim Cuthbertson <tim@gfxmonk.net>";
   timokau = "Timo Kaufmann <timokau@zoho.com>";
   tiramiseb = "Sébastien Maccagnoni <sebastien@maccagnoni.eu>";
@@ -692,6 +702,7 @@
   tvorog = "Marsel Zaripov <marszaripov@gmail.com>";
   tweber = "Thorsten Weber <tw+nixpkgs@360vier.de>";
   twey = "James ‘Twey’ Kay <twey@twey.co.uk>";
+  unode = "Renato Alves <alves.rjc@gmail.com>";
   uralbash = "Svintsov Dmitry <root@uralbash.ru>";
   utdemir = "Utku Demir <me@utdemir.com>";
   #urkud = "Yury G. Kudryashov <urkud+nix@ya.ru>"; inactive since 2012

@@ -925,7 +925,6 @@ let self = _self // overrides; _self = with self; {
     meta = {
       homepage = http://gtk2-perl.sourceforge.net/;
       description = "Perl interface to the cairo 2D vector graphics library";
-      maintainers = with maintainers; [ nckx ];
       license = stdenv.lib.licenses.lgpl21Plus;
     };
   };
@@ -2184,6 +2183,12 @@ let self = _self // overrides; _self = with self; {
       description = "Clipboard - Copy and Paste with any OS";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
     };
+    propagatedBuildInputs = stdenv.lib.optional stdenv.isDarwin MacPasteboard;
+    # Disable test on darwin because MacPasteboard fails when not logged in interactively.
+    # Mac OS error -4960 (coreFoundationUnknownErr): The unknown error at lib/Clipboard/MacPasteboard.pm line 3.
+    # Mac-Pasteboard-0.009.readme: 'NOTE that Mac OS X appears to restrict pasteboard access to processes that are logged in interactively.
+    #     Ssh sessions and cron jobs can not create the requisite pasteboard handles, giving coreFoundationUnknownErr (-4960)'
+    doCheck = !stdenv.isDarwin;
   };
 
 
@@ -2717,10 +2722,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   CryptJWT = buildPerlPackage rec {
-    name = "Crypt-JWT-0.018";
+    name = "Crypt-JWT-0.019";
     src = fetchurl {
       url = "mirror://cpan/authors/id/M/MI/MIK/${name}.tar.gz";
-      sha256 = "90e78f7f0ced17e5c2080ad8c7008ce3badd05186e2ff20cf9c7232ed863cdaf";
+      sha256 = "26aaaaedc153b04bdaaba7df7ac2f7ce3bdf672c8d7111d09347a8d0c794725c";
     };
     propagatedBuildInputs = [ CryptX JSONMaybeXS ];
     meta = {
@@ -3830,15 +3835,12 @@ let self = _self // overrides; _self = with self; {
   };
 
   DBIxClass = buildPerlPackage rec {
-    # tests broken again
-    doCheck = false;
-    name = "DBIx-Class-0.082840";
+    name = "DBIx-Class-0.082841";
     src = fetchurl {
       url = "mirror://cpan/authors/id/R/RI/RIBASUSHI/${name}.tar.gz";
-      sha256 = "4049afd175e315ebcab945b19030aec40bcec46cc5611b0286a5a267ca7181ef";
+      sha256 = "d705f85825aced299020534349778537524526d64f524217ca362787f683c3bd";
     };
-    patches = [ ../development/perl-modules/dbiclassx-fix.patch ]; # Remove after next release
-    buildInputs = [ DBDSQLite PackageStash SQLTranslator TestDeep TestException TestWarn ];
+    buildInputs = [ DBDSQLite PackageStash TestDeep TestException TestWarn ];
     propagatedBuildInputs = [ ClassAccessorGrouped ClassC3Componentised ClassInspector ConfigAny ContextPreserve DBI DataDumperConcise DataPage DevelGlobalDestruction HashMerge MROCompat ModuleFind Moo PathClass SQLAbstract ScopeGuard SubName TryTiny namespaceclean ];
     meta = {
       homepage = http://www.dbix-class.org/;
@@ -6048,10 +6050,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   GetoptLongDescriptive = buildPerlPackage rec {
-    name = "Getopt-Long-Descriptive-0.100";
+    name = "Getopt-Long-Descriptive-0.101";
     src = fetchurl {
       url = "mirror://cpan/authors/id/R/RJ/RJBS/${name}.tar.gz";
-      sha256 = "1451e79310d1630de37690e3aba5c38ea5f01a486c5a43f0cd95bef2a02dffb6";
+      sha256 = "752e898ea6eb8706ceb836668ca645704f5dcbc3124b6d1b21d04007dbc46948";
     };
     buildInputs = [ CPANMetaCheck TestFatal TestWarnings ];
     propagatedBuildInputs = [ ParamsValidate SubExporter ];
@@ -6059,7 +6061,6 @@ let self = _self // overrides; _self = with self; {
       homepage = https://github.com/rjbs/Getopt-Long-Descriptive;
       description = "Getopt::Long, but simpler and more powerful";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
-      maintainers = [ maintainers.rycee ];
     };
   };
 
@@ -6096,7 +6097,6 @@ let self = _self // overrides; _self = with self; {
     meta = {
       homepage = http://gtk2-perl.sourceforge.net/;
       description = "Perl wrappers for the GLib utility and Object libraries";
-      maintainers = with maintainers; [ nckx ];
       license = stdenv.lib.licenses.lgpl21Plus;
     };
   };
@@ -6288,7 +6288,6 @@ let self = _self // overrides; _self = with self; {
     meta = {
       homepage = http://gtk2-perl.sourceforge.net/;
       description = "Perl interface to the 2.x series of the Gimp Toolkit library";
-      maintainers = with maintainers; [ nckx ];
       license = stdenv.lib.licenses.lgpl21Plus;
     };
   };
@@ -8049,10 +8048,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   LogAny = buildPerlPackage rec {
-    name = "Log-Any-1.704";
+    name = "Log-Any-1.705";
     src = fetchurl {
       url = "mirror://cpan/authors/id/P/PR/PREACTION/${name}.tar.gz";
-      sha256 = "57289d17b83bb5ce1d44148fd4e31a82b0d27e9104706ddc1ec5bb15461d0dd9";
+      sha256 = "85c7c5189a8bfc2ffb6f879b4cd04dd77f94bc5abc3800b4330f42f43fb9a696";
     };
     # Syslog test fails.
     preCheck = "rm t/syslog.t";
@@ -8065,10 +8064,10 @@ let self = _self // overrides; _self = with self; {
   };
 
   LogContextual = buildPerlPackage rec {
-    name = "Log-Contextual-0.008000";
+    name = "Log-Contextual-0.008001";
     src = fetchurl {
       url = "mirror://cpan/authors/id/F/FR/FREW/${name}.tar.gz";
-      sha256 = "acd804508740e35c208e0cff575f3dbca2e01b8e64ec00eec3f88c7c4e3d656c";
+      sha256 = "b93cbcfbb8796d51c836e3b00243cda5630808c152c14eee5f20ca09c9451993";
     };
     buildInputs = [ TestFatal ];
     propagatedBuildInputs = [ DataDumperConcise ExporterDeclare Moo ];
@@ -8320,6 +8319,20 @@ let self = _self // overrides; _self = with self; {
     inherit fetchurl buildPerlPackage stdenv DBDmysql;
   };
 
+  MacPasteboard = buildPerlPackage rec {
+    name = "Mac-Pasteboard-0.009";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/W/WY/WYANT/${name}.tar.gz";
+      sha256 = "85b1d5e9630973b997c3c1634e2df964d6a8d6cb57d9abe1f7093385cf26cf54";
+    };
+    meta = with stdenv.lib; {
+      description = "Manipulate Mac OS X pasteboards";
+      license = with licenses; [ artistic1 gpl1Plus ];
+      platforms = platforms.darwin;
+    };
+    buildInputs = [ pkgs.darwin.apple_sdk.frameworks.ApplicationServices ];
+  };
+
   MailMaildir = buildPerlPackage rec {
     version = "1.0.0";
     name = "Mail-Maildir-${version}";
@@ -8383,6 +8396,18 @@ let self = _self // overrides; _self = with self; {
       sha256 = "0qzn8370cr91jnq1kawy6v16bcz49pch6inmw85rhzg87j1h6ica";
     };
     buildInputs = [ParseRecDescent];
+  };
+
+  MailPOP3Client = buildPerlPackage rec {
+    name = "Mail-POP3Client-2.19";
+    src = fetchurl {
+      url = "mirror://cpan/authors/id/S/SD/SDOWD/${name}.tar.gz";
+      sha256 = "1142d6247a93cb86b23ed8835553bb2d227ff8213ee2743e4155bb93f47acb59";
+    };
+    meta = {
+      description = "Perl 5 module to talk to a POP3 (RFC1939) server";
+      license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
+    };
   };
 
   MailRFC822Address = buildPerlPackage {
@@ -10758,7 +10783,6 @@ let self = _self // overrides; _self = with self; {
     meta = {
       homepage = http://gtk2-perl.sourceforge.net/;
       description = "Layout and render international text";
-      maintainers = with maintainers; [ nckx ];
       license = stdenv.lib.licenses.lgpl21Plus;
     };
   };
@@ -10859,7 +10883,6 @@ let self = _self // overrides; _self = with self; {
     meta = with stdenv.lib; {
       homepage = http://search.cpan.org/~jaybonci/Parse-DebControl;
       license = with licenses; [ artistic1 gpl1Plus ];
-      maintainers = with maintainers; [ nckx ];
     };
   };
 
@@ -12286,17 +12309,16 @@ let self = _self // overrides; _self = with self; {
   };
 
   SQLAbstract = buildPerlPackage rec {
-    name = "SQL-Abstract-1.81";
+    name = "SQL-Abstract-1.85";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/R/RI/RIBASUSHI/${name}.tar.gz";
-      sha256 = "5f4d5618ce2424d62bbfdb5228b382e8be0e0ccedbb273d6d850e25d07e64f9f";
+      url = "mirror://cpan/authors/id/I/IL/ILMARI/${name}.tar.gz";
+      sha256 = "9f44afe031a0cc63a6ccabaa46ba7ec58ef4db940559cee7fbc2dfbbf37bccab";
     };
     buildInputs = [ TestDeep TestException TestWarn ];
-    propagatedBuildInputs = [ HashMerge MROCompat Moo ];
+    propagatedBuildInputs = [ HashMerge MROCompat Moo SubQuote ];
     meta = {
       description = "Generate SQL from Perl data structures";
       license = with stdenv.lib.licenses; [ artistic1 gpl1Plus ];
-      maintainers = [ maintainers.rycee ];
     };
   };
 
