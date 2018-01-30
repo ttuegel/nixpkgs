@@ -1,7 +1,7 @@
 { qtModule, qtCompatVersion,
   qtdeclarative, qtquickcontrols, qtlocation, qtwebchannel
 
-, bison, coreutils, flex, git, gperf, ninja, pkgconfig, python2, which
+, bison, coreutils, flex, git, gperf, ninja, pkgconfig, python2, quilt, which
 
 , xlibs, libXcursor, libXScrnSaver, libXrandr, libXtst
 , fontconfig, freetype, harfbuzz, icu, dbus
@@ -25,7 +25,7 @@ qtModule {
   name = "qtwebengine";
   qtInputs = [ qtdeclarative qtquickcontrols qtlocation qtwebchannel ];
   nativeBuildInputs = [
-    bison coreutils flex git gperf ninja pkgconfig python2 which
+    bison coreutils flex git gperf ninja pkgconfig python2 quilt which
   ];
   doCheck = true;
   outputs = [ "bin" "dev" "out" ];

@@ -1,0 +1,25 @@
+From 45d318ef723e4a10b6f8153e6156df29d7a4041d Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 07:37:26 -0500
+Subject: [PATCH 2/3] Darwin: Fix path to icucore
+
+---
+ Source/WTF/WTF.pri | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source/WTF/WTF.pri b/Source/WTF/WTF.pri
+index 1f4866d66..bb61e4ba3 100644
+--- a/Source/WTF/WTF.pri
++++ b/Source/WTF/WTF.pri
+@@ -12,7 +12,7 @@ mac {
+     # Mac OS does ship libicu but not the associated header files.
+     # Therefore WebKit provides adequate header files.
+     INCLUDEPATH = $${ROOT_WEBKIT_DIR}/Source/WTF/icu $$INCLUDEPATH
+-    LIBS += -licucore
++    LIBS += /usr/lib/libicucore.dylib
+ } else:!use?(wchar_unicode): {
+     win32 {
+         CONFIG(static, static|shared) {
+-- 
+2.15.1
+

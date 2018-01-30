@@ -1,0 +1,3 @@
+libgtk.patch
+darwin-icucore.patch
+icu-59.patch

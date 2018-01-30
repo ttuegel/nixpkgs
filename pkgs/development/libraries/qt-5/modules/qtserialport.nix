@@ -1,9 +1,10 @@
-{ qtModule, stdenv, lib, qtbase, substituteAll, systemd }:
+{ qtModule, stdenv, lib, quilt, qtbase, substituteAll, systemd }:
 
 let inherit (lib) getLib optional; in
 
 qtModule {
   name = "qtserialport";
+  nativeBuildInputs = [ quilt ];
   qtInputs = [ qtbase ];
   NIX_CFLAGS_COMPILE =
     optional stdenv.isLinux

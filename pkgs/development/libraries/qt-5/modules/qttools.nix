@@ -1,9 +1,10 @@
-{ qtModule, stdenv, lib, qtbase }:
+{ qtModule, stdenv, lib, quilt, qtbase }:
 
 with lib;
 
 qtModule {
   name = "qttools";
+  nativeBuildInputs = [ quilt ];
   qtInputs = [ qtbase ];
   outputs = [ "out" "dev" "bin" ];
 

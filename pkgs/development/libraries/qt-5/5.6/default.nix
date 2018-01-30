@@ -48,12 +48,12 @@ let
   patches = {
     qtbase = ./qtbase.patch.d;
     qtdeclarative = ./qtdeclarative.patch.d;
-    qtscript = [ ./qtscript.patch ];
-    qtserialport = [ ./qtserialport.patch ];
-    qttools = [ ./qttools.patch ];
+    qtscript = ./qtscript.patch.d;
+    qtserialport = ./qtserialport.patch.d;
+    qttools = ./qttools.patch.d;
     qtwebengine = [ ./qtwebengine-seccomp.patch ]
       ++ optional stdenv.needsPax ./qtwebengine-paxmark-mksnapshot.patch;
-    qtwebkit = [ ./qtwebkit.patch ];
+    qtwebkit = ./qtwebkit.patch.d;
   };
 
   mkDerivation =
