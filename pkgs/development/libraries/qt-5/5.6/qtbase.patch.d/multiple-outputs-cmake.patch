@@ -51,7 +51,7 @@ Index: qtbase-opensource-src-5.6.3/mkspecs/features/create_cmake.prf
 -    # installed in $${CMAKE_LIB_DIR}/cmake/Qt5$${CMAKE_MODULE_NAME}
 -    CMAKE_RELATIVE_INSTALL_DIR = "$${CMAKE_RELATIVE_INSTALL_LIBS_DIR}../../"
 -}
-+CMAKE_LIB_DIR = $$NIX_OUTPUT_DEV/lib/
++CMAKE_LIB_DIR = $$NIX_OUTPUT_OUT/lib/
 +CMAKE_LIB_DIR_IS_ABSOLUTE = True
  
 -CMAKE_BIN_DIR = $$cmakeRelativePath($$[QT_HOST_BINS], $$[QT_INSTALL_PREFIX])
@@ -80,7 +80,7 @@ Index: qtbase-opensource-src-5.6.3/mkspecs/features/create_cmake.prf
 -    CMAKE_DLL_DIR = $$CMAKE_LIB_DIR
 -    CMAKE_DLL_DIR_IS_ABSOLUTE = $$CMAKE_LIB_DIR_IS_ABSOLUTE
 -}
-+CMAKE_DLL_DIR = $$NIX_OUTPUT_DEV/lib/
++CMAKE_DLL_DIR = $$NIX_OUTPUT_OUT/lib/
 +CMAKE_DLL_DIR_IS_ABSOLUTE = True
  
  static|staticlib:CMAKE_STATIC_TYPE = true
