@@ -1,0 +1,24 @@
+From 5f03ffc67a02ea31195bbfdc39f6159ffcc7998a Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Thu, 19 Oct 2017 07:23:27 -0500
+Subject: [PATCH 04/11] kstartupconfig: do not require kdostartupconfig5 to be
+ installed
+
+---
+ startkde/kstartupconfig/kstartupconfig.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/startkde/kstartupconfig/kstartupconfig.cpp b/startkde/kstartupconfig/kstartupconfig.cpp
+index c9927855..bd506ce2 100644
+--- a/startkde/kstartupconfig/kstartupconfig.cpp
++++ b/startkde/kstartupconfig/kstartupconfig.cpp
+@@ -147,5 +147,5 @@ int main()
+     fclose( keys );
+     fclose( config );
+   doit:
+-    return system( "kdostartupconfig5" );
++    return system( NIXPKGS_KDOSTARTUPCONFIG5 );
+     }
+-- 
+2.16.1
+

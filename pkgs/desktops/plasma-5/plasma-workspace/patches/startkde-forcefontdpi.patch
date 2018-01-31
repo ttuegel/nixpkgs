@@ -1,0 +1,39 @@
+From 1aaf71c44cbf258ac0814056fab855aaf179fb50 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Fri, 20 Oct 2017 08:18:11 -0500
+Subject: [PATCH 11/11] startkde: Guard against unset forceFontDPI
+
+---
+ startkde/startkde.cmake              | 2 +-
+ startkde/startplasmacompositor.cmake | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/startkde/startkde.cmake b/startkde/startkde.cmake
+index 1f554d79..79e50a96 100644
+--- a/startkde/startkde.cmake
++++ b/startkde/startkde.cmake
+@@ -201,7 +201,7 @@ if test -n "$kcminputrc_mouse_cursortheme" -o -n "$kcminputrc_mouse_cursorsize"
+     fi
+ fi
+ 
+-if [ "$kcmfonts_general_forcefontdpi" -ne 0 ]; then
++if [ "${kcmfonts_general_forcefontdpi:-0}" -ne 0 ]; then
+     @NIXPKGS_XRDB@ -quiet -merge -nocpp <<EOF
+ Xft.dpi: $kcmfonts_general_forcefontdpi
+ EOF
+diff --git a/startkde/startplasmacompositor.cmake b/startkde/startplasmacompositor.cmake
+index f52d5d92..3f62745a 100644
+--- a/startkde/startplasmacompositor.cmake
++++ b/startkde/startplasmacompositor.cmake
+@@ -156,7 +156,7 @@ if [ -n "$kcminputrc_mouse_cursortheme" -o -n "$kcminputrc_mouse_cursorsize" ];
+     fi
+ fi
+ 
+-if [ "$kcmfonts_general_forcefontdpiwayland" -ne 0 ]; then
++if [ "${kcmfonts_general_forcefontdpiwayland:-0}" -ne 0 ]; then
+     export QT_WAYLAND_FORCE_DPI=$kcmfonts_general_forcefontdpiwayland
+ else
+     export QT_WAYLAND_FORCE_DPI=96
+-- 
+2.16.1
+

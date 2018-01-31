@@ -1,0 +1,26 @@
+From 69a2337a3f1f788125ead16b10b2281e13842635 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Fri, 20 Oct 2017 06:58:53 -0500
+Subject: [PATCH 10/11] startkde: Enforce xcb QPA
+
+---
+ startkde/startkde.cmake | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/startkde/startkde.cmake b/startkde/startkde.cmake
+index c3581a1b..1f554d79 100644
+--- a/startkde/startkde.cmake
++++ b/startkde/startkde.cmake
+@@ -272,6 +272,9 @@ export KDE_SESSION_UID
+ XDG_CURRENT_DESKTOP=KDE
+ export XDG_CURRENT_DESKTOP
+ 
++# Enforce xcb QPA. Helps switching between Wayland and X sessions.
++export QT_QPA_PLATFORM=xcb
++
+ # Source scripts found in <config locations>/plasma-workspace/env/*.sh
+ # (where <config locations> correspond to the system and user's configuration
+ # directories, as identified by Qt's qtpaths,  e.g.  $HOME/.config
+-- 
+2.16.1
+

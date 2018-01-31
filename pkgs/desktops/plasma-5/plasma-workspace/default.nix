@@ -1,7 +1,7 @@
 {
   mkDerivation, lib,
 
-  extra-cmake-modules, kdoctools,
+  extra-cmake-modules, kdoctools, quilt, wrapQtAppsHook,
 
   coreutils, dbus, gnugrep, gnused, isocodes, libdbusmenu, libSM, libXcursor,
   libXtst, pam, wayland, xmessage, xprop, xrdb, xsetroot,
@@ -21,7 +21,7 @@ let inherit (lib) getBin getLib; in
 mkDerivation {
   name = "plasma-workspace";
 
-  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
+  nativeBuildInputs = [ extra-cmake-modules kdoctools quilt wrapQtAppsHook ];
   buildInputs = [
     isocodes libdbusmenu libSM libXcursor libXtst pam wayland
 
@@ -34,6 +34,7 @@ mkDerivation {
     qtgraphicaleffects qtquickcontrols qtquickcontrols2 qtscript qtwayland qtx11extras
   ];
   outputs = [ "out" "dev" ];
+  patches = ./patches;
 
   cmakeFlags = [
     "-DNIXPKGS_XMESSAGE=${getBin xmessage}/bin/xmessage"
@@ -52,19 +53,6 @@ mkDerivation {
     "-DNIXPKGS_KDEINIT5_SHUTDOWN=${getBin kinit}/bin/kdeinit5_shutdown"
     "-DNIXPKGS_SED=${getBin gnused}/bin/sed"
   ];
-
-  # To regenerate ./plasma-workspace.patch,
-  #
-  # > git clone https://github.com/ttuegel/plasma-workspace
-  # > cd plasma-workspace
-  # > git checkout nixpkgs/$x.$y  # where $x.$y.$z == $version
-  # ... make some commits ...
-  # > git diff v$x.$y.$z
-  #
-  # Add upstream patches to the list below. For new patchs, particularly if not
-  # submitted upstream, please make a pull request and add it to
-  # ./plasma-workspace.patch.
-  patches = [ ./plasma-workspace.patch ];
 
   preConfigure = ''
     NIX_CFLAGS_COMPILE+=" -DNIXPKGS_KDOSTARTUPCONFIG5=\"''${!outputBin}/bin/kdostartupconfig5\""

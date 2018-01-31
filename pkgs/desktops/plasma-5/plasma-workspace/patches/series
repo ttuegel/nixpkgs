@@ -1,0 +1,11 @@
+startkde-nixpkgs.patch
+dbus-binary-paths.patch
+startplasma-nixpkgs.patch
+kstartupconfig-kdostartupconfig5-path.patch
+qml-import-paths.patch
+startkde-default-gtk.patch
+startplasma-default-gtk.patch
+startkde-no-xmessage.patch
+startplasma-no-xmessage.patch
+startkde-xcb-qpa.patch
+startkde-forcefontdpi.patch
