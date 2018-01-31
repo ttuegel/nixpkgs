@@ -44,7 +44,7 @@ mkDerivation {
     "-DNIXPKGS_XPROP=${getBin xprop}/bin/xprop"
     "-DNIXPKGS_ID=${getBin coreutils}/bin/id"
     "-DNIXPKGS_DBUS_UPDATE_ACTIVATION_ENVIRONMENT=${getBin dbus}/bin/dbus-update-activation-environment"
-    "-DNIXPKGS_START_KDEINIT_WRAPPER=${getLib kinit}/lib/libexec/kf5/start_kdeinit_wrapper"
+    "-DNIXPKGS_START_KDEINIT_WRAPPER=${getLib kinit}/libexec/kf5/start_kdeinit_wrapper"
     "-DNIXPKGS_QDBUS=${getBin qttools}/bin/qdbus"
     "-DNIXPKGS_KWRAPPER5=${getBin kinit}/bin/kwrapper5"
     "-DNIXPKGS_KREADCONFIG5=${getBin kconfig}/bin/kreadconfig5"
