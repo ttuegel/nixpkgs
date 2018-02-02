@@ -1,5 +1,5 @@
 # Inherit arguments given in mkDerivation
-qtWrapperArgs=( $qtWrapperArgs )
+qtWrapperArgs=( --unset QT_PLUGIN_PATH --unset QML2_IMPORT_PATH $qtWrapperArgs )
 
 qtHostPathHookSkip=( $qtHostPathHookSkip )
 
