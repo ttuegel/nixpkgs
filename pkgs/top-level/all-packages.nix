@@ -10651,7 +10651,7 @@ with pkgs;
       inherit (gst_all_1) gstreamer gst-plugins-base;
     });
 
-  libsForQt56 = lib.makeScope qt56.newScope mkLibsForQt5;
+  libsForQt56 = lib.makeScope qt56.newScope (mkLibsForQt5 qt56);
 
   qt59 = recurseIntoAttrs (makeOverridable
     (import ../development/libraries/qt-5/5.9) {
@@ -10666,7 +10666,7 @@ with pkgs;
       inherit (gnome3) gtk3 dconf;
     });
 
-  libsForQt59 = lib.makeScope qt59.newScope mkLibsForQt5;
+  libsForQt59 = lib.makeScope qt59.newScope (mkLibsForQt5 qt59);
 
   qt510 = recurseIntoAttrs (makeOverridable
     (import ../development/libraries/qt-5/5.10) {
@@ -10681,14 +10681,21 @@ with pkgs;
       inherit (gnome3) gtk3 dconf;
     });
 
-  libsForQt510 = recurseIntoAttrs (lib.makeScope qt510.newScope mkLibsForQt5);
+  libsForQt510 =
+    recurseIntoAttrs (lib.makeScope qt510.newScope (mkLibsForQt5 qt510));
 
   qt5 = qt510;
   libsForQt5 = libsForQt510;
 
   qt5ct = libsForQt5.callPackage ../tools/misc/qt5ct { };
 
-  mkLibsForQt5 = self: with self; {
+  mkLibsForQt5 = qt5: self: with self; {
+
+    wrapQtApp = import ../development/libraries/qt-5/wrap-qt-app.nix {
+      inherit config lib;
+      inherit (qt5) mkDerivation wrapQtAppsHook;
+      libsForQt5 = self;
+    };
 
     ### KDE FRAMEWORKS
 
@@ -10715,11 +10722,33 @@ with pkgs;
     inherit (kdeApplications.override { libsForQt5 = self; })
       kholidays libkdcraw libkexiv2 libkipi libkomparediff2 libksane;
 
+    ### PLUGINS
+
+    inherit (kdeFrameworks.override { libsForQt5 = self; })
+      frameworkintegration;
+
+    inherit (plasma5.override { libsForQt5 = self; })
+      breeze-qt5 plasma-integration;
+
+    fcitx-qt5 = callPackage ../tools/inputmethods/fcitx/fcitx-qt5.nix { };
+
+    phonon-backend-gstreamer = callPackage ../development/libraries/phonon/backends/gstreamer.nix {
+      withQt5 = true;
+    };
+
+    phonon-backend-vlc = callPackage ../development/libraries/phonon/backends/vlc.nix {
+      withQt5 = true;
+    };
+
+    qtstyleplugins = callPackage ../development/libraries/qtstyleplugins { };
+
+    qtstyleplugin-kvantum = callPackage ../development/libraries/qtstyleplugin-kvantum { };
+
+    qtwebkit-plugins = callPackage ../development/libraries/qtwebkit-plugins { };
+
     ### LIBRARIES
 
     accounts-qt = callPackage ../development/libraries/accounts-qt { };
-
-    fcitx-qt5 = callPackage ../tools/inputmethods/fcitx/fcitx-qt5.nix { };
 
     qgpgme = callPackage ../development/libraries/gpgme { };
 
@@ -10767,14 +10796,6 @@ with pkgs;
       withQt5 = true;
     };
 
-    phonon-backend-gstreamer = callPackage ../development/libraries/phonon/backends/gstreamer.nix {
-      withQt5 = true;
-    };
-
-    phonon-backend-vlc = callPackage ../development/libraries/phonon/backends/vlc.nix {
-      withQt5 = true;
-    };
-
     polkit-qt = callPackage ../development/libraries/polkit-qt-1/qt-5.nix { };
 
     poppler = callPackage ../development/libraries/poppler {
@@ -10797,10 +10818,6 @@ with pkgs;
       withQt5 = true;
     };
 
-    qtstyleplugins = callPackage ../development/libraries/qtstyleplugins { };
-
-    qtstyleplugin-kvantum = libsForQt5.callPackage ../development/libraries/qtstyleplugin-kvantum { };
-
     quazip = callPackage ../development/libraries/quazip { };
 
     qwt = callPackage ../development/libraries/qwt/6.nix { };
@@ -10812,8 +10829,6 @@ with pkgs;
       withQt5 = true;
       ffmpeg = ffmpeg_2;
     });
-
-    qtwebkit-plugins = callPackage ../development/libraries/qtwebkit-plugins { };
 
   };
 

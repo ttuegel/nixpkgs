@@ -121,6 +121,10 @@ let
       wrapQtAppsHook = makeSetupHook {
         deps = [ self.qtbase.dev self.qtwayland.dev makeWrapper ];
       } ../hooks/wrap-qt-apps-hook.sh;
+
+      wrapQtApp = import ../wrap-qt-app.nix {
+        inherit mkDerivation makeWrapper lib qtbase qtwayland;
+      };
     };
 
    self = makeScope newScope addPackages;

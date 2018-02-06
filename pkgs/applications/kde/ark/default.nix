@@ -1,7 +1,7 @@
 {
   mkDerivation, lib, config,
 
-  extra-cmake-modules, kdoctools, wrapQtAppsHook,
+  extra-cmake-modules, kdoctools, wrapQtApp,
 
   karchive, kconfig, kcrash, kdbusaddons, ki18n, kiconthemes, kitemmodels,
   khtml, kio, kparts, kpty, kservice, kwidgetsaddons,
@@ -19,7 +19,7 @@ let
   extraTools = [ p7zip lrzip ] ++ lib.optional unfreeEnableUnrar unrar;
 in
 
-mkDerivation {
+wrapQtApp (mkDerivation {
   name = "ark";
   meta = {
     license = with lib.licenses;
@@ -28,7 +28,7 @@ mkDerivation {
   };
 
   outputs = [ "out" "dev" ];
-  nativeBuildInputs = [ extra-cmake-modules kdoctools wrapQtAppsHook ];
+  nativeBuildInputs = [ extra-cmake-modules kdoctools ];
   buildInputs = [ libarchive libzip ] ++ extraTools;
   propagatedBuildInputs = [
     karchive kconfig kcrash kdbusaddons khtml ki18n kiconthemes kio kitemmodels
@@ -36,4 +36,4 @@ mkDerivation {
   ];
 
   qtWrapperArgs = [ "--prefix" "PATH" ":" (lib.makeBinPath extraTools) ];
-}
+})
