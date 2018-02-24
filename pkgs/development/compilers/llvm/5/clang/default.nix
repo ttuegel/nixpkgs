@@ -37,9 +37,6 @@ let
 
     patches = [ ./purity.patch ];
 
-    # XXX: TODO: This should be removed on next rebuild
-    postBuild = "";
-
     postPatch = ''
       sed -i -e 's/DriverArgs.hasArg(options::OPT_nostdlibinc)/true/' \
              -e 's/Args.hasArg(options::OPT_nostdlibinc)/true/' \
@@ -47,6 +44,8 @@ let
 
       # Patch for standalone doc building
       sed -i '1s,^,find_package(Sphinx REQUIRED)\n,' docs/CMakeLists.txt
+    '' + stdenv.lib.optionalString stdenv.hostPlatform.isMusl ''
+      sed -i -e 's/lgcc_s/lgcc_eh/' lib/Driver/ToolChains/*.cpp
     '';
 
     outputs = [ "out" "lib" "python" ];

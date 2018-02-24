@@ -1,7 +1,8 @@
 { stdenv, fetchFromGitHub, file, curl, pkgconfig, python, openssl, cmake, zlib
 , makeWrapper, libiconv, cacert, rustPlatform, rustc, libgit2, darwin
-, version, srcSha, cargoSha256
-, patches ? [] }:
+, version
+, patches ? []
+, src }:
 
 let
   inherit (darwin.apple_sdk.frameworks) CoreFoundation;
@@ -9,17 +10,12 @@ in
 
 rustPlatform.buildRustPackage rec {
   name = "cargo-${version}";
-  inherit version;
+  inherit version src patches;
 
-  src = fetchFromGitHub {
-    owner  = "rust-lang";
-    repo   = "cargo";
-    rev    = version;
-    sha256 = srcSha;
-  };
-
-  inherit cargoSha256;
-  inherit patches;
+  # the rust source tarball already has all the dependencies vendored, no need to fetch them again
+  cargoVendorDir = "src/vendor";
+  preBuild = "cd src; pushd tools/cargo";
+  postBuild = "popd";
 
   passthru.rustc = rustc;
 
@@ -61,6 +57,6 @@ rustPlatform.buildRustPackage rec {
     description = "Downloads your Rust project's dependencies and builds your project";
     maintainers = with maintainers; [ wizeman retrry ];
     license = [ licenses.mit licenses.asl20 ];
-    platforms = [ "x86_64-linux" "x86_64-darwin" ];
+    platforms = platforms.unix;
   };
 }

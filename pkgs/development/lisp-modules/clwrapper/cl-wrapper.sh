@@ -1,4 +1,4 @@
-#!@stdenv_shell@
+#!@bash@/bin/bash
 # Part of NixPkgs package collection
 # This script can be used at your option under the same license as NixPkgs or
 # under MIT/X11 license
@@ -101,7 +101,7 @@ nix_lisp_build_system(){
                                 :separator \":\")
                        for l in sb-alien::*shared-objects*
                        for ns := (sb-alien::shared-object-namestring l)
-                       do (and (> (length ns) 0) (not (equal (elt ns 0) "/"))
+                       do (and (> (length ns) 0) (not (equal (elt ns 0) \"/\"))
                                (let*
                                  ((prefix (find-if (lambda (s) (probe-file (format nil \"~a/~a\" s ns))) libpath))
                                   (fullpath (and prefix (format nil \"~a/~a\" prefix ns))))
