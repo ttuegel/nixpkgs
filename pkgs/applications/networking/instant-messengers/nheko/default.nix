@@ -17,8 +17,8 @@ let
     src = fetchFromGitHub {
       owner = "mujx";
       repo = "matrix-structs";
-      rev = "91bb2b85a75d664007ef81aeb500d35268425922";
-      sha256 = "1v544pv18sd91gdrhbk0nm54fggprsvwwrkjmxa59jrvhwdk7rsx";
+      rev = "690080daa3bc1984297c4d7103cde9ea07e2e0b7";
+      sha256 = "0l6mncpdbjmrzp5a3q1jv0sxf7bwl5ljslrcjca1j2bjjbqb61bz";
     };
 
     postUnpack = ''
@@ -47,13 +47,13 @@ let
 in
 stdenv.mkDerivation rec {
   name = "nheko-${version}";
-  version = "0.3.0";
+  version = "0.4.0";
 
   src = fetchFromGitHub {
     owner = "mujx";
     repo = "nheko";
     rev = "v${version}";
-    sha256 = "178z64vkl7nmr1amgsgvdcwipj8czp7vbvidxllxiwal21yvqpky";
+    sha256 = "1yg6bk193mqj99x3sy0f20x3ggpl0ahrp36w6hhx7pyw5qm17342";
   };
 
   # This patch is likely not strictly speaking needed, but will help detect when

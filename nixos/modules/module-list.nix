@@ -166,14 +166,14 @@
   ./services/backup/crashplan-small-business.nix
   ./services/backup/mysql-backup.nix
   ./services/backup/postgresql-backup.nix
+  ./services/backup/restic.nix
+  ./services/backup/restic-rest-server.nix
   ./services/backup/rsnapshot.nix
   ./services/backup/tarsnap.nix
   ./services/backup/znapzend.nix
-  ./services/cluster/fleet.nix
   ./services/cluster/kubernetes/default.nix
   ./services/cluster/kubernetes/dns.nix
   ./services/cluster/kubernetes/dashboard.nix
-  ./services/cluster/panamax.nix
   ./services/computing/boinc/client.nix
   ./services/computing/torque/server.nix
   ./services/computing/torque/mom.nix
@@ -194,9 +194,11 @@
   ./services/databases/clickhouse.nix
   ./services/databases/couchdb.nix
   ./services/databases/firebird.nix
+  ./services/databases/foundationdb.nix
   ./services/databases/hbase.nix
   ./services/databases/influxdb.nix
   ./services/databases/memcached.nix
+  ./services/databases/monetdb.nix
   ./services/databases/mongodb.nix
   ./services/databases/mysql.nix
   ./services/databases/neo4j.nix
@@ -248,6 +250,7 @@
   ./services/hardware/illum.nix
   ./services/hardware/interception-tools.nix
   ./services/hardware/irqbalance.nix
+  ./services/hardware/lcd.nix
   ./services/hardware/nvidia-optimus.nix
   ./services/hardware/pcscd.nix
   ./services/hardware/pommed.nix
@@ -325,7 +328,7 @@
   ./services/misc/geoip-updater.nix
   ./services/misc/gitea.nix
   #./services/misc/gitit.nix
-  #./services/misc/gitlab.nix
+  ./services/misc/gitlab.nix
   ./services/misc/gitolite.nix
   ./services/misc/gitweb.nix
   ./services/misc/gogs.nix
@@ -480,6 +483,7 @@
   ./services/networking/gnunet.nix
   ./services/networking/gogoclient.nix
   ./services/networking/gvpe.nix
+  ./services/networking/hans.nix
   ./services/networking/haproxy.nix
   ./services/networking/heyefi.nix
   ./services/networking/hostapd.nix
@@ -509,6 +513,7 @@
   ./services/networking/murmur.nix
   ./services/networking/namecoind.nix
   ./services/networking/nat.nix
+  ./services/networking/ndppd.nix
   ./services/networking/networkmanager.nix
   ./services/networking/nftables.nix
   ./services/networking/ngircd.nix
@@ -533,7 +538,7 @@
   ./services/networking/prayer.nix
   ./services/networking/privoxy.nix
   ./services/networking/prosody.nix
-  # ./services/networking/quagga.nix
+  ./services/networking/quagga.nix
   ./services/networking/quassel.nix
   ./services/networking/racoon.nix
   ./services/networking/radicale.nix
@@ -547,6 +552,7 @@
   ./services/networking/searx.nix
   ./services/networking/seeks.nix
   ./services/networking/skydns.nix
+  ./services/networking/shadowsocks.nix
   ./services/networking/shairport-sync.nix
   ./services/networking/shout.nix
   ./services/networking/sniproxy.nix
@@ -558,6 +564,7 @@
   ./services/networking/ssh/lshd.nix
   ./services/networking/ssh/sshd.nix
   ./services/networking/strongswan.nix
+  ./services/networking/strongswan-swanctl/module.nix
   ./services/networking/stunnel.nix
   ./services/networking/supplicant.nix
   ./services/networking/supybot.nix
@@ -645,6 +652,7 @@
   ./services/web-servers/apache-httpd/default.nix
   ./services/web-servers/caddy.nix
   ./services/web-servers/fcgiwrap.nix
+  ./services/web-servers/hitch/default.nix
   ./services/web-servers/jboss/default.nix
   ./services/web-servers/lighttpd/cgit.nix
   ./services/web-servers/lighttpd/collectd.nix

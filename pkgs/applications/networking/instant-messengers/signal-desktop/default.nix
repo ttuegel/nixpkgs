@@ -40,13 +40,13 @@ in
   stdenv.mkDerivation rec {
     name = "signal-desktop-${version}";
 
-    version = "1.6.1";
+    version = "1.9.0";
 
     src =
       if stdenv.system == "x86_64-linux" then
         fetchurl {
           url = "https://updates.signal.org/desktop/apt/pool/main/s/signal-desktop/signal-desktop_${version}_amd64.deb";
-          sha256 = "0q2qzl84ifnhcn1qbq38fdpj8ry748h6dlzp2mdpkslsh8mc46as";
+          sha256 = "18i9chyarpcw369rqyldckkln1lxy5g9qy9f5gy5gsz9y5qngxqa";
         }
       else
         throw "Signal for Desktop is not currently supported on ${stdenv.system}";
@@ -81,7 +81,7 @@ in
       description = "Signal Private Messenger for the Desktop.";
       homepage    = https://signal.org/;
       license     = lib.licenses.gpl3;
-      maintainers = [ lib.maintainers.ixmatus ];
+      maintainers = with lib.maintainers; [ ixmatus primeos ];
       platforms   = [
         "x86_64-linux"
       ];
