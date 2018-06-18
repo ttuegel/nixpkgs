@@ -198,6 +198,7 @@ in rec {
         modules = singleton ({ config, pkgs, ... }:
           { fileSystems."/".device  = mkDefault "/dev/sda1";
             boot.loader.grub.device = mkDefault "/dev/sda";
+            system.nixos.stateVersion = mkDefault "18.03";
           });
       }).config.system.build.toplevel;
       preferLocalBuild = true;
@@ -247,6 +248,7 @@ in rec {
   tests.avahi = callTest tests/avahi.nix {};
   tests.beegfs = callTest tests/beegfs.nix {};
   tests.bittorrent = callTest tests/bittorrent.nix {};
+  tests.bind = callTest tests/bind.nix {};
   tests.blivet = callTest tests/blivet.nix {};
   tests.boot = callSubTests tests/boot.nix {};
   tests.boot-stage1 = callTest tests/boot-stage1.nix {};
@@ -284,8 +286,10 @@ in rec {
   tests.env = callTest tests/env.nix {};
   tests.ferm = callTest tests/ferm.nix {};
   tests.firefox = callTest tests/firefox.nix {};
+  tests.flatpak = callTest tests/flatpak.nix {};
   tests.firewall = callTest tests/firewall.nix {};
   tests.fwupd = callTest tests/fwupd.nix {};
+  tests.gdk-pixbuf = callTest tests/gdk-pixbuf.nix {};
   #tests.gitlab = callTest tests/gitlab.nix {};
   tests.gitolite = callTest tests/gitolite.nix {};
   tests.gjs = callTest tests/gjs.nix {};
@@ -296,11 +300,13 @@ in rec {
   tests.grafana = callTest tests/grafana.nix {};
   tests.graphite = callTest tests/graphite.nix {};
   tests.hardened = callTest tests/hardened.nix { };
+  tests.haproxy = callTest tests/haproxy.nix {};
   tests.hibernate = callTest tests/hibernate.nix {};
   tests.hitch = callTest tests/hitch {};
   tests.home-assistant = callTest tests/home-assistant.nix { };
   tests.hound = callTest tests/hound.nix {};
   tests.hocker-fetchdocker = callTest tests/hocker-fetchdocker {};
+  tests.hydra = callTest tests/hydra {};
   tests.i3wm = callTest tests/i3wm.nix {};
   tests.iftop = callTest tests/iftop.nix {};
   tests.initrd-network-ssh = callTest tests/initrd-network-ssh {};
@@ -313,10 +319,7 @@ in rec {
   tests.plotinus = callTest tests/plotinus.nix {};
   tests.keymap = callSubTests tests/keymap.nix {};
   tests.initrdNetwork = callTest tests/initrd-network.nix {};
-  tests.kafka_0_9 = callTest tests/kafka_0_9.nix {};
-  tests.kafka_0_10 = callTest tests/kafka_0_10.nix {};
-  tests.kafka_0_11 = callTest tests/kafka_0_11.nix {};
-  tests.kafka_1_0 = callTest tests/kafka_1_0.nix {};
+  tests.kafka = callSubTests tests/kafka.nix {};
   tests.kernel-copperhead = callTest tests/kernel-copperhead.nix {};
   tests.kernel-latest = callTest tests/kernel-latest.nix {};
   tests.kernel-lts = callTest tests/kernel-lts.nix {};
@@ -331,6 +334,7 @@ in rec {
   #tests.logstash = callTest tests/logstash.nix {};
   tests.mathics = callTest tests/mathics.nix {};
   tests.matrix-synapse = callTest tests/matrix-synapse.nix {};
+  tests.memcached = callTest tests/memcached.nix {};
   tests.mesos = callTest tests/mesos.nix {};
   tests.misc = callTest tests/misc.nix {};
   tests.mongodb = callTest tests/mongodb.nix {};
@@ -348,6 +352,7 @@ in rec {
   tests.networking.scripted = callSubTests tests/networking.nix { networkd = false; };
   # TODO: put in networking.nix after the test becomes more complete
   tests.networkingProxy = callTest tests/networking-proxy.nix {};
+  tests.nexus = callTest tests/nexus.nix { };
   tests.nfs3 = callTest tests/nfs.nix { version = 3; };
   tests.nfs4 = callTest tests/nfs.nix { version = 4; };
   tests.nginx = callTest tests/nginx.nix { };
@@ -383,6 +388,7 @@ in rec {
   tests.sddm = callSubTests tests/sddm.nix {};
   tests.simple = callTest tests/simple.nix {};
   tests.slim = callTest tests/slim.nix {};
+  tests.slurm = callTest tests/slurm.nix {};
   tests.smokeping = callTest tests/smokeping.nix {};
   tests.snapper = callTest tests/snapper.nix {};
   tests.statsd = callTest tests/statsd.nix {};
@@ -398,11 +404,14 @@ in rec {
   tests.virtualbox = callSubTestsOnMatchingSystems ["x86_64-linux"] tests/virtualbox.nix {};
   tests.wordpress = callTest tests/wordpress.nix {};
   tests.xautolock = callTest tests/xautolock.nix {};
+  tests.xdg-desktop-portal = callTest tests/xdg-desktop-portal.nix {};
   tests.xfce = callTest tests/xfce.nix {};
   tests.xmonad = callTest tests/xmonad.nix {};
   tests.xrdp = callTest tests/xrdp.nix {};
+  tests.xss-lock = callTest tests/xss-lock.nix {};
   tests.yabar = callTest tests/yabar.nix {};
   tests.zookeeper = callTest tests/zookeeper.nix {};
+  tests.morty = callTest tests/morty.nix { };
 
   /* Build a bunch of typical closures so that Hydra can keep track of
      the evolution of closure sizes. */

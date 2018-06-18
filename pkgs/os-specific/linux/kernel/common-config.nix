@@ -37,7 +37,12 @@ with stdenv.lib;
   DEBUG_STACKOVERFLOW n
   SCHEDSTATS n
   DETECT_HUNG_TASK y
-  DEBUG_INFO n # Not until we implement a separate debug output
+
+  ${if (features.debug or false) then ''
+    DEBUG_INFO y
+  '' else ''
+    DEBUG_INFO n
+  ''}
 
   ${optionalString (versionOlder version "4.4") ''
     CPU_NOTIFIER_ERROR_INJECT? n
@@ -208,6 +213,11 @@ with stdenv.lib;
   # Enable KMS for devices whose X.org driver supports it.
   ${optionalString (versionOlder version "4.3") ''
     DRM_I915_KMS y
+  ''}
+  # iGVT-g support
+  ${optionalString (versionAtLeast version "4.16") ''
+    DRM_I915_GVT y
+    DRM_I915_GVT_KVMGT m
   ''}
   # Allow specifying custom EDID on the kernel command line
   DRM_LOAD_EDID_FIRMWARE y
@@ -453,6 +463,7 @@ with stdenv.lib;
   PPP_FILTER y
   REGULATOR y # Voltage and Current Regulator Support
   RC_DEVICES? y # Enable IR devices
+  RT2800USB_RT53XX y
   RT2800USB_RT55XX y
   SCHED_AUTOGROUP y
   CFS_BANDWIDTH y
@@ -636,6 +647,11 @@ with stdenv.lib;
     X86_X2APIC y
     IRQ_REMAP y
   ''}
+  
+  # needed for iwd WPS support (wpa_supplicant replacement)
+  ${optionalString (versionAtLeast version "4.7") ''
+    KEY_DH_OPERATIONS y
+  ''}
 
   # Disable the firmware helper fallback, udev doesn't implement it any more
   FW_LOADER_USER_HELPER_FALLBACK? n
@@ -702,10 +718,6 @@ with stdenv.lib;
     HID_PICOLCD_LEDS? y
     HID_PICOLCD_CIR? y
     DEBUG_MEMORY_INIT? y
-  ''}
-
-  ${optionalString (features.debug or false)  ''
-    DEBUG_INFO y
   ''}
 
   ${extraConfig}
