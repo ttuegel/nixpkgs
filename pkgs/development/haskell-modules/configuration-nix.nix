@@ -269,6 +269,10 @@ self: super: builtins.intersectAttrs super {
     );
 
   llvm-hs = super.llvm-hs.override { llvm-config = pkgs.llvm; };
+  llvm-hs_6_3_0 = super.llvm-hs_6_3_0.override {
+    llvm-config = pkgs.llvm_6;
+    llvm-hs-pure = super.llvm-hs-pure_6_2_1;
+  };
 
   # Needs help finding LLVM.
   spaceprobe = addBuildTool super.spaceprobe self.llvmPackages.llvm;
@@ -512,9 +516,4 @@ self: super: builtins.intersectAttrs super {
   # Tests require a browser: https://github.com/ku-fpg/blank-canvas/issues/73
   blank-canvas = dontCheck super.blank-canvas;
   blank-canvas_0_6_2 = dontCheck super.blank-canvas_0_6_2;
-
-  # cabal2nix generates a dependency on base-compat, which is the wrong version
-  base-compat-batteries = super.base-compat-batteries.override {
-    base-compat = super.base-compat_0_10_1;
-  };
 }
