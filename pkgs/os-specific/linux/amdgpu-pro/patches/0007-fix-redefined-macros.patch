@@ -1,0 +1,81 @@
+From 5ff8fdb8bfeb0fd5221a59e306bbe0fa02689fe3 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Wed, 11 Jul 2018 11:09:18 -0500
+Subject: [PATCH 7/7] fix redefined macros
+
+---
+ amd/amdgpu/amdgpu_amdkfd.c        | 2 --
+ amd/amdgpu/amdgpu_amdkfd_gfx_v7.c | 2 --
+ amd/amdgpu/amdgpu_amdkfd_gfx_v8.c | 2 --
+ amd/amdgpu/amdgpu_amdkfd_gfx_v9.c | 2 --
+ amd/amdgpu/amdgpu_amdkfd_gpuvm.c  | 2 --
+ 5 files changed, 10 deletions(-)
+
+diff --git a/amd/amdgpu/amdgpu_amdkfd.c b/amd/amdgpu/amdgpu_amdkfd.c
+index 043a1c2..1465cea 100644
+--- a/amd/amdgpu/amdgpu_amdkfd.c
++++ b/amd/amdgpu/amdgpu_amdkfd.c
+@@ -20,8 +20,6 @@
+  * OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-#define pr_fmt(fmt) "kfd2kgd: " fmt
+-
+ #include "amdgpu_amdkfd.h"
+ #include <linux/dma-buf.h>
+ #include <drm/drmP.h>
+diff --git a/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c b/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c
+index 0555ce9..38bb14a 100644
+--- a/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c
++++ b/amd/amdgpu/amdgpu_amdkfd_gfx_v7.c
+@@ -20,8 +20,6 @@
+  * OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-#define pr_fmt(fmt) "kfd2kgd: " fmt
+-
+ #include <linux/fdtable.h>
+ #include <linux/uaccess.h>
+ #include <linux/firmware.h>
+diff --git a/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c b/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c
+index dfd0026..d0cd1e5 100644
+--- a/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c
++++ b/amd/amdgpu/amdgpu_amdkfd_gfx_v8.c
+@@ -20,8 +20,6 @@
+  * OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-#define pr_fmt(fmt) "kfd2kgd: " fmt
+-
+ #include <linux/module.h>
+ #include <linux/fdtable.h>
+ #include <linux/uaccess.h>
+diff --git a/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c b/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
+index f044739..9621b74 100644
+--- a/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
++++ b/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
+@@ -20,8 +20,6 @@
+  * OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-#define pr_fmt(fmt) "kfd2kgd: " fmt
+-
+ #include <linux/module.h>
+ #include <linux/fdtable.h>
+ #include <linux/uaccess.h>
+diff --git a/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+index f0e3ff9..428aa57 100644
+--- a/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
++++ b/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
+@@ -20,8 +20,6 @@
+  * OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-#define pr_fmt(fmt) "kfd2kgd: " fmt
+-
+ #include <linux/list.h>
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
+ #include <linux/sched/mm.h>
+-- 
+2.17.1
+
