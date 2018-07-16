@@ -28,9 +28,9 @@ let
 
 in stdenv.mkDerivation rec {
 
-  version = "18.20";
+  version = "17.40";
   pname = "amdgpu-pro";
-  build = "${version}-606296";
+  build = "${version}-492261";
 
   libCompatDir = "/run/lib/${libArch}";
 
@@ -38,8 +38,8 @@ in stdenv.mkDerivation rec {
 
   src = fetchurl {
     url =
-    "https://www2.ati.com/drivers/linux/ubuntu/18.04/amdgpu-pro-${build}.tar.xz";
-    sha256 = "1ybnzx4jzf4qabwmz7vng2ybsi73529jxn4jrfnizywf7scic1ra";
+    "https://www2.ati.com/drivers/linux/ubuntu/amdgpu-pro-${build}.tar.xz";
+    sha256 = "1c073lp9cq1rc2mddky2r0j2dv9dd167qj02visz37vwaxbm2r5h";
     curlOpts = "--referer http://support.amd.com/en-us/kb-articles/Pages/AMD-Radeon-GPU-PRO-Linux-Beta-Driver%e2%80%93Release-Notes.aspx";
   };
 
@@ -51,22 +51,14 @@ in stdenv.mkDerivation rec {
     cd $sourceRoot
     mkdir root
     cd root
-    for deb in ../*_all.deb ../*_i386.deb ${optionalString stdenv.is64bit "../*_amd64.deb"}
-    do
-      echo $deb
-      ar p $deb data.tar.xz | tar -xJ
-    done
+    for deb in ../*_all.deb ../*_i386.deb '' + optionalString stdenv.is64bit "../*_amd64.deb" + ''; do echo $deb; ar p $deb data.tar.xz | tar -xJ; done
     sourceRoot=.
   '';
 
   modulePatches = optionals (!libsOnly) ([
     ./patches/0001-fix-warnings-for-Werror.patch
-    ./patches/0002-disable-firmware-copy.patch
-    ./patches/0003-removed-vga_switcheroo_set_dynamic_switch.patch
-    ./patches/0004-drop-redundant-drm_edid_to_eld-call.patch
-    ./patches/0005-fix-Wformat-warnings.patch
-    ./patches/0006-fix-uninitialized-use.patch
-    ./patches/0007-fix-redefined-macros.patch
+    ./patches/0002-fix-sketchy-int-ptr-warning.patch
+    ./patches/0003-disable-firmware-copy.patch
   ]);
 
   patchPhase = optionalString (!libsOnly) ''
@@ -74,19 +66,22 @@ in stdenv.mkDerivation rec {
     for patch in $modulePatches
     do
       echo $patch
-      patch -p1 < $patch || true
+      patch -f -p1 < $patch || true
     done
     popd
   '';
+
+  xreallocarray = ./xreallocarray.c;
 
   preBuild = optionalString (!libsOnly) ''
     pushd usr/src/amdgpu-${build}
     makeFlags="$makeFlags M=$(pwd)"
     patchShebangs pre-build.sh
-    sed -i pre-build.sh \
-        -e "s@/lib/firmware@$out/lib/firmware@" \
-        -e "s@/usr/src@$NIX_BUILD_TOP/$pname-$build/root/usr/src@"
     ./pre-build.sh ${kernel.version}
+    popd
+    pushd lib
+    $CC -fPIC -shared -o libhack-xreallocarray.so $xreallocarray
+    strip libhack-xreallocarray.so
     popd
   '';
 
@@ -123,27 +118,21 @@ in stdenv.mkDerivation rec {
     cp -r share $out/share
     popd
 
-    pushd opt/amdgpu
-    cp -r lib/${libArch}/* $out/lib
-    ${optionalString (!libsOnly) ''
-      mkdir -p $out/bin
-      for prog in modetest vbltest kms-universal-planes kms-steal-crtc modeprint amdgpu_test kmstest proptest; do
-        cp bin/$prog $out/bin
-      done
-
-      mv lib/xorg $out/lib/xorg
-    ''}
-    popd
-
     pushd opt/amdgpu-pro
-    ${optionalString (!libsOnly) ''cp bin/clinfo $out/bin''}
+  '' + optionalString (!libsOnly && stdenv.is64bit) ''
+    cp -r bin $out/bin
+  '' + ''
     cp -r include $out/include
+    cp -r share/* $out/share
     cp -r lib/${libArch}/* $out/lib
+  '' + optionalString (!libsOnly) ''
+    mv lib/xorg $out/lib/xorg
+  '' + ''
     popd
 
   '' + optionalString (!libsOnly)
     (concatMapStrings (m:
-      "install -Dm444 usr/src/amdgpu-$build/${m}.xz $out/lib/modules/${kernel.modDirVersion}/kernel/drivers/gpu/drm/${m}.xz\n") modules)
+      "install -Dm444 usr/src/amdgpu-${build}/${m}.xz $out/lib/modules/${kernel.modDirVersion}/kernel/drivers/gpu/drm/${m}.xz\n") modules)
   + ''
     mv $out/etc/vulkan $out/share
     interpreter="$(cat $NIX_CC/nix-support/dynamic-linker)"
@@ -162,17 +151,20 @@ in stdenv.mkDerivation rec {
     for lib in `find "$out/lib/" -name '*.so*' -type f`; do
       patchelf --set-rpath "$libPath" "$lib"
     done
-    for lib in libEGL.so.1 libGL.so.1.2 dri/amdgpu_dri.so libamdocl${bitness}.so; do
+    for lib in libEGL.so.1 libGL.so.1.2 ${optionalString (!libsOnly) "xorg/modules/extensions/libglx.so"} dri/amdgpu_dri.so libamdocl${bitness}.so; do
       perl -pi -e 's:${libReplaceDir}:${libCompatDir}:g' "$out/lib/$lib"
     done
-    for lib in dri/amdgpu_dri.so libdrm_amdgpu.so.1.0.0 libdrm.so.2.4.0 libgbm.so.1.0.0 libkms.so.1.0.0 libamdocl${bitness}.so; do
+    for lib in dri/amdgpu_dri.so libdrm_amdgpu.so.1.0.0 libgbm_amdgpu.so.1.0.0 libkms_amdgpu.so.1.0.0 libamdocl${bitness}.so; do
       perl -pi -e 's:/opt/amdgpu-pro/:/run/amdgpu-pro/:g' "$out/lib/$lib"
     done
     substituteInPlace "$out/share/vulkan/icd.d/amd_icd${bitness}.json" --replace "/opt/amdgpu-pro/lib/${libArch}" "$out/lib"
+  '' + optionalString (!libsOnly) ''
+    for lib in drivers/modesetting_drv.so libglamoregl.so; do
+      patchelf --add-needed $out/lib/libhack-xreallocarray.so $out/lib/xorg/modules/$lib
+    done
   '';
 
   buildInputs = [
-    elfutils
     patchelf
     perl
   ];
