@@ -716,6 +716,11 @@
     github = "brian-dawn";
     name = "Brian Dawn";
   };
+  bricewge = {
+    email = "bricewge@gmail.com";
+    github = "bricewge";
+    name = "Brice Waegeneire";
+  };
   bstrik = {
     email = "dutchman55@gmx.com";
     github = "bstrik";
@@ -4198,6 +4203,11 @@
     email = "elisp.vim@gmail.com";
     github = "vyp";
     name = "vyp";
+  };
+  waynr = {
+    name = "Wayne Warren";
+    email = "wayne.warren.s@gmail.com";
+    github = "waynr";
   };
   wchresta = {
     email = "wchresta.nix@chrummibei.ch";
