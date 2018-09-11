@@ -69,6 +69,10 @@ self:
         inherit (self.melpaPackages) easy-kill;
       };
 
+      editorconfig = super.editorconfig.overrideAttrs (attrs: {
+        propagatedUserEnvPkgs = [ external.editorconfig-core-c ];
+      });
+
       # missing git
       egg = markBroken super.egg;
 
