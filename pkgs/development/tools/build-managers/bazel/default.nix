@@ -1,11 +1,13 @@
-{ stdenv, lib, fetchurl, runCommand, makeWrapper
+{ stdenv, lib, fetchurl, fetchpatch, runCommand, makeWrapper
 , jdk, zip, unzip, bash, writeCBin, coreutils
 , which, python, perl, gnused, gnugrep, findutils
+# Apple dependencies
+, cctools, clang, libcxx, CoreFoundation, CoreServices, Foundation
+# Allow to independently override the jdks used to build and run respectively
+, buildJdk ? jdk, runJdk ? jdk
 # Always assume all markers valid (don't redownload dependencies).
 # Also, don't clean up environment variables.
 , enableNixHacks ? false
-# Apple dependencies
-, cctools, clang, libcxx, CoreFoundation, CoreServices, Foundation
 }:
 
 let
@@ -26,7 +28,7 @@ let
 in
 stdenv.mkDerivation rec {
 
-  version = "0.16.0";
+  version = "0.16.1";
 
   meta = with lib; {
     homepage = "https://github.com/bazelbuild/bazel/";
@@ -40,12 +42,19 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-dist.zip";
-    sha256 = "1ca9pncnj6v4r1kvgxys7607wpz4d2ic6g0i7lpsc2zg2qwmjc67";
+    sha256 = "0v5kcz8q9vzf4cpmlx8k2gg0dsr8mj0jmx9a44pwb0kc6na6pih9";
   };
 
   sourceRoot = ".";
 
-  patches = lib.optional enableNixHacks ./nix-hacks.patch;
+  patches =
+    lib.optional enableNixHacks ./nix-hacks.patch
+    # patch perl out of the bash completions
+    # should land in 0.18
+    ++ [(fetchpatch {
+           url = "https://github.com/bazelbuild/bazel/commit/27be70979b54d7510bf401d9581fb4075737ef34.patch";
+           sha256 = "04rip46lnibrsdyzjpi29wf444b49cbwb1xjcbrr3kdqsdj4d8h5";
+       })];
 
   # Bazel expects several utils to be available in Bash even without PATH. Hence this hack.
 
@@ -139,18 +148,13 @@ stdenv.mkDerivation rec {
       cat tools/bash/runfiles/runfiles.bash >> runfiles.bash.tmp
       mv runfiles.bash.tmp tools/bash/runfiles/runfiles.bash
 
-      # the bash completion requires perl
-      # https://github.com/bazelbuild/bazel/issues/5943
-      substituteInPlace scripts/bazel-complete-template.bash \
-        --replace "perl" "${perl}/bin/perl"
-
       patchShebangs .
     '';
     in lib.optionalString stdenv.hostPlatform.isDarwin darwinPatches
      + genericPatches;
 
   buildInputs = [
-    jdk
+    buildJdk
   ];
 
   nativeBuildInputs = [
@@ -188,7 +192,7 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/bin
     mv output/bazel $out/bin
-    wrapProgram "$out/bin/bazel" --set JAVA_HOME "${jdk}"
+    wrapProgram "$out/bin/bazel" --set JAVA_HOME "${runJdk}"
     mkdir -p $out/share/bash-completion/completions $out/share/zsh/site-functions
     mv output/bazel-complete.bash $out/share/bash-completion/completions/bazel
     cp scripts/zsh_completion/_bazel $out/share/zsh/site-functions/

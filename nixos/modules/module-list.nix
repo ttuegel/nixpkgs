@@ -7,6 +7,10 @@
   ./config/fonts/fontdir.nix
   ./config/fonts/fonts.nix
   ./config/fonts/ghostscript.nix
+  ./config/xdg/autostart.nix
+  ./config/xdg/icons.nix
+  ./config/xdg/menus.nix
+  ./config/xdg/mime.nix
   ./config/gnu.nix
   ./config/i18n.nix
   ./config/iproute2.nix
@@ -241,6 +245,7 @@
   ./services/desktops/gnome3/gnome-user-share.nix
   ./services/desktops/gnome3/gpaste.nix
   ./services/desktops/gnome3/gvfs.nix
+  ./services/desktops/gnome3/rygel.nix
   ./services/desktops/gnome3/seahorse.nix
   ./services/desktops/gnome3/sushi.nix
   ./services/desktops/gnome3/tracker.nix
@@ -402,6 +407,7 @@
   ./services/misc/taskserver
   ./services/misc/tzupdate.nix
   ./services/misc/uhub.nix
+  ./services/misc/weechat.nix
   ./services/misc/xmr-stak.nix
   ./services/misc/zookeeper.nix
   ./services/monitoring/apcupsd.nix
@@ -417,6 +423,7 @@
   ./services/monitoring/graphite.nix
   ./services/monitoring/hdaps.nix
   ./services/monitoring/heapster.nix
+  ./services/monitoring/incron.nix
   ./services/monitoring/longview.nix
   ./services/monitoring/monit.nix
   ./services/monitoring/munin.nix
@@ -510,9 +517,11 @@
   ./services/networking/heyefi.nix
   ./services/networking/hostapd.nix
   ./services/networking/htpdate.nix
+  ./services/networking/hylafax/default.nix
   ./services/networking/i2pd.nix
   ./services/networking/i2p.nix
   ./services/networking/iodine.nix
+  ./services/networking/iperf3.nix
   ./services/networking/ircd-hybrid/default.nix
   ./services/networking/iwd.nix
   ./services/networking/keepalived/default.nix
@@ -615,6 +624,7 @@
   ./services/networking/xl2tpd.nix
   ./services/networking/xrdp.nix
   ./services/networking/zerobin.nix
+  ./services/networking/zeronet.nix
   ./services/networking/zerotierone.nix
   ./services/networking/znc.nix
   ./services/printing/cupsd.nix
