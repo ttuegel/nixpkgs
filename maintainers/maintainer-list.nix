@@ -227,7 +227,7 @@
     name = "Andrew Morsillo";
   };
   AndersonTorres = {
-    email = "torres.anderson.85@gmail.com";
+    email = "torres.anderson.85@protonmail.com";
     github = "AndersonTorres";
     name = "Anderson Torres";
   };
@@ -2812,6 +2812,11 @@
     email = "mail@muflax.com";
     github = "muflax";
     name = "Stefan Dorn";
+  };
+  mvnetbiz = {
+    email = "mvnetbiz@gmail.com";
+    github = "mvnetbiz";
+    name = "Matt Votava";
   };
   myrl = {
     email = "myrl.0xf@gmail.com";
