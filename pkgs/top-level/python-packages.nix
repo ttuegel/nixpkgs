@@ -190,7 +190,9 @@ in {
 
   astral = callPackage ../development/python-modules/astral { };
 
-  astropy = callPackage ../development/python-modules/astropy {  };
+  astropy = callPackage ../development/python-modules/astropy { };
+
+  atom = callPackage ../development/python-modules/atom { };
 
   augeas = callPackage ../development/python-modules/augeas {
     inherit (pkgs) augeas;
@@ -250,6 +252,8 @@ in {
 
   dependency-injector = callPackage ../development/python-modules/dependency-injector { };
 
+  btchip = callPackage ../development/python-modules/btchip { };
+
   dbf = callPackage ../development/python-modules/dbf { };
 
   dbfread = callPackage ../development/python-modules/dbfread { };
@@ -299,6 +303,8 @@ in {
   diff-match-patch = callPackage ../development/python-modules/diff-match-patch { };
 
   fido2 = callPackage ../development/python-modules/fido2 {  };
+
+  filterpy = callPackage ../development/python-modules/filterpy { };
 
   fire = callPackage ../development/python-modules/fire { };
 
@@ -373,6 +379,8 @@ in {
   oauthenticator = callPackage ../development/python-modules/oauthenticator { };
 
   ordered-set = callPackage ../development/python-modules/ordered-set { };
+
+  osmnx = callPackage ../development/python-modules/osmnx { };
 
   outcome = callPackage ../development/python-modules/outcome {};
 
@@ -742,9 +750,7 @@ in {
 
   autopep8 = callPackage ../development/python-modules/autopep8 { };
 
-  av = callPackage ../development/python-modules/av {
-    inherit (pkgs) ffmpeg_2 git libav pkgconfig;
-  };
+  av = callPackage ../development/python-modules/av { };
 
   avro = callPackage ../development/python-modules/avro {};
 
@@ -2219,25 +2225,7 @@ in {
 
   enzyme = callPackage ../development/python-modules/enzyme {};
 
-  escapism = buildPythonPackage rec {
-    name = "escapism-${version}";
-    version = "0.0.1";
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/e/escapism/${name}.tar.gz";
-      sha256 = "1yfyxwxb864xrmrrqgp85xgsh4yrrq5mmzvkdg19jwr7rm6sqx9p";
-    };
-
-    # No tests distributed
-    doCheck = false;
-
-    meta = {
-      description = "Simple, generic API for escaping strings";
-      homepage = "https://github.com/minrk/escapism";
-      license = licenses.mit;
-      maintainers = with maintainers; [ bzizou ];
-    };
-  };
+  escapism = callPackage ../development/python-modules/escapism { };
 
   etcd = buildPythonPackage rec {
     name = "etcd-${version}";
@@ -2363,22 +2351,7 @@ in {
 
   ezdxf = callPackage ../development/python-modules/ezdxf {};
 
-  facebook-sdk = buildPythonPackage rec {
-    name = "facebook-sdk-0.4.0";
-
-    disabled = isPy3k;
-
-    src = pkgs.fetchurl {
-      url = "mirror://pypi/f/facebook-sdk/facebook-sdk-0.4.0.tar.gz";
-      sha256 = "5a96c54d06213039dff1fe1fabc51972e394666cd6d83ea70f7c2e67472d9b72";
-    };
-
-    meta = with pkgs.stdenv.lib; {
-      description = "Client library that supports the Facebook Graph API and the official Facebook JavaScript SDK";
-      homepage = https://github.com/pythonforfacebook/facebook-sdk;
-      license = licenses.asl20 ;
-    };
-  };
+  facebook-sdk = callPackage ../development/python-modules/facebook-sdk { };
 
   face_recognition = callPackage ../development/python-modules/face_recognition { };
 
@@ -4294,6 +4267,8 @@ in {
   };
 
   schema = callPackage ../development/python-modules/schema {};
+
+  simple-websocket-server = callPackage ../development/python-modules/simple-websocket-server {};
 
   stem = callPackage ../development/python-modules/stem { };
 
