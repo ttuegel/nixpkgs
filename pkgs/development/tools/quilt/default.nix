@@ -1,4 +1,11 @@
-{ stdenv, fetchurl, makeWrapper, bash, perl, diffstat, diffutils, patch, findutils }:
+{
+  stdenv, lib, fetchurl, makeWrapper,
+  bash, perl, diffstat, diffutils, patch, findutils,
+}:
+
+let
+  binPath = lib.makeBinPath [ perl bash diffstat diffutils findutils patch ];
+in
 
 stdenv.mkDerivation rec {
 
@@ -12,8 +19,7 @@ stdenv.mkDerivation rec {
   buildInputs = [ makeWrapper perl bash diffutils patch findutils diffstat ];
 
   postInstall = ''
-    wrapProgram $out/bin/quilt --prefix PATH : \
-      ${perl}/bin:${bash}/bin:${diffstat}/bin:${diffutils}/bin:${findutils}/bin:${patch}/bin
+    wrapProgram $out/bin/quilt --prefix PATH : "${binPath}"
   '';
 
   meta = {
