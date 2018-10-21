@@ -1,0 +1,26 @@
+From b136343a1080e06760e4c9a9a0aec2c3fbdeee69 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Thu, 9 Nov 2017 19:17:27 -0600
+Subject: [PATCH 11/14] Use `command -v' instead of `type -p' for POSIX
+ compatibility
+
+---
+ mkspecs/features/qt_functions.prf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mkspecs/features/qt_functions.prf b/mkspecs/features/qt_functions.prf
+index 5cb1ba3d18..ae7b585989 100644
+--- a/mkspecs/features/qt_functions.prf
++++ b/mkspecs/features/qt_functions.prf
+@@ -69,7 +69,7 @@ defineTest(qtHaveModule) {
+ defineTest(qtPrepareTool) {
+     cmd = $$eval(QT_TOOL.$${2}.binary)
+     isEmpty(cmd) {
+-        cmd = $$system("type -p $$2")
++        cmd = $$system("command -v $$2")
+         exists($${cmd}.pl) {
+             $${1}_EXE = $${cmd}.pl
+             cmd = perl -w $$system_path($${cmd}.pl)
+-- 
+2.19.1
+

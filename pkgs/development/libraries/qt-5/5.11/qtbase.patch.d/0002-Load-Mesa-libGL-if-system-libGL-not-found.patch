@@ -1,0 +1,36 @@
+From 8f399a732a408cb9dbf2e06ce4290082772a27c0 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 06:54:06 -0500
+Subject: [PATCH 02/14] Load Mesa libGL if system libGL not found
+
+The system libGL is always preferred to take advantage of installed drivers, but
+if the system libGL cannot be found, we fall back to the Mesa libGL from
+Nixpkgs.
+---
+ .../xcb/gl_integrations/xcb_glx/qglxintegration.cpp      | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp b/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
+index cc982b3379..0c5005d3d7 100644
+--- a/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
++++ b/src/plugins/platforms/xcb/gl_integrations/xcb_glx/qglxintegration.cpp
+@@ -648,9 +648,14 @@ QFunctionPointer QGLXContext::getProcAddress(const char *procName)
+ #if QT_CONFIG(library)
+                 extern const QString qt_gl_library_name();
+ //                QLibrary lib(qt_gl_library_name());
++                // Check system library paths first
+                 QLibrary lib(QLatin1String("GL"));
+-                if (!lib.load())
+-                    lib.setFileNameAndVersion(QLatin1String("GL"), 1);
++#ifdef NIXPKGS_MESA_GL
++                if (!lib.load()) {
++                    // Fallback to Mesa driver
++                    lib.setFileName(QLatin1String(NIXPKGS_MESA_GL));
++                }
++#endif // NIXPKGS_MESA_GL
+                 glXGetProcAddressARB = (qt_glXGetProcAddressARB) lib.resolve("glXGetProcAddressARB");
+ #endif
+             }
+-- 
+2.19.1
+
