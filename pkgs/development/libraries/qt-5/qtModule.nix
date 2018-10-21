@@ -1,4 +1,4 @@
-{ lib, mkDerivation, perl }:
+{ lib, mkDerivation, perl, quilt }:
 
 let inherit (lib) licenses maintainers platforms; in
 
@@ -17,7 +17,9 @@ mkDerivation (args // {
   inherit src;
   patches = args.patches or patches."${name}" or [];
 
-  nativeBuildInputs = (args.nativeBuildInputs or []) ++ [ perl self.qmake ];
+  nativeBuildInputs =
+    (args.nativeBuildInputs or [])
+    ++ [ perl quilt self.qmake ];
   propagatedBuildInputs = args.qtInputs ++ (args.propagatedBuildInputs or []);
 
   outputs = args.outputs or [ "out" "dev" ];

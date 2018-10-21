@@ -12102,7 +12102,7 @@ in
       inherit cups;
       harfbuzz = harfbuzzFull;
       inherit libGL;
-      inherit perl;
+      inherit perl quilt;
       inherit (darwin) cf-private;
       inherit (gnome3) gtk3 dconf;
       inherit (gst_all_1) gstreamer gst-plugins-base;
