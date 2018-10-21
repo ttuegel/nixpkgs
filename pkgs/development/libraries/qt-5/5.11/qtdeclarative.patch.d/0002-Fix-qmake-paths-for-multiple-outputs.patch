@@ -1,0 +1,25 @@
+From c69ea96fcb9bff4d726e5961b69ad3a8173821e1 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 07:11:31 -0500
+Subject: [PATCH 2/2] Fix qmake paths for multiple outputs
+
+---
+ tools/qmlcachegen/qmlcache.prf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/qmlcachegen/qmlcache.prf b/tools/qmlcachegen/qmlcache.prf
+index 537eaf62e..e21de58f6 100644
+--- a/tools/qmlcachegen/qmlcache.prf
++++ b/tools/qmlcachegen/qmlcache.prf
+@@ -26,7 +26,7 @@ defineReplace(qmlCacheOutputFileName) {
+ }
+ 
+ qmlcacheinst.base = $$QMLCACHE_DESTDIR
+-qmlcacheinst.path = $$[QT_INSTALL_QML]/$$TARGETPATH
++qmlcacheinst.path = $$NIX_OUTPUT_QML/$$TARGETPATH
+ qmlcacheinst.CONFIG = no_check_exist
+ 
+ qmlcachegen.input = CACHEGEN_FILES
+-- 
+2.19.1
+

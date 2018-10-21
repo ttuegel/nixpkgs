@@ -11835,7 +11835,7 @@ with pkgs;
       inherit cups;
       harfbuzz = harfbuzzFull;
       inherit libGL;
-      inherit perl;
+      inherit perl quilt;
       inherit (gst_all_1) gstreamer gst-plugins-base;
       inherit (gnome3) gtk3 dconf;
     });

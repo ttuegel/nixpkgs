@@ -1,0 +1,2 @@
+pkgs/development/libraries/qt-5/5.11/qtdeclarative.patch.d/0001-Deduce-QML-import-paths-from-PATH.patch
+pkgs/development/libraries/qt-5/5.11/qtdeclarative.patch.d/0002-Fix-qmake-paths-for-multiple-outputs.patch
