@@ -1,3 +1,15 @@
+From a8c75aa65773e17f9599525e0f192a514362ab00 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 21 Oct 2018 10:21:39 -0500
+Subject: [PATCH 14/14] Darwin: Obj-C fixes
+
+---
+ src/plugins/bearer/corewlan/qcorewlanengine.mm | 4 ++--
+ src/plugins/platforms/cocoa/qcocoascreen.mm    | 2 +-
+ src/plugins/platforms/cocoa/qcocoawindow.mm    | 6 +++---
+ src/plugins/platforms/cocoa/qnswindow.mm       | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
 diff --git a/src/plugins/bearer/corewlan/qcorewlanengine.mm b/src/plugins/bearer/corewlan/qcorewlanengine.mm
 index 341d3bccf2..3368234c26 100644
 --- a/src/plugins/bearer/corewlan/qcorewlanengine.mm
@@ -26,17 +38,28 @@ index a17a02b629..d76c42fa03 100644
 +++ b/src/plugins/platforms/cocoa/qcocoascreen.mm
 @@ -114,7 +114,7 @@ void QCocoaScreen::updateGeometry()
          return;
-
+ 
      // The reference screen for the geometry is always the primary screen
 -    QRectF primaryScreenGeometry = QRectF::fromCGRect([[NSScreen screens] firstObject].frame);
 +    QRectF primaryScreenGeometry = QRectF::fromCGRect([[[NSScreen screens] firstObject] frame]);
      m_geometry = qt_mac_flip(QRectF::fromCGRect(nsScreen.frame), primaryScreenGeometry).toRect();
      m_availableGeometry = qt_mac_flip(QRectF::fromCGRect(nsScreen.visibleFrame), primaryScreenGeometry).toRect();
-
+ 
 diff --git a/src/plugins/platforms/cocoa/qcocoawindow.mm b/src/plugins/platforms/cocoa/qcocoawindow.mm
-index 72f3bc0075..a9c058a850 100644
+index 72f3bc0075..bbb8a18668 100644
 --- a/src/plugins/platforms/cocoa/qcocoawindow.mm
 +++ b/src/plugins/platforms/cocoa/qcocoawindow.mm
+@@ -404,8 +404,8 @@ void QCocoaWindow::setVisible(bool visible)
+                         removeMonitor();
+                         monitor = [NSEvent addGlobalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSMouseMovedMask handler:^(NSEvent *e) {
+                             QPointF localPoint = QCocoaScreen::mapFromNative([NSEvent mouseLocation]);
+-                            const auto button = e.type == NSEventTypeMouseMoved ? Qt::NoButton : cocoaButton2QtButton([e buttonNumber]);
+-                            const auto eventType = e.type == NSEventTypeMouseMoved ? QEvent::MouseMove : QEvent::MouseButtonPress;
++                            const auto button = e.type == NSMouseMoved ? Qt::NoButton : cocoaButton2QtButton([e buttonNumber]);
++                            const auto eventType = e.type == NSMouseMoved ? QEvent::MouseMove : QEvent::MouseButtonPress;
+                             QWindowSystemInterface::handleMouseEvent(window(), window()->mapFromGlobal(localPoint.toPoint()), localPoint,
+                                                                      Qt::MouseButtons(uint(NSEvent.pressedMouseButtons & 0xFFFF)), button, eventType);
+                         }];
 @@ -1676,7 +1676,7 @@ void QCocoaWindow::applyContentBorderThickness(NSWindow *window)
  
      if (!m_drawContentBorderGradient) {
@@ -68,3 +91,6 @@ index cb13b7d184..0159d68dca 100644
      NSApplication *application = [NSApplication sharedApplication];
  
  #if QT_MACOS_PLATFORM_SDK_EQUAL_OR_ABOVE(__MAC_10_12)
+-- 
+2.19.1
+

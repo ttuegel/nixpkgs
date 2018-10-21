@@ -3,7 +3,7 @@
   src, patches, version, qtCompatVersion,
 
   coreutils, bison, flex, gdb, gperf, lndir, patchelf, perl, pkgconfig, python2,
-  which,
+  quilt, which,
   # darwin support
   darwin, libiconv,
 
@@ -83,7 +83,7 @@ stdenv.mkDerivation {
     ++ lib.optional (postgresql != null) postgresql;
 
   nativeBuildInputs =
-    [ bison flex gperf lndir perl pkgconfig python2 which ]
+    [ bison flex gperf lndir perl pkgconfig python2 quilt which ]
     ++ lib.optional (!stdenv.isDarwin) patchelf;
 
   propagatedNativeBuildInputs = [ lndir ];
@@ -376,13 +376,11 @@ stdenv.mkDerivation {
       moveToOutput bin "$dev"
     ''
 
-    + (
-        # fixup .pc file (where to find 'moc' etc.)
-        ''
-          sed -i "$dev/lib/pkgconfig/Qt5Core.pc" \
-              -e "/^host_bins=/ c host_bins=$dev/bin"
-        ''
-    );
+    # fixup .pc file (where to find 'moc' etc.)
+    + ''
+      sed -i "$dev/lib/pkgconfig/Qt5Core.pc" \
+          -e "/^host_bins=/ c host_bins=$dev/bin"
+    '';
 
   setupHook = ../hooks/qtbase-setup-hook.sh;
 

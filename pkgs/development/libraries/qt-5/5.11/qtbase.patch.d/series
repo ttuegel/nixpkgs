@@ -1,0 +1,14 @@
+0001-Fix-path-to-libXcursor.patch
+0002-Load-Mesa-libGL-if-system-libGL-not-found.patch
+0003-Check-TZDIR-for-zoneinfo.patch
+0004-Set-fallback-for-QTCOMPOSE.patch
+0005-Set-environment-for-GTK3-platform-theme.patch
+0006-Deduce-plugin-paths-from-PATH.patch
+0007-Fix-CMake-paths-for-multiple-outputs.patch
+0008-Fix-qmake-paths-for-multiple-outputs.patch
+0009-Darwin-Unset-RPATH-linker-flags.patch
+0010-Darwin-Remove-unused-features.patch
+0011-Use-command-v-instead-of-type-p-for-POSIX-compatibil.patch
+0012-Condition-QTEST_ASSERT-on-QT_NO_DEBUG.patch
+0013-Revert-Remove-code-paths-for-macOS-10.11.patch
+0014-Darwin-Obj-C-fixes.patch

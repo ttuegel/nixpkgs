@@ -1,24 +1,14 @@
-Revert "Remove code paths for macOS < 10.11"
+From 6c6ef66be6b34843006f731f24a5cd72949188e5 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 21 Oct 2018 10:20:42 -0500
+Subject: [PATCH 13/14] Revert "Remove code paths for macOS < 10.11"
 
 This reverts commit 138a65e0cfa80b13fd018a01e7d8b33341a3cfd3.
-
-From 138a65e0cfa80b13fd018a01e7d8b33341a3cfd3 Mon Sep 17 00:00:00 2001
-From: Jake Petroules <jake.petroules@qt.io>
-Date: Thu, 8 Feb 2018 11:05:42 -0800
-Subject: [PATCH] Remove code paths for macOS < 10.11
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Change-Id: I5ae02d88aa3dcd97d1f2ebf6255a68643e5d6daa
-Reviewed-by: Tor Arne Vestbø <tor.arne.vestbo@qt.io>
-Reviewed-by: Gabriel de Dietrich <gabriel.dedietrich@qt.io>
-Reviewed-by: Konstantin Ritt <ritt.ks@gmail.com>
 ---
- .../fontdatabases/mac/qfontengine_coretext.mm            | 16 +++-------------
- src/plugins/platforms/cocoa/qcocoafiledialoghelper.mm    |  6 +-----
- src/plugins/platforms/cocoa/qnswindowdelegate.mm         | 16 ----------------
- 3 files changed, 4 insertions(+), 34 deletions(-)
+ .../fontdatabases/mac/qfontengine_coretext.mm    | 16 +++++++++++++---
+ .../platforms/cocoa/qcocoafiledialoghelper.mm    |  6 +++++-
+ src/plugins/platforms/cocoa/qnswindowdelegate.mm | 16 ++++++++++++++++
+ 3 files changed, 34 insertions(+), 4 deletions(-)
 
 diff --git a/src/platformsupport/fontdatabases/mac/qfontengine_coretext.mm b/src/platformsupport/fontdatabases/mac/qfontengine_coretext.mm
 index 98b753eff9..489d9cd031 100644
@@ -100,3 +90,6 @@ index 057a4c2943..eb55e50622 100644
  - (BOOL)window:(NSWindow *)window shouldPopUpDocumentPathMenu:(NSMenu *)menu
  {
      Q_UNUSED(window);
+-- 
+2.19.1
+
