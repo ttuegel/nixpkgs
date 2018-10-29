@@ -149,6 +149,7 @@
   ./security/duosec.nix
   ./security/hidepid.nix
   ./security/lock-kernel-modules.nix
+  ./security/misc.nix
   ./security/oath.nix
   ./security/pam.nix
   ./security/pam_usb.nix
@@ -742,6 +743,7 @@
   ./services/x11/hardware/multitouch.nix
   ./services/x11/hardware/synaptics.nix
   ./services/x11/hardware/wacom.nix
+  ./services/x11/gdk-pixbuf.nix
   ./services/x11/redshift.nix
   ./services/x11/urxvtd.nix
   ./services/x11/window-managers/awesome.nix

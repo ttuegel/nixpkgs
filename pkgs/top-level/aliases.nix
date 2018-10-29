@@ -49,6 +49,11 @@ mapAliases ({
   bashCompletion = bash-completion; # Added 2016-09-28
   bridge_utils = bridge-utils;  # added 2015-02-20
   btrfsProgs = btrfs-progs; # added 2016-01-03
+  buildbot = pythonPackages.buildbot; # added 2018-10-11
+  buildbot-full = pythonPackages.buildbot-full; # added 2018-10-11
+  buildbot-pkg = pythonPackages.buildbot-pkg; # added 2018-10-11
+  buildbot-ui = pythonPackages.buildbot-ui; # added 2018-10-11
+  buildbot-worker = pythonPackages.buildbot-worker; # added 2018-10-11
   bundler_HEAD = bundler; # added 2015-11-15
   cantarell_fonts = cantarell-fonts; # added 2018-03-03
   checkbashism = checkbashisms; # added 2016-08-16
@@ -202,6 +207,7 @@ mapAliases ({
   openssh_with_kerberos = openssh; # added 2018-01-28
   owncloudclient = owncloud-client;  # added 2016-08
   p11_kit = p11-kit; # added 2018-02-25
+  parquet-cpp = arrow-cpp; # added 2018-09-08
   pass-otp = pass.withExtensions (ext: [ext.pass-otp]); # added 2018-05-04
   pgp-tools = signing-party; # added 2017-03-26
   pidgin-with-plugins = pidgin; # added 2016-06
