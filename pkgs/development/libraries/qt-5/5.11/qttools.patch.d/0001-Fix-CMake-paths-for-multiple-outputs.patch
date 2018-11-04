@@ -1,3 +1,13 @@
+From b9c979c1fda1a389ad6877c0040e68c13d2a37ff Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 07:21:14 -0500
+Subject: [PATCH] Fix CMake paths for multiple outputs
+
+---
+ src/assistant/help/Qt5HelpConfigExtras.cmake.in | 11 +++--------
+ src/linguist/Qt5LinguistToolsConfig.cmake.in    | 12 ------------
+ 2 files changed, 3 insertions(+), 20 deletions(-)
+
 diff --git a/src/assistant/help/Qt5HelpConfigExtras.cmake.in b/src/assistant/help/Qt5HelpConfigExtras.cmake.in
 index 3b97923a..63336bd5 100644
 --- a/src/assistant/help/Qt5HelpConfigExtras.cmake.in
@@ -69,3 +79,6 @@ index 4318b16f..d60db4ff 100644
      _qt5_LinguistTools_check_file_exists(${imported_location})
  
      set_target_properties(Qt5::lconvert PROPERTIES
+-- 
+2.19.1
+
