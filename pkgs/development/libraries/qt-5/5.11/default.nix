@@ -54,7 +54,7 @@ let
     qtserialport = ./qtserialport.patch.d;
     qttools = ./qttools.patch.d;
     qtwebengine = optional stdenv.needsPax ./qtwebengine-paxmark-mksnapshot.patch;
-    qtwebkit = [ ./qtwebkit.patch ];
+    qtwebkit = ./qtwebkit.patch.d;
   };
 
   mkDerivation =
