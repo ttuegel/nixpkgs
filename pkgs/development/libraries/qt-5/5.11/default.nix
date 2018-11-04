@@ -50,9 +50,9 @@ let
   patches = {
     qtbase = ./qtbase.patch.d;
     qtdeclarative = ./qtdeclarative.patch.d;
-    qtscript = [ ./qtscript.patch ];
     qtserialport = [ ./qtserialport.patch ];
     qttools = [ ./qttools.patch ];
+    qtscript = ./qtscript.patch.d;
     qtwebengine = optional stdenv.needsPax ./qtwebengine-paxmark-mksnapshot.patch;
     qtwebkit = [ ./qtwebkit.patch ];
   };
