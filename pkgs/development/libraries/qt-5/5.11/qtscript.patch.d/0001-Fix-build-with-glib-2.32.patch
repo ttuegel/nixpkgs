@@ -1,3 +1,12 @@
+From 87c371993b5059e9895ca2ab6faf0fa54ed1fd5f Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 07:14:51 -0500
+Subject: [PATCH] Fix build with glib-2.32
+
+---
+ src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h b/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h
 index 1f6d25e..087c3fb 100644
 --- a/src/3rdparty/javascriptcore/JavaScriptCore/wtf/Threading.h
@@ -11,3 +20,6 @@ index 1f6d25e..087c3fb 100644
  typedef struct _GCond GCond;
  #endif
  
+-- 
+2.19.1
+
