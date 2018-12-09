@@ -1,0 +1,31 @@
+From b4ea762d4399b69a0fd52ed613629a5fa8cb1ce0 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 15 Oct 2017 07:09:02 -0500
+Subject: [PATCH 1/2] Deduce QML import paths from PATH
+
+On NixOS, QML modules are not installed in a global location. Instead, we deduce
+QML import paths from the PATH environment variable.
+---
+ src/qml/qml/qqmlimport.cpp | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+Index: qtdeclarative-opensource-src-5.9.3/src/qml/qml/qqmlimport.cpp
+===================================================================
+--- qtdeclarative-opensource-src-5.9.3.orig/src/qml/qml/qqmlimport.cpp
++++ qtdeclarative-opensource-src-5.9.3/src/qml/qml/qqmlimport.cpp
+@@ -1713,6 +1713,15 @@ QQmlImportDatabase::QQmlImportDatabase(Q
+     QString installImportsPath =  QLibraryInfo::location(QLibraryInfo::Qml2ImportsPath);
+     addImportPath(installImportsPath);
+ 
++    // Add import paths derived from PATH
++    const QStringList paths = QFile::decodeName(qgetenv("PATH")).split(':');
++    const QString qmldir = QStringLiteral("../" NIXPKGS_QML2_IMPORT_PREFIX);
++    for (const QString &path: paths) {
++        if (!path.isEmpty()) {
++            addImportPath(QDir::cleanPath(path + QDir::separator() + qmldir));
++        }
++    }
++
+     // env import paths
+     if (Q_UNLIKELY(!qEnvironmentVariableIsEmpty("QML2_IMPORT_PATH"))) {
+         const QByteArray envImportPath = qgetenv("QML2_IMPORT_PATH");

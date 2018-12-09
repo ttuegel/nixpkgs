@@ -1,0 +1,39 @@
+From 6c6ef66be6b34843006f731f24a5cd72949188e5 Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Sun, 21 Oct 2018 10:20:42 -0500
+Subject: [PATCH 13/14] Revert "Remove code paths for macOS < 10.11"
+
+This reverts commit 138a65e0cfa80b13fd018a01e7d8b33341a3cfd3.
+---
+ .../fontdatabases/mac/qfontengine_coretext.mm    | 16 +++++++++++++---
+ .../platforms/cocoa/qcocoafiledialoghelper.mm    |  6 +++++-
+ src/plugins/platforms/cocoa/qnswindowdelegate.mm | 16 ++++++++++++++++
+ 3 files changed, 34 insertions(+), 4 deletions(-)
+
+Index: qtbase-opensource-src-5.9.3/src/plugins/platforms/cocoa/qnswindowdelegate.mm
+===================================================================
+--- qtbase-opensource-src-5.9.3.orig/src/plugins/platforms/cocoa/qnswindowdelegate.mm
++++ qtbase-opensource-src-5.9.3/src/plugins/platforms/cocoa/qnswindowdelegate.mm
+@@ -94,6 +94,22 @@
+ }
+ #endif
+ 
++#if QT_MACOS_DEPLOYMENT_TARGET_BELOW(__MAC_10_11)
++/*
++    AppKit on OS X 10.10 wrongly calls windowWillUseStandardFrame:defaultFrame
++    from -[NSWindow _frameForFullScreenMode] when going into fullscreen, resulting
++    in black bars on top and bottom of the window. By implementing the following
++    method, AppKit will choose that instead, and resolve the right fullscreen
++    geometry.
++*/
++- (NSSize)window:(NSWindow *)window willUseFullScreenContentSize:(NSSize)proposedSize
++{
++    Q_UNUSED(proposedSize);
++    Q_ASSERT(window == m_cocoaWindow->nativeWindow());
++    return NSSizeFromCGSize(m_cocoaWindow->screen()->geometry().size().toCGSize());
++}
++#endif
++
+ - (BOOL)window:(NSWindow *)window shouldPopUpDocumentPathMenu:(NSMenu *)menu
+ {
+     Q_UNUSED(window);

@@ -12086,10 +12086,10 @@ in
       inherit cups;
       harfbuzz = harfbuzzFull;
       inherit libGL;
-      inherit perl;
+      inherit perl quilt;
       inherit (darwin) cf-private;
-      inherit (gst_all_1) gstreamer gst-plugins-base;
       inherit (gnome3) gtk3 dconf;
+      inherit (gst_all_1) gstreamer gst-plugins-base;
     });
 
   libsForQt59 = lib.makeScope qt59.newScope mkLibsForQt5;

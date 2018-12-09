@@ -18,7 +18,7 @@ top-level attribute to `top-level/all-packages.nix`.
 {
   newScope,
   stdenv, fetchurl, makeSetupHook,
-  bison, cups ? null, harfbuzz, libGL, perl,
+  bison, cups ? null, harfbuzz, libGL, perl, quilt,
   gstreamer, gst-plugins-base, gtk3, dconf,
   cf-private,
 
@@ -38,13 +38,13 @@ let
   srcs = import ./srcs.nix { inherit fetchurl; inherit mirror; };
 
   patches = {
-    qtbase = [ ./qtbase.patch ./qtbase-fixguicmake.patch ] ++ optional stdenv.isDarwin ./qtbase-darwin.patch;
-    qtdeclarative = [ ./qtdeclarative.patch ];
-    qtscript = [ ./qtscript.patch ];
-    qtserialport = [ ./qtserialport.patch ];
-    qttools = [ ./qttools.patch ];
+    qtbase = ./qtbase.patch.d;
+    qtdeclarative = ./qtdeclarative.patch.d;
+    qtscript = ./qtscript.patch.d;
+    qtserialport = ./qtserialport.patch.d;
+    qttools = ./qttools.patch.d;
     qtwebengine = optional stdenv.needsPax ./qtwebengine-paxmark-mksnapshot.patch;
-    qtwebkit = [ ./qtwebkit.patch ];
+    qtwebkit = ./qtwebkit.patch.d;
   };
 
   mkDerivation =
@@ -54,7 +54,7 @@ let
 
   qtModule =
     import ../qtModule.nix
-    { inherit mkDerivation perl; inherit (stdenv) lib; }
+    { inherit mkDerivation perl quilt; inherit (stdenv) lib; }
     { inherit self srcs patches; };
 
   addPackages = self: with self;
