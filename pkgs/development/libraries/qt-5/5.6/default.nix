@@ -27,7 +27,7 @@ existing packages here and modify it as necessary.
 {
   newScope,
   stdenv, fetchurl, makeSetupHook,
-  bison, cups ? null, harfbuzz, libGL, perl, quilt,
+  bison, cups ? null, harfbuzz, libGL, perl,
   gstreamer, gst-plugins-base,
 
   # options
@@ -63,7 +63,7 @@ let
 
   qtModule =
     import ../qtModule.nix
-    { inherit mkDerivation perl quilt; inherit (stdenv) lib; }
+    { inherit mkDerivation perl; inherit (stdenv) lib; }
     { inherit self srcs patches; };
 
   addPackages = self: with self;

@@ -12118,7 +12118,7 @@ in
       inherit cups;
       harfbuzz = harfbuzzFull;
       inherit libGL;
-      inherit perl quilt;
+      inherit perl;
       inherit (gst_all_1) gstreamer gst-plugins-base;
     });
 
