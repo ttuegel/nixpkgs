@@ -18,7 +18,7 @@ top-level attribute to `top-level/all-packages.nix`.
 {
   newScope,
   stdenv, fetchurl, fetchFromGitHub, makeSetupHook,
-  bison, cups ? null, harfbuzz, libGL, perl, quilt,
+  bison, cups ? null, harfbuzz, libGL, perl,
   gstreamer, gst-plugins-base, gtk3, dconf,
   cf-private,
 
@@ -50,7 +50,7 @@ let
 
   patches = {
     qtbase = ./qtbase.patch.d;
-    qtdeclarative = ./qtdeclarative.patch.d;
+    qtdeclarative = [ ./qtdeclarative.patch ];
     qtscript = [ ./qtscript.patch ];
     qtserialport = [ ./qtserialport.patch ];
     qttools = [ ./qttools.patch ];
@@ -65,7 +65,7 @@ let
 
   qtModule =
     import ../qtModule.nix
-    { inherit mkDerivation perl quilt; inherit (stdenv) lib; }
+    { inherit mkDerivation perl; inherit (stdenv) lib; }
     { inherit self srcs patches; };
 
   addPackages = self: with self;
