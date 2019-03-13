@@ -1,23 +1,23 @@
 { stdenv, fetchurl
 , dbus-glib, gtk3, libexif, libXScrnSaver, ninja, nss
-, pciutils, pkgconfig, python2, xdg_utils, gn
+, pciutils, pkgconfig, python2, xdg_utils, gn, at-spi2-core
 }:
 
 stdenv.mkDerivation rec {
   name = "${product}-${version}";
   product = "vivaldi-ffmpeg-codecs";
-  version = "70.0.3538.77";
+  version = "72.0.3626.121";
 
   src = fetchurl {
     url = "https://commondatastorage.googleapis.com/chromium-browser-official/chromium-${version}.tar.xz";
-    sha512 = "128hvkcbyw70j31dj4jviqqjrzyfx38689nb8v0kk5vi2zlgfy5ibz2gyrv4bvrb53ld262y9pvam51nbdmrx2vqd9xrs173py7v0a0";
+    sha512 = "2bcwgv75cmv92i89vhwd253hcgzgjxjpxr9zp46wfcw5hbiya1xx95p01wsny0blnwv76s9n7n41z3r7fkv6mnv1zb2mnb2lrzvmghb";
   };
 
   buildInputs = [ ];
 
   nativeBuildInputs = [
     gtk3 libexif libXScrnSaver ninja nss pciutils python2 xdg_utils gn
-    pkgconfig dbus-glib
+    pkgconfig dbus-glib at-spi2-core.dev
   ];
 
   patches = [

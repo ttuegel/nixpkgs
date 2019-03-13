@@ -1,11 +1,11 @@
 { stdenv, fetchgit, meson, ninja, pkgconfig
 , python3, gtk3, gst_all_1, libsecret, libsoup
-, appstream-glib, desktop-file-utils, gnome3
-, gobject-introspection, wrapGAppsHook }:
+, appstream-glib, desktop-file-utils, totem-pl-parser
+, hicolor-icon-theme, gobject-introspection, wrapGAppsHook }:
 
 python3.pkgs.buildPythonApplication rec  {
   pname = "lollypop";
-  version = "0.9.906";
+  version = "0.9.923";
 
   format = "other";
   doCheck = false;
@@ -14,10 +14,10 @@ python3.pkgs.buildPythonApplication rec  {
     url = "https://gitlab.gnome.org/World/lollypop";
     rev = "refs/tags/${version}";
     fetchSubmodules = true;
-    sha256 = "1blfq3vdzs3ji3sr1z6dn5c2f8w93zv2k7aa5xpfpfnds4zfd3q6";
+    sha256 = "0jgz36lrhigcsr9vs5sp4ngv8rir3zqicygymjv7d61d6pclkx1z";
   };
 
-  nativeBuildInputs = with python3.pkgs; [
+  nativeBuildInputs = [
     appstream-glib
     desktop-file-utils
     gobject-introspection
@@ -28,7 +28,7 @@ python3.pkgs.buildPythonApplication rec  {
   ];
 
   buildInputs = with gst_all_1; [
-    gnome3.totem-pl-parser
+    gobject-introspection
     gst-libav
     gst-plugins-bad
     gst-plugins-base
@@ -36,8 +36,10 @@ python3.pkgs.buildPythonApplication rec  {
     gst-plugins-ugly
     gstreamer
     gtk3
+    hicolor-icon-theme
     libsecret
     libsoup
+    totem-pl-parser
   ];
 
   propagatedBuildInputs = with python3.pkgs; [

@@ -18,17 +18,16 @@ let
     else "amd64";
 
   major = "11";
-  update = ".0.1";
-  build = "13";
+  update = ".0.2";
+  build = "9";
   repover = "jdk-${major}${update}+${build}";
-  paxflags = if stdenv.isi686 then "msp" else "m";
 
   openjdk = stdenv.mkDerivation {
     name = "openjdk-${major}${update}-b${build}";
 
     src = fetchurl {
       url = "http://hg.openjdk.java.net/jdk-updates/jdk${major}u/archive/${repover}.tar.gz";
-      sha256 = "1ri3fv67rvs9xxhc3ynklbprhxbdsgpwafbw6wqj950xy5crgysm";
+      sha256 = "0xc7nksvj72cgw8zrmvlcwaasinpij1j1959398a4nqvzpvpxg30";
     };
 
     nativeBuildInputs = [ pkgconfig ];
@@ -105,14 +104,6 @@ let
       ${lib.optionalString minimal ''
         rm $out/lib/openjdk/lib/{libjsound,libfontmanager}.so
       ''}
-
-      # Set PaX markings
-      exes=$(file $out/lib/openjdk/bin/* 2> /dev/null | grep -E 'ELF.*(executable|shared object)' | sed -e 's/: .*$//')
-      echo "to mark: *$exes*"
-      for file in $exes; do
-        echo "marking *$file*"
-        paxmark ${paxflags} "$file"
-      done
 
       ln -s $out/lib/openjdk/bin $out/bin
     '';

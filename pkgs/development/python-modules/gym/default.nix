@@ -5,11 +5,11 @@
 
 buildPythonPackage rec {
   pname = "gym";
-  version = "0.9.6";
+  version = "0.11.0";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "0llbhn3zdlsz2crd5grd1yygg8zp2shsclc24iqix5gw5f65clx5";
+    sha256 = "f9c79fc295b8b20cfda5ab0a671e72c95615dc77517ae414f8f8b10e9375f155";
   };
 
   propagatedBuildInputs = [

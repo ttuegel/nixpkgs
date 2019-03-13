@@ -1,4 +1,4 @@
-{stdenv, fetchurl, tlsSupport ? false, openssl ? null}:
+{stdenv, fetchurl, tlsSupport ? true, openssl ? null}:
 
 assert tlsSupport -> openssl != null;
 
@@ -35,6 +35,8 @@ stdenv.mkDerivation {
   installTargets = [ "install" "install-sendmail" ];
 
   buildInputs = stdenv.lib.optional tlsSupport openssl;
+
+  NIX_LDFLAGS = stdenv.lib.optional tlsSupport [ "-lcrypto" ];
 
   meta = with stdenv.lib; {
     platforms = platforms.linux;

@@ -3,14 +3,15 @@
 , gtk3, nssTools, pcsclite
 , libxml2, libproxy 
 , openssl, curl
-, makeWrapper }:
+, makeWrapper
+, substituteAll }:
 
 stdenv.mkDerivation rec {
   name = "eid-mw-${version}";
-  version = "4.4.11";
+  version = "4.4.13";
 
   src = fetchFromGitHub {
-    sha256 = "13mhz23j2gp5bywdq2xiwkk0gnc354j31ry8x35pzlwrcn19by10"; 
+    sha256 = "14bgn2k0xbd6241qdghg787pgxy7k9rvcspaf74zwwyibaqknzyx"; 
     rev = "v${version}";
     repo = "eid-mw";
     owner = "Fedict";
@@ -32,8 +33,15 @@ stdenv.mkDerivation rec {
 
   configureFlags = [ "--enable-dialogs=yes" ];
 
-  postInstall = ''
-    install -D ${./eid-nssdb.in} $out/bin/eid-nssdb
+  postInstall =
+  let
+    eid-nssdb-in = substituteAll {
+      inherit (stdenv) shell;
+      src = ./eid-nssdb.in;
+    };
+  in
+  ''
+    install -D ${eid-nssdb-in} $out/bin/eid-nssdb
     substituteInPlace $out/bin/eid-nssdb \
       --replace "modutil" "${nssTools}/bin/modutil"
 

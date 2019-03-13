@@ -2,11 +2,11 @@
 
 stdenv.mkDerivation rec {
   name = "bdf2psf-${version}";
-  version = "1.187";
+  version = "1.189";
 
   src = fetchurl {
     url = "mirror://debian/pool/main/c/console-setup/bdf2psf_${version}_all.deb";
-    sha256 = "05r5jg7n4hbdxcy3kc7038h1r0fkipwld6kd0d49nbkmywl2k1a8";
+    sha256 = "0i4q4qdf5w96wkhc5lb2h7mdj0wfzqr3a265jp4wzyzgybayfz33";
   };
 
   buildInputs = [ dpkg ];

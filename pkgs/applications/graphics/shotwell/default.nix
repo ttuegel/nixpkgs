@@ -1,5 +1,5 @@
 { fetchurl, stdenv, meson, ninja, gtk3, libexif, libgphoto2, libsoup, libxml2, vala, sqlite
-, webkitgtk, pkgconfig, gnome3, gst_all_1, libgudev, libraw, glib, json-glib
+, webkitgtk, pkgconfig, gnome3, gst_all_1, libgudev, libraw, glib, json-glib, gcr
 , gettext, desktop-file-utils, gdk_pixbuf, librsvg, wrapGAppsHook
 , gobject-introspection, itstool, libgdata, python3 }:
 
@@ -7,13 +7,13 @@
 
 let
   pname = "shotwell";
-  version = "0.30.1";
+  version = "0.30.2";
 in stdenv.mkDerivation rec {
   name = "${pname}-${version}";
 
   src = fetchurl {
     url = "mirror://gnome/sources/${pname}/${stdenv.lib.versions.majorMinor version}/${name}.tar.xz";
-    sha256 = "01hsmig06hjv34yf9y60hv2gml593xfkza4ilq4b22gr8l4v2qip";
+    sha256 = "0pam0si110vkc65kh59lrmgkv91f9zxmf1gpfm99ixjgw25rfi8r";
   };
 
   nativeBuildInputs = [
@@ -25,7 +25,7 @@ in stdenv.mkDerivation rec {
     gst_all_1.gstreamer gst_all_1.gst-plugins-base gnome3.libgee
     libgudev gnome3.gexiv2 gnome3.gsettings-desktop-schemas
     libraw json-glib glib gdk_pixbuf librsvg gnome3.rest
-    gnome3.gcr gnome3.defaultIconTheme libgdata
+    gcr gnome3.adwaita-icon-theme libgdata
   ];
 
   postPatch = ''

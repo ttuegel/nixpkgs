@@ -1,5 +1,5 @@
 { stdenv, lib, buildPackages
-, fetchurl, zlib, autoreconfHook264
+, fetchurl, zlib, autoreconfHook
 # Enabling all targets increases output size to a multiple.
 , withAllTargets ? false, libbfd, libopcodes
 , enableShared ? true
@@ -12,7 +12,7 @@ let
   # Remove gold-symbol-visibility patch when updating, the proper fix
   # is now upstream.
   # https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commitdiff;h=330b90b5ffbbc20c5de6ae6c7f60c40fab2e7a4f;hp=99181ccac0fc7d82e7dabb05dc7466e91f1645d3
-  version = "2.30";
+  version = "2.31.1";
   basename = "binutils-${version}";
   # The targetPrefix prepended to binary names to allow multiple binuntils on the
   # PATH to both be usable.
@@ -26,22 +26,12 @@ stdenv.mkDerivation rec {
   # HACK to ensure that we preserve source from bootstrap binutils to not rebuild LLVM
   src = stdenv.__bootPackages.binutils-unwrapped.src or (fetchurl {
     url = "mirror://gnu/binutils/${basename}.tar.bz2";
-    sha256 = "028cklfqaab24glva1ks2aqa1zxa6w6xmc8q34zs1sb7h22dxspg";
+    sha256 = "1l34hn1zkmhr1wcrgf0d4z7r3najxnw3cx2y2fk7v55zjlk3ik7z";
   });
 
   patches = [
-    # Since binutils 2.22, DT_NEEDED flags aren't copied for dynamic outputs.
-    # That requires upstream changes for things to work. So we can patch it to
-    # get the old behaviour by now.
-    ./dtneeded.patch
-
     # Make binutils output deterministic by default.
     ./deterministic.patch
-
-    # Always add PaX flags section to ELF files.
-    # This is needed, for instance, so that running "ldd" on a binary that is
-    # PaX-marked to disable mprotect doesn't fail with permission denied.
-    ./pt-pax-flags.patch
 
     # Bfd looks in BINDIR/../lib for some plugins that don't
     # exist. This is pointless (since users can't install plugins
@@ -65,10 +55,11 @@ stdenv.mkDerivation rec {
     # https://sourceware.org/bugzilla/show_bug.cgi?id=22868
     ./gold-symbol-visibility.patch
 
-    # Version 2.30 introduced strict requirements on ELF relocations which cannot
-    # be satisfied on aarch64 platform. Add backported fix from bugzilla.
-    # https://sourceware.org/bugzilla/show_bug.cgi?id=22764
-    ./relax-R_AARCH64_ABS32-R_AARCH64_ABS16-absolute.patch
+    # https://sourceware.org/bugzilla/show_bug.cgi?id=23428
+    # un-break features so linking against musl doesn't produce crash-only binaries
+    ./0001-x86-Add-a-GNU_PROPERTY_X86_ISA_1_USED-note-if-needed.patch
+    ./0001-x86-Properly-merge-GNU_PROPERTY_X86_ISA_1_USED.patch
+    ./0001-x86-Properly-add-X86_ISA_1_NEEDED-property.patch
   ] ++ lib.optional stdenv.targetPlatform.isiOS ./support-ios.patch;
 
   outputs = [ "out" "info" "man" ];
@@ -77,7 +68,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [
     bison
   ] ++ lib.optionals stdenv.targetPlatform.isiOS [
-    autoreconfHook264
+    autoreconfHook
   ];
   buildInputs = [ zlib ];
 

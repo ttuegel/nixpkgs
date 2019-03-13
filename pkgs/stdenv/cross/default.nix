@@ -54,13 +54,14 @@ in lib.init bootStages ++ [
              then buildPackages.darwin.iosSdkPkgs.clang
            else if crossSystem.useAndroidPrebuilt or false
              then buildPackages."androidndkPkgs_${crossSystem.ndkVer}".gcc
+           else if crossSystem.useLLVM or false
+             then buildPackages.llvmPackages_7.lldClang
            else buildPackages.gcc;
 
       extraNativeBuildInputs = old.extraNativeBuildInputs
         ++ lib.optionals
              (hostPlatform.isLinux && !buildPlatform.isLinux)
-             [ buildPackages.patchelf buildPackages.paxctl ]
-        ++ lib.optional hostPlatform.isDarwin buildPackages.clang
+             [ buildPackages.patchelf ]
         ++ lib.optional
              (let f = p: !p.isx86 || p.libc == "musl"; in f hostPlatform && !(f buildPlatform))
              buildPackages.updateAutotoolsGnuConfigScriptsHook

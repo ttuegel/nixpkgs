@@ -54,7 +54,7 @@ stdenv.mkDerivation rec {
   preConfigure =
     '' for i in "tests/util/"*.in
        do
-         sed -i "$i" -e's|/bin/bash|/bin/sh|g'
+         sed -i "$i" -e's|/bin/bash|${stdenv.shell}|g'
        done
 
        # Apparently, the QEMU executable is no longer called
@@ -89,10 +89,6 @@ stdenv.mkDerivation rec {
 
   doCheck = false;
   enableParallelBuilding = true;
-
-  postInstall = ''
-    paxmark pms $out/sbin/grub-{probe,bios-setup}
-  '';
 
   meta = with stdenv.lib; {
     description = "GRUB 2.0 extended with TCG (TPM) support for integrity measured boot process (trusted boot)";

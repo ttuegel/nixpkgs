@@ -2,14 +2,14 @@
 , qtquickcontrols, qtgraphicaleffects, qmake }:
 
 stdenv.mkDerivation rec {
-  version = "1.0.1";
+  version = "1.1.1";
   name = "cool-retro-term-${version}";
 
   src = fetchFromGitHub {
     owner = "Swordfish90";
     repo = "cool-retro-term";
     rev = version;
-    sha256 = "1ah54crqv13xsg9cvlwmgyhz90xjjy3vy8pbn9i0vc0ljmpgkqd5";
+    sha256 = "0mird4k88ml6y61hky2jynrjmnxl849fvhsr5jfdlnv0i7r5vwi5";
   };
 
   patchPhase = ''

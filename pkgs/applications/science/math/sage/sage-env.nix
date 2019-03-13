@@ -14,8 +14,7 @@
 , python3
 , pkg-config
 , pari
-, gap-libgap-compatible
-, libgap
+, gap
 , ecl
 , maxima-ecl
 , singular
@@ -70,13 +69,13 @@ let
     binutils.bintools
     pkg-config
     pari
-    gap-libgap-compatible
-    libgap
+    gap
     ecl
     maxima-ecl
     singular
     giac
     palp
+    # needs to be rWrapper since the default `R` doesn't include R's default libraries
     rWrapper
     gfan
     cddlib
@@ -117,7 +116,7 @@ writeTextFile rec {
 
     # set dependent vars, like JUPYTER_CONFIG_DIR
     source "${sagelib.src}/src/bin/sage-env"
-    export PATH="${runtimepath}:$orig_path" # sage-env messes with PATH
+    export PATH="$RUNTIMEPATH_PREFIX:${runtimepath}:$orig_path" # sage-env messes with PATH
 
     export SAGE_LOGS="$TMPDIR/sage-logs"
     export SAGE_DOC="''${SAGE_DOC_OVERRIDE:-doc-placeholder}"
@@ -132,7 +131,7 @@ writeTextFile rec {
     export LDFLAGS='${
       lib.concatStringsSep " " (map (pkg: "-L${pkg}/lib") [
         flint
-        libgap
+        gap
         glpk
         gmp
         mpfr
@@ -152,7 +151,7 @@ writeTextFile rec {
         gmp.dev
         glpk
         flint
-        libgap
+        gap
         pynac
         mpfr.dev
       ])

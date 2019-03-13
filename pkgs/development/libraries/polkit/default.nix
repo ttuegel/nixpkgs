@@ -21,6 +21,12 @@ stdenv.mkDerivation rec {
   };
 
   patches = [
+    # CVE-2019-6133 - See: https://bugs.chromium.org/p/project-zero/issues/detail?id=1692
+    (fetchpatch {
+      url = "https://gitlab.freedesktop.org/polkit/polkit/commit/6cc6aafee135ba44ea748250d7d29b562ca190e3.patch";
+      name = "CVE-2019-6133.patch";
+      sha256 = "0jjlbjzqcz96xh6w3nv3ss9jl0hhrcd7jg4aa5advf08ibaj29r1";
+    })
     # CVE-2018-19788 - high UID fixup
     (fetchpatch {
       url = "https://gitlab.freedesktop.org/polkit/polkit/commit/5230646dc6876ef6e27f57926b1bad348f636147.patch";
@@ -71,13 +77,6 @@ stdenv.mkDerivation rec {
   ] ++ stdenv.lib.optional (!doCheck) "--disable-test";
 
   makeFlags = "INTROSPECTION_GIRDIR=$(out)/share/gir-1.0 INTROSPECTION_TYPELIBDIR=$(out)/lib/girepository-1.0";
-
-  # The following is required on grsecurity/PaX due to spidermonkey's JIT
-  postBuild = stdenv.lib.optionalString stdenv.isLinux ''
-    paxmark mr src/polkitbackend/.libs/polkitd
-  '' + stdenv.lib.optionalString (stdenv.isLinux && doCheck) ''
-    paxmark mr test/polkitbackend/.libs/polkitbackendjsauthoritytest
-  '';
 
   installFlags=["datadir=$(out)/share" "sysconfdir=$(out)/etc"];
 

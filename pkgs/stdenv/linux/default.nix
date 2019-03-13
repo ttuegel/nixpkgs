@@ -13,6 +13,7 @@
       "x86_64-linux" = import ./bootstrap-files/x86_64.nix;
       "armv5tel-linux" = import ./bootstrap-files/armv5tel.nix;
       "armv6l-linux" = import ./bootstrap-files/armv6l.nix;
+      "armv7a-linux" = import ./bootstrap-files/armv7l.nix;
       "armv7l-linux" = import ./bootstrap-files/armv7l.nix;
       "aarch64-linux" = import ./bootstrap-files/aarch64.nix;
       "mipsel-linux" = import ./bootstrap-files/loongson2f.nix;
@@ -216,7 +217,7 @@ in
       inherit (prevStage)
         ccWrapperStdenv
         gcc-unwrapped coreutils gnugrep
-        perl paxctl gnum4 bison;
+        perl gnum4 bison;
       # This also contains the full, dynamically linked, final Glibc.
       binutils = prevStage.binutils.override {
         # Rewrap the binutils with the new glibc, so both the next
@@ -250,7 +251,7 @@ in
         isl = isl_0_17;
       };
     };
-    extraNativeBuildInputs = [ prevStage.patchelf prevStage.paxctl ] ++
+    extraNativeBuildInputs = [ prevStage.patchelf ] ++
       # Many tarballs come with obsolete config.sub/config.guess that don't recognize aarch64.
       lib.optional (!localSystem.isx86 || localSystem.libc == "musl")
                    prevStage.updateAutotoolsGnuConfigScriptsHook;
@@ -325,7 +326,7 @@ in
       initialPath =
         ((import ../common-path.nix) {pkgs = prevStage;});
 
-      extraNativeBuildInputs = [ prevStage.patchelf prevStage.paxctl ] ++
+      extraNativeBuildInputs = [ prevStage.patchelf ] ++
         # Many tarballs come with obsolete config.sub/config.guess that don't recognize aarch64.
         lib.optional (!localSystem.isx86 || localSystem.libc == "musl")
         prevStage.updateAutotoolsGnuConfigScriptsHook;
@@ -349,7 +350,7 @@ in
         # Simple executable tools
         concatMap (p: [ (getBin p) (getLib p) ]) [
             gzip bzip2 xz bash binutils.bintools coreutils diffutils findutils
-            gawk gnumake gnused gnutar gnugrep gnupatch patchelf ed paxctl
+            gawk gnumake gnused gnutar gnugrep gnupatch patchelf ed
           ]
         # Library dependencies
         ++ map getLib (
@@ -368,7 +369,7 @@ in
         inherit (prevStage)
           gzip bzip2 xz bash coreutils diffutils findutils gawk
           gnumake gnused gnutar gnugrep gnupatch patchelf
-          attr acl paxctl zlib pcre;
+          attr acl zlib pcre;
         ${localSystem.libc} = getLibc prevStage;
       } // lib.optionalAttrs (super.stdenv.targetPlatform == localSystem) {
         # Need to get rid of these when cross-compiling.
