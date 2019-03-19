@@ -260,6 +260,12 @@ self:
 
       w3m = super.w3m.override (args: {
         melpaBuild = drv: args.melpaBuild (drv // {
+          src = external.fetchFromGitHub {
+            owner = "emacs-w3m";
+            repo = "emacs-w3m";
+            rev = "84ef5a917182d3fc5417c763fd9b3fe6db32d1fb";
+            sha256 = "1qc8la7y121pj7l1g98wcafr3cjs5dbafcv1k9d9xiadpi21bir2";
+          };
           prePatch =
             let w3m = "${lib.getBin external.w3m}/bin/w3m"; in ''
               substituteInPlace w3m.el \
