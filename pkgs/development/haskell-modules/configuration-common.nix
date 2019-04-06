@@ -48,7 +48,6 @@ self: super: {
 
   # Break infinite recursions.
   attoparsec-varword = super.attoparsec-varword.override { bytestring-builder-varword = dontCheck self.bytestring-builder-varword; };
-  clock = dontCheck super.clock;
   Dust-crypto = dontCheck super.Dust-crypto;
   hasql-postgres = dontCheck super.hasql-postgres;
   hspec-core = super.hspec-core.override { silently = dontCheck self.silently; temporary = dontCheck self.temporary; };
@@ -85,7 +84,7 @@ self: super: {
       name = "git-annex-${super.git-annex.version}-src";
       url = "git://git-annex.branchable.com/";
       rev = "refs/tags/" + super.git-annex.version;
-      sha256 = "1v2v6cwy957y5rgclb66ia7bl5j5mx291s3lh2swa39q3420m6v0";
+      sha256 = "08gw3b5gbbxs2dr3b4zf9xsvhbvpqjj4ikmvzmcvs3fh1q65xbgl";
     };
   }).override {
     dbus = if pkgs.stdenv.isLinux then self.dbus else null;
@@ -1044,6 +1043,8 @@ self: super: {
   # https://github.com/dmwit/encoding/pull/3
   encoding = appendPatch super.encoding ./patches/encoding-Cabal-2.0.patch;
 
+  clock = dontCheck (appendPatch super.clock ./patches/clock-0.7.2.patch);
+
   # Work around overspecified constraint on github ==0.18.
   github-backup = doJailbreak super.github-backup;
 
@@ -1215,6 +1216,14 @@ self: super: {
       url    = "https://github.com/redelmann/scat/pull/6.diff";
       sha256 = "07nj2p0kg05livhgp1hkkdph0j0a6lb216f8x348qjasy0lzbfhl";
     })];
+  });
+
+  # Remove unecessary constraint:
+  # https://github.com/agrafix/superbuffer/pull/2
+  superbuffer = overrideCabal super.superbuffer (drv: {
+    postPatch = ''
+      sed -i 's#QuickCheck < 2.10#QuickCheck < 2.13#' superbuffer.cabal
+    '';
   });
 
   # Use latest pandoc despite what LTS says.

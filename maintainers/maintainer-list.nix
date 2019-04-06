@@ -147,6 +147,11 @@
     github = "aepsil0n";
     name = "Eduard Bopp";
   };
+  aerialx = {
+    email = "aaron+nixos@aaronlindsay.com";
+    github = "AerialX";
+    name = "Aaron Lindsay";
+  };
   aespinosa = {
     email = "allan.espinosa@outlook.com";
     github = "aespinosa";
@@ -334,6 +339,11 @@
     email = "andrew@du.nham.ca";
     github = "andrew-d";
     name = "Andrew Dunham";
+  };
+  andrewchambers = {
+    email = "ac@acha.ninja";
+    github = "andrewchambers";
+    name = "Andrew Chambers";
   };
   andrewrk = {
     email = "superjoe30@gmail.com";
@@ -1299,7 +1309,7 @@
     name = "Tim Dysinger";
   };
   dywedir = {
-    email = "dywedir@protonmail.ch";
+    email = "dywedir@gra.red";
     github = "dywedir";
     name = "Vladyslav M.";
   };
@@ -1588,6 +1598,11 @@
     github = "fdns";
     name = "Felipe Espinoza";
   };
+  ffinkdevs = {
+    email = "fink@h0st.space";
+    github = "ffinkdevs";
+    name = "Fabian Fink";
+  };
   fgaz = {
     email = "fgaz@fgaz.me";
     github = "fgaz";
@@ -1769,6 +1784,11 @@
     email = "tobias.happ@gmx.de";
     github = "Gerschtli";
     name = "Tobias Happ";
+  };
+  ggpeti = {
+    email = "ggpeti@gmail.com";
+    github = "ggpeti";
+    name = "Peter Ferenczy";
   };
   gilligan = {
     email = "tobias.pflug@gmail.com";
@@ -2369,6 +2389,11 @@
     email = "dehos@lisic.univ-littoral.fr";
     github = "juliendehos";
     name = "Julien Dehos";
+  };
+  justinwoo = {
+    email = "moomoowoo@gmail.com";
+    github = "justinwoo";
+    name = "Justin Woo";
   };
   jwiegley = {
     email = "johnw@newartisans.com";
@@ -3851,6 +3876,16 @@
       longkeyid = "rsa4096/736CCDF9EF51BD97";
       fingerprint = "7573 56D7 79BB B888 773E  415E 736C CDF9 EF51 BD97";
     }];
+  };
+  rafaelgg = {
+    email = "rafael.garcia.gallego@gmail.com";
+    github = "rafaelgg";
+    name = "Rafael García";
+  };
+  raquelgb = {
+    email = "raquel.garcia.bautista@gmail.com";
+    github = "raquelgb";
+    name = "Raquel García";
   };
   ragge = {
     email = "r.dahlen@gmail.com";
@@ -5365,5 +5400,10 @@
     email = "minijackson@riseup.net";
     github = "minijackson";
     name = "Rémi Nicole";
+  };
+  shazow = {
+    email = "andrey.petrov@shazow.net";
+    github = "shazow";
+    name = "Andrey Petrov";
   };
 }
