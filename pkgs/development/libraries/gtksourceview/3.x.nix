@@ -3,11 +3,11 @@
 
 stdenv.mkDerivation rec {
   name = "gtksourceview-${version}";
-  version = "3.24.10";
+  version = "3.24.11";
 
   src = fetchurl {
     url = "mirror://gnome/sources/gtksourceview/${stdenv.lib.versions.majorMinor version}/${name}.tar.xz";
-    sha256 = "16ym7jwiki4s1pilwr4incx0yg7ll94f1cajrnpndkxxs36hcm5b";
+    sha256 = "1zbpj283b5ycz767hqz5kdq02wzsga65pp4fykvhg8xj6x50f6v9";
   };
 
   propagatedBuildInputs = [
@@ -33,7 +33,7 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  doCheck = false; # FAIL: test-language
+  doCheck = stdenv.isLinux;
   checkPhase = ''
     NO_AT_BRIDGE=1 \
     XDG_DATA_DIRS="$XDG_DATA_DIRS:${shared-mime-info}/share" \

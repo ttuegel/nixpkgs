@@ -9,7 +9,7 @@
 , # GHC can be built with system libffi or a bundled one.
   libffi ? null
 
-, useLLVM ? !stdenv.targetPlatform.isx86 || (stdenv.targetPlatform.isMusl && stdenv.hostPlatform != stdenv.targetPlatform)
+, useLLVM ? !stdenv.targetPlatform.isx86
 , # LLVM is conceptually a run-time-only depedendency, but for
   # non-x86, we need LLVM to bootstrap later stages, so it becomes a
   # build-time dependency too.
@@ -31,7 +31,8 @@
 
 , # What flavour to build. An empty string indicates no
   # specific flavour and falls back to ghc default values.
-  ghcFlavour ? stdenv.lib.optionalString (stdenv.targetPlatform != stdenv.hostPlatform) "perf-cross"
+  ghcFlavour ? stdenv.lib.optionalString (stdenv.targetPlatform != stdenv.hostPlatform)
+    (if useLLVM then "perf-cross" else "perf-cross-ncg")
 
 , # Whether to disable the large address space allocator
   # necessary fix for iOS: https://www.reddit.com/r/haskell/comments/4ttdz1/building_an_osxi386_to_iosarm64_cross_compiler/d5qvd67/
@@ -96,11 +97,20 @@ stdenv.mkDerivation (rec {
 
   outputs = [ "out" "doc" ];
 
-  patches = [(fetchpatch rec { # https://phabricator.haskell.org/D5123
-    url = "http://tarballs.nixos.org/sha256/${sha256}";
-    name = "D5123.diff";
-    sha256 = "0nhqwdamf2y4gbwqxcgjxs0kqx23w9gv5kj0zv6450dq19rji82n";
-  })];
+  patches = [
+    (fetchpatch rec { # https://phabricator.haskell.org/D5123
+     url = "http://tarballs.nixos.org/sha256/${sha256}";
+     name = "D5123.diff";
+     sha256 = "0nhqwdamf2y4gbwqxcgjxs0kqx23w9gv5kj0zv6450dq19rji82n";
+    })
+    (fetchpatch rec { # https://github.com/haskell/haddock/issues/900
+     url = "https://patch-diff.githubusercontent.com/raw/haskell/haddock/pull/983.diff";
+     name = "loadpluginsinmodules.diff";
+     sha256 = "0bvvv0zsfq2581zsir97zfkggc1kkircbbajc2fz3b169ycpbha1";
+     extraPrefix = "utils/haddock/";
+     stripLen = 1;
+   })
+  ];
 
   postPatch = "patchShebangs .";
 

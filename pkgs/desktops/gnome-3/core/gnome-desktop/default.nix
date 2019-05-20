@@ -1,16 +1,16 @@
 { stdenv, fetchurl, substituteAll, pkgconfig, libxslt, ninja, libX11, gnome3, gtk3, glib
 , gettext, libxml2, xkeyboard_config, isocodes, meson, wayland, fetchpatch
-, libseccomp, bubblewrap, gobject-introspection, gtk-doc, docbook_xsl }:
+, libseccomp, bubblewrap, gobject-introspection, gtk-doc, docbook_xsl, gsettings-desktop-schemas }:
 
 stdenv.mkDerivation rec {
   name = "gnome-desktop-${version}";
-  version = "3.32.0";
+  version = "3.32.2";
 
   outputs = [ "out" "dev" "devdoc" ];
 
   src = fetchurl {
     url = "mirror://gnome/sources/gnome-desktop/${stdenv.lib.versions.majorMinor version}/${name}.tar.xz";
-    sha256 = "0m3vs3rhhykr4xnwzi18h4bb1l05l8ykpiw4mi90dz19zk2ksfd6";
+    sha256 = "0bidx4626x7k2myv6f64qv4fzmxv8v475wibiz19kj8hjfr737q9";
   };
 
   enableParallelBuilding = true;
@@ -24,7 +24,7 @@ stdenv.mkDerivation rec {
     gtk3 glib libseccomp
   ];
 
-  propagatedBuildInputs = [ gnome3.gsettings-desktop-schemas ];
+  propagatedBuildInputs = [ gsettings-desktop-schemas ];
 
   patches = [
     (substituteAll {

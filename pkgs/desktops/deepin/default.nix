@@ -10,10 +10,12 @@ let
     dde-api = callPackage ./dde-api { };
     dde-calendar = callPackage ./dde-calendar { };
     dde-daemon = callPackage ./dde-daemon { };
-    dde-polkit-agent = callPackage ./dde-polkit-agent { };
+    dde-dock = callPackage ./dde-dock { };
     dde-network-utils = callPackage ./dde-network-utils { };
+    dde-polkit-agent = callPackage ./dde-polkit-agent { };
     dde-qt-dbus-factory = callPackage ./dde-qt-dbus-factory { };
     dde-session-ui = callPackage ./dde-session-ui { };
+    deepin-anything = callPackage ./deepin-anything { };
     deepin-desktop-base = callPackage ./deepin-desktop-base { };
     deepin-desktop-schemas = callPackage ./deepin-desktop-schemas { };
     deepin-gettext-tools = callPackage ./deepin-gettext-tools { };
@@ -24,6 +26,7 @@ let
     deepin-metacity = callPackage ./deepin-metacity { };
     deepin-movie-reborn = callPackage ./deepin-movie-reborn { };
     deepin-mutter = callPackage ./deepin-mutter { };
+    deepin-screenshot = callPackage ./deepin-screenshot { };
     deepin-shortcut-viewer = callPackage ./deepin-shortcut-viewer { };
     deepin-sound-theme = callPackage ./deepin-sound-theme { };
     deepin-terminal = callPackage ./deepin-terminal {
