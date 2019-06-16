@@ -276,6 +276,7 @@ self:
       removeAttrs (super // overrides)
       [
         "show-marks"  # missing dependency: fm
+        "lenlen-theme"  # missing dependency: color-theme-solarized
       ];
   in
     melpaPackages // { inherit melpaPackages; }

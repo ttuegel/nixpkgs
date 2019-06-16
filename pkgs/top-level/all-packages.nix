@@ -5340,7 +5340,6 @@ in
   podiff = callPackage ../tools/text/podiff { };
 
   podman = callPackage ../applications/virtualization/podman { };
-  conmon = callPackage ../applications/virtualization/podman/conmon.nix { };
 
   pod2mdoc = callPackage ../tools/misc/pod2mdoc { };
 
@@ -5822,6 +5821,8 @@ in
 
   sharutils = callPackage ../tools/archivers/sharutils { };
 
+  shelldap = callPackage ../tools/misc/shelldap { };
+
   schema2ldif = callPackage ../tools/text/schema2ldif { };
 
   shocco = callPackage ../tools/text/shocco { };
@@ -6021,6 +6022,8 @@ in
   supertux-editor = callPackage ../applications/editors/supertux-editor { };
 
   super-user-spark = haskellPackages.callPackage ../applications/misc/super_user_spark { };
+
+  svgbob = callPackage ../tools/graphics/svgbob { };
 
   svgcleaner = callPackage ../tools/graphics/svgcleaner { };
 
@@ -8041,8 +8044,9 @@ in
 
   scala_2_10 = callPackage ../development/compilers/scala/2.10.nix { };
   scala_2_11 = callPackage ../development/compilers/scala/2.11.nix { };
-  scala_2_12 = callPackage ../development/compilers/scala { jre = jre8; };
-  scala = scala_2_12;
+  scala_2_12 = callPackage ../development/compilers/scala/2.12.nix { jre = jre8; };
+  scala_2_13 = callPackage ../development/compilers/scala/2.13.nix { jre = jre8; };
+  scala = scala_2_13;
 
   scalafix = callPackage ../development/tools/scalafix { };
   scalafmt = callPackage ../development/tools/scalafmt { };
@@ -8844,7 +8848,9 @@ in
 
   bazel-remote = callPackage ../development/tools/build-managers/bazel/bazel-remote { };
 
-  bazel-watcher = callPackage ../development/tools/bazel-watcher { };
+  bazel-watcher = callPackage ../development/tools/bazel-watcher {
+    buildBazelPackage = buildBazelPackage.override { enableNixHacks = false; };
+  };
 
   bazelisk = callPackage ../development/tools/bazelisk { };
 
@@ -9936,7 +9942,7 @@ in
   belr = callPackage ../development/libraries/belr { };
 
   beignet = callPackage ../development/libraries/beignet {
-    inherit (llvmPackages_39) llvm clang-unwrapped;
+    inherit (llvmPackages_6) llvm clang-unwrapped;
   };
 
   belle-sip = callPackage ../development/libraries/belle-sip { };
@@ -9999,6 +10005,8 @@ in
   cachix = callPackage ../development/tools/cachix { };
 
   capnproto = callPackage ../development/libraries/capnproto { };
+
+  captive-browser = callPackage ../applications/networking/browsers/captive-browser { };
 
   ndn-cxx = callPackage ../development/libraries/ndn-cxx { };
 
@@ -14705,6 +14713,7 @@ in
   samba3 = callPackage ../servers/samba/3.x.nix { };
 
   samba4 = callPackage ../servers/samba/4.x.nix {
+    rpcgen = netbsd.rpcgen;
     python = python3;
   };
 
@@ -16330,6 +16339,8 @@ in
 
   iwona = callPackage ../data/fonts/iwona { };
 
+  jost = callPackage ../data/fonts/jost { };
+
   junicode = callPackage ../data/fonts/junicode { };
 
   kanji-stroke-order-font = callPackage ../data/fonts/kanji-stroke-order-font {};
@@ -17655,7 +17666,8 @@ in
       inherit (pythonPackages) elpy;
       inherit
         autoconf automake editorconfig-core-c fetchFromGitHub git libffi libpng
-        pkgconfig poppler rtags w3m zlib substituteAll rustPlatform;
+        pkgconfig poppler rtags w3m zlib substituteAll rustPlatform cmake
+        llvmPackages;
     };
   };
 
@@ -19210,6 +19222,8 @@ in
 
   natron = callPackage ../applications/video/natron { };
 
+  neocomp  = callPackage ../applications/window-managers/neocomp { };
+
   nicotine-plus = callPackage ../applications/networking/soulseek/nicotine-plus {
     geoip = geoipWithDatabase;
   };
@@ -20130,8 +20144,6 @@ in
 
   slic3r = callPackage ../applications/misc/slic3r { };
 
-  slic3r-prusa3d = callPackage ../applications/misc/slic3r/prusa3d.nix { };
-
   curaengine_stable = callPackage ../applications/misc/curaengine/stable.nix { };
   cura_stable = callPackage ../applications/misc/cura/stable.nix {
     curaengine = curaengine_stable;
@@ -20141,6 +20153,8 @@ in
     inherit (python3.pkgs) libarcus;
   };
   cura = qt5.callPackage ../applications/misc/cura { };
+
+  curaPlugins = callPackage ../applications/misc/cura/plugins.nix { };
 
   curaLulzbot = callPackage ../applications/misc/cura/lulzbot.nix { };
 
@@ -20153,6 +20167,8 @@ in
   pmidi = callPackage ../applications/audio/pmidi { };
 
   printrun = callPackage ../applications/misc/printrun { };
+
+  prusa-slicer = callPackage ../applications/misc/prusa-slicer { };
 
   sddm = libsForQt5.callPackage ../applications/display-managers/sddm { };
 
@@ -20282,7 +20298,7 @@ in
 
   symlinks = callPackage ../tools/system/symlinks { };
 
-  syncplay = callPackage ../applications/networking/syncplay { };
+  syncplay = python3.pkgs.callPackage ../applications/networking/syncplay { };
 
   inherit (callPackages ../applications/networking/syncthing { })
     syncthing
@@ -21355,6 +21371,8 @@ in
   commandergenius = callPackage ../games/commandergenius { };
 
   confd = callPackage ../tools/system/confd { };
+
+  conmon = callPackage ../applications/virtualization/conmon { };
 
   construoBase = lowPrio (callPackage ../games/construo {
     libGL = null;
@@ -23321,12 +23339,16 @@ in
   lguf-brightness = callPackage ../misc/lguf-brightness { };
 
   lilypond = callPackage ../misc/lilypond { guile = guile_1_8; };
+
   lilypond-unstable = callPackage ../misc/lilypond/unstable.nix { };
+
   lilypond-with-fonts = callPackage ../misc/lilypond/with-fonts.nix {
     lilypond = lilypond-unstable;
   };
 
-  openlilylib-fonts = callPackage ../misc/lilypond/fonts.nix { };
+  openlilylib-fonts = callPackage ../misc/lilypond/fonts.nix {
+    lilypond = lilypond-unstable;
+  };
 
   loop = callPackage ../tools/misc/loop { };
 
@@ -23364,7 +23386,8 @@ in
     nix
     nix1
     nixStable
-    nixUnstable;
+    nixUnstable
+    nixFlakes;
 
   nixops = callPackage ../tools/package-management/nixops { };
 
@@ -23816,6 +23839,8 @@ in
   ssh-audit = callPackage ../tools/security/ssh-audit { };
 
   thermald = callPackage ../tools/system/thermald { };
+
+  throttled = callPackage ../tools/system/throttled { };
 
   thinkfan = callPackage ../tools/system/thinkfan { };
 
