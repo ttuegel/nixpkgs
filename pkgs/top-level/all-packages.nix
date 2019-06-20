@@ -16276,6 +16276,7 @@ in
 
   fira-mono = callPackage ../data/fonts/fira-mono { };
 
+  font-awesome_4 = callPackage ../data/fonts/font-awesome-4 { };
   font-awesome_5 = callPackage ../data/fonts/font-awesome-5 { };
   font-awesome = font-awesome_5;
 
