@@ -8,7 +8,7 @@ let # un-indented, over the whole file
 
 result = if extraFeatures then wrapped-full else unwrapped;
 
-inherit (stdenv.lib) optional concatStringsSep;
+inherit (stdenv.lib) optional;
 
 unwrapped = stdenv.mkDerivation rec {
   name = "knot-resolver-${version}";
@@ -80,7 +80,7 @@ wrapped-full = runCommand unwrapped.name
     nativeBuildInputs = [ makeWrapper ];
     buildInputs = with luajitPackages; [
       luasec luasocket # trust anchor bootstrap, prefill module
-      lfs # prefill module
+      luafilesystem # prefill module
       http # for http module; brings lots of deps; some are useful elsewhere
     ];
     preferLocalBuild = true;

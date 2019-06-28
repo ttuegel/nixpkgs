@@ -2,8 +2,7 @@
 
 let
   mkCoqPackages' = self: coq:
-    let newScope = self.newScope;
-        callPackage = self.callPackage; in {
+    let callPackage = self.callPackage; in {
       inherit coq;
       coqPackages = self;
 
@@ -28,6 +27,7 @@ let
       equations = callPackage ../development/coq-modules/equations { };
       fiat_HEAD = callPackage ../development/coq-modules/fiat/HEAD.nix {};
       flocq = callPackage ../development/coq-modules/flocq {};
+      gappalib = callPackage ../development/coq-modules/gappalib {};
       heq = callPackage ../development/coq-modules/heq {};
       HoTT = callPackage ../development/coq-modules/HoTT {};
       interval = callPackage ../development/coq-modules/interval {};

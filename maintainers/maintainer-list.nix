@@ -1353,6 +1353,11 @@
     github = "domenkozar";
     name = "Domen Kozar";
   };
+  doronbehar = {
+    email = "me@doronbehar.com";
+    github = "doronbehar";
+    name = "Doron Behar";
+  };
   dotlambda = {
     email = "rschuetz17@gmail.com";
     github = "dotlambda";
@@ -2185,7 +2190,7 @@
     name = "Imuli";
   };
   infinisil = {
-    email = "infinisil@icloud.com";
+    email = "contact@infinisil.com";
     github = "infinisil";
     name = "Silvan Mosberger";
   };
@@ -3015,6 +3020,11 @@
     email = "Marc.Fontaine@gmx.de";
     github = "MarcFontaine";
     name = "Marc Fontaine";
+  };
+  magenbluten = {
+    email = "magenbluten@codemonkey.cc";
+    github = "magenbluten";
+    name = "magenbluten";
   };
   magnetophon = {
     email = "bart@magnetophon.nl";
@@ -4443,6 +4453,10 @@
     email = "robert@rycee.net";
     github = "rycee";
     name = "Robert Helgesson";
+    keys = [{
+      longkeyid = "rsa4096/0x3573356C25C424D4";
+      fingerprint = "36CA CF52 D098 CC0E 78FB  0CB1 3573 356C 25C4 24D4";
+    }];
   };
   ryneeverett = {
     email = "ryneeverett@gmail.com";

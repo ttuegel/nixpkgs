@@ -139,9 +139,7 @@ in {
 
   setuptools = toPythonModule (callPackage ../development/python-modules/setuptools { });
 
-  vowpalwabbit = callPackage ../development/python-modules/vowpalwabbit {
-    boost = pkgs.boost160;
-  };
+  vowpalwabbit = callPackage ../development/python-modules/vowpalwabbit { };
 
   acoustics = callPackage ../development/python-modules/acoustics { };
 
@@ -253,6 +251,8 @@ in {
   azure-nspkg = callPackage ../development/python-modules/azure-nspkg { };
 
   azure-common = callPackage ../development/python-modules/azure-common { };
+
+  azure-cosmos = callPackage ../development/python-modules/azure-cosmos { };
 
   azure-mgmt-common = callPackage ../development/python-modules/azure-mgmt-common { };
 
@@ -508,6 +508,8 @@ in {
 
   intelhex = callPackage ../development/python-modules/intelhex { };
 
+  inquirer = callPackage ../development/python-modules/inquirer { };
+
   jira = callPackage ../development/python-modules/jira { };
 
   jwcrypto = callPackage ../development/python-modules/jwcrypto { };
@@ -704,6 +706,8 @@ in {
 
   pydocstyle = callPackage ../development/python-modules/pydocstyle { };
 
+  pydocumentdb = callPackage ../development/python-modules/pydocumentdb { };
+
   pyexiv2 = disabledIf isPy3k (toPythonModule (callPackage ../development/python-modules/pyexiv2 {}));
 
   py3exiv2 = callPackage ../development/python-modules/py3exiv2 { };
@@ -803,6 +807,18 @@ in {
 
   pysideTools = callPackage ../development/python-modules/pyside/tools.nix { };
 
+  pyside2 = toPythonModule (callPackage ../development/python-modules/pyside2 {
+    inherit (pkgs) cmake qt5 ninja;
+  });
+
+  shiboken2 = toPythonModule (callPackage ../development/python-modules/shiboken2 {
+    inherit (pkgs) cmake qt5 llvmPackages;
+  });
+
+  pyside2-tools = toPythonModule (callPackage ../development/python-modules/pyside2-tools {
+    inherit (pkgs) cmake qt5;
+  });
+
   pyslurm = callPackage ../development/python-modules/pyslurm {
     slurm = pkgs.slurm;
   };
@@ -822,6 +838,8 @@ in {
   pytest-mypy = callPackage ../development/python-modules/pytest-mypy { };
 
   pytest-pylint = callPackage ../development/python-modules/pytest-pylint { };
+
+  pytest-testmon = callPackage ../development/python-modules/pytest-testmon { };
 
   pytest-tornado = callPackage ../development/python-modules/pytest-tornado { };
 
@@ -977,6 +995,8 @@ in {
   toml = callPackage ../development/python-modules/toml { };
 
   tomlkit = callPackage ../development/python-modules/tomlkit { };
+
+  toggl-cli = callPackage ../development/python-modules/toggl-cli { };
 
   unifi = callPackage ../development/python-modules/unifi { };
 
@@ -1745,6 +1765,8 @@ in {
 
   pytest-warnings = callPackage ../development/python-modules/pytest-warnings { };
 
+  pytest-watch = callPackage ../development/python-modules/pytest-watch { };
+
   pytestpep8 = callPackage ../development/python-modules/pytest-pep8 { };
 
   pytest-pep257 = callPackage ../development/python-modules/pytest-pep257 { };
@@ -2216,6 +2238,8 @@ in {
 
   python-mapnik = callPackage ../development/python-modules/python-mapnik { };
 
+  midiutil = callPackage ../development/python-modules/midiutil {};
+
   misaka = callPackage ../development/python-modules/misaka {};
 
   mt-940 = callPackage ../development/python-modules/mt-940 { };
@@ -2470,6 +2494,8 @@ in {
   zope_deprecation = callPackage ../development/python-modules/zope_deprecation { };
 
   validictory = callPackage ../development/python-modules/validictory { };
+
+  validate-email = callPackage ../development/python-modules/validate-email { };
 
   venusian = callPackage ../development/python-modules/venusian { };
 
@@ -2976,6 +3002,8 @@ in {
 
   gspread = callPackage ../development/python-modules/gspread { };
 
+  gtts-token = callPackage ../development/python-modules/gtts-token { };
+
   gym = callPackage ../development/python-modules/gym { };
 
   gyp = callPackage ../development/python-modules/gyp { };
@@ -3239,7 +3267,7 @@ in {
 
   locustio = callPackage ../development/python-modules/locustio { };
 
-  llvmlite = callPackage ../development/python-modules/llvmlite { llvm = pkgs.llvm_6; };
+  llvmlite = callPackage ../development/python-modules/llvmlite { llvm = pkgs.llvm_8; };
 
   lockfile = callPackage ../development/python-modules/lockfile { };
 
@@ -3800,7 +3828,9 @@ in {
 
   pysftp = callPackage ../development/python-modules/pysftp { };
 
-  pysoundfile = callPackage ../development/python-modules/pysoundfile { };
+  soundfile = callPackage ../development/python-modules/soundfile { };
+
+  pysoundfile = self.soundfile;  # Alias added 23-06-2019
 
   python3pika = callPackage ../development/python-modules/python3pika { };
 
@@ -3860,6 +3890,8 @@ in {
   ptpython = callPackage ../development/python-modules/ptpython {
     prompt_toolkit = self.prompt_toolkit;
   };
+
+  ptable = callPackage ../development/python-modules/ptable { };
 
   publicsuffix = callPackage ../development/python-modules/publicsuffix {};
 
@@ -4254,6 +4286,8 @@ in {
 
   readme_renderer = callPackage ../development/python-modules/readme_renderer { };
 
+  readchar = callPackage ../development/python-modules/readchar { };
+
   rivet = disabledIf isPy3k (toPythonModule (pkgs.rivet.override {
     python2 = python;
   }));
@@ -4295,6 +4329,8 @@ in {
   robotframework-seleniumlibrary = callPackage ../development/python-modules/robotframework-seleniumlibrary { };
 
   robotframework-selenium2library = callPackage ../development/python-modules/robotframework-selenium2library { };
+
+  robotframework-sshlibrary = callPackage ../development/python-modules/robotframework-sshlibrary { };
 
   robotframework-tools = callPackage ../development/python-modules/robotframework-tools { };
 
@@ -4350,13 +4386,24 @@ in {
 
   scapy = callPackage ../development/python-modules/scapy { };
 
-  scipy = callPackage ../development/python-modules/scipy { };
+  scipy = let
+    scipy_ = callPackage ../development/python-modules/scipy { };
+    scipy_1_2 = scipy_.overridePythonAttrs(oldAttrs: {
+      version = "1.2.1";
+      src = oldAttrs.src.override {
+        inherit version;
+        sha256 = "e085d1babcb419bbe58e2e805ac61924dac4ca45a07c9fa081144739e500aa3c";
+      };
+    });
+  in if pythonOlder "3.5" then scipy_1_2 else scipy_;
 
   scikitimage = callPackage ../development/python-modules/scikit-image { };
 
-  scikitlearn = callPackage ../development/python-modules/scikitlearn {
-    inherit (pkgs) gfortran glibcLocales;
-  };
+  scikitlearn = let
+    args = { inherit (pkgs) gfortran glibcLocales; };
+  in
+    if isPy3k then callPackage ../development/python-modules/scikitlearn args
+    else callPackage ../development/python-modules/scikitlearn/0.20.nix args;
 
   scikit-bio = callPackage ../development/python-modules/scikit-bio { };
 

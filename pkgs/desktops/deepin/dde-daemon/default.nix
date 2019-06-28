@@ -3,13 +3,13 @@
   deepin-gettext-tools, dde-api, deepin-desktop-schemas,
   deepin-wallpapers, deepin-desktop-base, alsaLib, glib, gtk3,
   libgudev, libinput, libnl, librsvg, linux-pam, networkmanager,
-  pulseaudio, xorg, python3, hicolor-icon-theme, glibc, tzdata, go,
+  pulseaudio, python3, hicolor-icon-theme, glibc, tzdata, go,
   deepin, makeWrapper, wrapGAppsHook }:
 
 buildGoPackage rec {
   name = "${pname}-${version}";
   pname = "dde-daemon";
-  version = "3.27.1";
+  version = "3.27.2.5";
 
   goPackagePath = "pkg.deepin.io/dde/daemon";
 
@@ -17,7 +17,7 @@ buildGoPackage rec {
     owner = "linuxdeepin";
     repo = pname;
     rev = version;
-    sha256 = "1rbv7fals2bwhalw1hh3swmrdzclqbhny782shnrwqv53235xda3";
+    sha256 = "117yhsb0axwblncyj02fhcyl4b7jl7vvh1bbx08bscih5lnvjihx";
   };
 
   patches = [
