@@ -736,6 +736,8 @@ in
 
   container-linux-config-transpiler = callPackage ../development/tools/container-linux-config-transpiler { };
 
+  ccextractor = callPackage ../applications/video/ccextractor { };
+
   cconv = callPackage ../tools/text/cconv { };
 
   go-check = callPackage ../development/tools/check { };
@@ -1263,7 +1265,7 @@ in
   cdemu-client = callPackage ../misc/emulators/cdemu/client.nix { };
 
   ceres-solver = callPackage ../development/libraries/ceres-solver {
-    google-gflags = null; # only required for examples/tests
+    gflags = null; # only required for examples/tests
   };
 
   gcdemu = callPackage ../misc/emulators/cdemu/gui.nix { };
@@ -1311,6 +1313,8 @@ in
   clingo = callPackage ../applications/science/logic/potassco/clingo.nix { };
 
   clprover = callPackage ../applications/science/logic/clprover/clprover.nix { };
+
+  coloredlogs = with python3Packages; toPythonApplication coloredlogs;
 
   colord-kde = libsForQt5.callPackage ../tools/misc/colord-kde {};
 
@@ -1378,6 +1382,8 @@ in
   csvs-to-sqlite = with python3Packages; toPythonApplication csvs-to-sqlite;
 
   cucumber = callPackage ../development/tools/cucumber {};
+
+  dabtools = callPackage ../applications/radio/dabtools { };
 
   daemontools = callPackage ../tools/admin/daemontools { };
 
@@ -1757,6 +1763,8 @@ in
   mpdcron = callPackage ../tools/audio/mpdcron { };
 
   mpdris2 = callPackage ../tools/audio/mpdris2 { };
+
+  mpd-mpris = callPackage ../tools/audio/mpd-mpris { };
 
   mq-cli = callPackage ../tools/system/mq-cli { };
 
@@ -2871,6 +2879,8 @@ in
 
   execline = skawarePackages.execline;
 
+  executor = with python3Packages; toPythonApplication executor;
+
   exif = callPackage ../tools/graphics/exif { };
 
   exiftags = callPackage ../tools/graphics/exiftags { };
@@ -3741,6 +3751,8 @@ in
 
   hubicfuse = callPackage ../tools/filesystems/hubicfuse { };
 
+  humanfriendly = with python3Packages; toPythonApplication humanfriendly;
+
   hwinfo = callPackage ../tools/system/hwinfo { };
 
   hybridreverb2 = callPackage ../applications/audio/hybridreverb2 { };
@@ -3973,6 +3985,8 @@ in
   jpegoptim = callPackage ../applications/graphics/jpegoptim { };
 
   jpegrescan = callPackage ../applications/graphics/jpegrescan { };
+
+  jpylyzer = with pythonPackages; toPythonApplication jpylyzer;
 
   jq = callPackage ../development/tools/jq { };
 
@@ -4327,8 +4341,6 @@ in
   });
 
   nodePackages = nodePackages_10_x;
-
-  npm2nix = nodePackages.npm2nix;
 
   now-cli = callPackage ../development/web/now-cli {};
 
@@ -5121,6 +5133,8 @@ in
   };
 
   oppai-ng = callPackage ../tools/misc/oppai-ng { };
+
+  update-dotdee = with python3Packages; toPythonApplication update-dotdee;
 
   update-resolv-conf = callPackage ../tools/networking/openvpn/update-resolv-conf.nix { };
 
@@ -6387,6 +6401,8 @@ in
 
   trace-cmd = callPackage ../os-specific/linux/trace-cmd { };
 
+  kernelshark = libsForQt5.callPackage ../os-specific/linux/trace-cmd/kernelshark.nix { };
+
   traceroute = callPackage ../tools/networking/traceroute { };
 
   tracebox = callPackage ../tools/networking/tracebox { };
@@ -6871,6 +6887,8 @@ in
   wkhtmltopdf = callPackage ../tools/graphics/wkhtmltopdf { };
 
   wml = callPackage ../development/web/wml { };
+
+  wmc-mpris = callPackage ../applications/misc/web-media-controller { };
 
   wol = callPackage ../tools/networking/wol { };
 
@@ -10776,8 +10794,7 @@ in
   goocanvas2 = callPackage ../development/libraries/goocanvas/2.x.nix { };
   goocanvasmm2 = callPackage ../development/libraries/goocanvasmm { };
 
-  google-gflags = callPackage ../development/libraries/google-gflags { };
-  gflags = google-gflags; # TODO: move to aliases.nix
+  gflags = callPackage ../development/libraries/gflags { };
 
   gperftools = callPackage ../development/libraries/gperftools { };
 
@@ -13159,6 +13176,8 @@ in
 
   rocksdb_lite = rocksdb.override { enableLite = true; };
 
+  rotate-backups = with python3Packages; toPythonApplication rotate-backups;
+
   rote = callPackage ../development/libraries/rote { };
 
   ronn = callPackage ../development/tools/ronn { };
@@ -14934,6 +14953,8 @@ in
   systemd-journal2gelf = callPackage ../tools/system/systemd-journal2gelf { };
 
   syncserver = callPackage ../servers/syncserver { };
+
+  thanos = callPackage ../servers/monitoring/thanos { };
 
   inherit (callPackages ../servers/http/tomcat { })
     tomcat7
@@ -17430,6 +17451,8 @@ in
 
   cyclone = callPackage ../applications/audio/pd-plugins/cyclone  { };
 
+  dablin = callPackage ../applications/radio/dablin { };
+
   darcs = haskell.lib.overrideCabal (haskell.lib.justStaticExecutables haskellPackages.darcs) (drv: {
     configureFlags = (stdenv.lib.remove "-flibrary" drv.configureFlags or []) ++ ["-f-library"];
   });
@@ -17507,10 +17530,11 @@ in
   };
 
   inherit (callPackage ../applications/virtualization/docker {})
-    docker_18_09;
+    docker_18_09
+    docker_19_03;
 
-  docker = docker_18_09;
-  docker-edge = docker_18_09;
+  docker = docker_19_03;
+  docker-edge = docker_19_03;
 
   docker-proxy = callPackage ../applications/virtualization/docker/proxy.nix { };
 
@@ -18564,10 +18588,7 @@ in
 
   super-productivity = callPackage ../applications/networking/super-productivity { };
 
-  wlc = callPackage ../development/libraries/wlc { };
   wlroots = callPackage ../development/libraries/wlroots { };
-
-  orbment = callPackage ../applications/window-managers/orbment { };
 
   sway = callPackage ../applications/window-managers/sway { };
   swaybg = callPackage ../applications/window-managers/sway/bg.nix { };
@@ -18576,11 +18597,6 @@ in
 
   waybar = callPackage ../applications/misc/waybar {
     pulseSupport = config.pulseaudio or false;
-  };
-
-  velox = callPackage ../applications/window-managers/velox {
-    stConf = config.st.conf or null;
-    stPatches = config.st.patches or null;
   };
 
   i3 = callPackage ../applications/window-managers/i3 {
@@ -18913,6 +18929,12 @@ in
   kubernetes = callPackage ../applications/networking/cluster/kubernetes { };
 
   kubectl = callPackage ../applications/networking/cluster/kubectl { };
+
+  k9s = callPackage ../applications/networking/cluster/k9s { };
+
+  fluxctl = callPackage ../applications/networking/cluster/fluxctl { };
+
+  linkerd = callPackage ../applications/networking/cluster/linkerd { };
 
   kubernetes-helm = callPackage ../applications/networking/cluster/helm { };
 
@@ -19655,7 +19677,7 @@ in
 
   openorienteering-mapper = libsForQt5.callPackage ../applications/gis/openorienteering-mapper { };
 
-  openscad = callPackage ../applications/graphics/openscad {};
+  openscad = qt5.callPackage ../applications/graphics/openscad {};
 
   opentimestamps-client = python3Packages.callPackage ../tools/misc/opentimestamps-client {};
 
