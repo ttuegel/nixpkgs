@@ -129,6 +129,8 @@ in {
 
   py3to2 = callPackage ../development/python-modules/3to2 { };
 
+  pynamodb = callPackage ../development/python-modules/pynamodb { };
+
   absl-py = callPackage ../development/python-modules/absl-py { };
 
   adb-homeassistant = callPackage ../development/python-modules/adb-homeassistant { };
@@ -482,7 +484,9 @@ in {
 
   btchip = callPackage ../development/python-modules/btchip { };
 
-  datatable = callPackage ../development/python-modules/datatable { };
+  datatable = callPackage ../development/python-modules/datatable {
+    inherit (pkgs.llvmPackages) openmp libcxx libcxxabi;
+  };
 
   datamodeldict = callPackage ../development/python-modules/datamodeldict { };
 
@@ -501,6 +505,8 @@ in {
   dictionaries = callPackage ../development/python-modules/dictionaries { };
 
   diff_cover = callPackage ../development/python-modules/diff_cover { };
+
+  diofant = callPackage ../development/python-modules/diofant { };
 
   docrep = callPackage ../development/python-modules/docrep { };
 
@@ -585,6 +591,8 @@ in {
   globus-sdk = callPackage ../development/python-modules/globus-sdk { };
 
   glymur = callPackage ../development/python-modules/glymur { };
+
+  glob2 = callPackage ../development/python-modules/glob2 { };
 
   glom = callPackage ../development/python-modules/glom { };
 
@@ -940,6 +948,10 @@ in {
     `propagatedBuildInputs` may cause collisions.
   */
   pyqt5_with_qtwebkit = self.pyqt5.override { withWebKit = true; };
+
+  pyqtwebengine = pkgs.libsForQt5.callPackage ../development/python-modules/pyqtwebengine {
+    pythonPackages = self;
+  };
 
   pysc2 = callPackage ../development/python-modules/pysc2 { };
 
@@ -2351,7 +2363,11 @@ in {
 
   image-match = callPackage ../development/python-modules/image-match { };
 
-  imbalanced-learn = callPackage ../development/python-modules/imbalanced-learn { };
+  imbalanced-learn =
+    if isPy27 then
+      callPackage ../development/python-modules/imbalanced-learn/0.4.nix { }
+    else
+      callPackage ../development/python-modules/imbalanced-learn { };
 
   immutables = callPackage ../development/python-modules/immutables {};
 
@@ -3842,9 +3858,18 @@ in {
 
   Nuitka = callPackage ../development/python-modules/nuitka { };
 
-  numpy = callPackage ../development/python-modules/numpy {
-    blas = pkgs.openblasCompat;
-  };
+  numpy = let
+    numpy_ = callPackage ../development/python-modules/numpy {
+      blas = pkgs.openblasCompat;
+    };
+    numpy_2 = numpy_.overridePythonAttrs(oldAttrs: rec {
+      version = "1.16.4";
+      src = oldAttrs.src.override {
+        inherit version;
+        sha256 = "1ivrwh66cmly7xh1dl7pybizfz5rcicn4kkkx5g29v4gll9bwhkj";
+      };
+    });
+  in if pythonOlder "3.5" then numpy_2 else numpy_;
 
   numpydoc = callPackage ../development/python-modules/numpydoc { };
 
@@ -3906,8 +3931,7 @@ in {
 
   cachetools = callPackage ../development/python-modules/cachetools {};
 
-  cmd2_9 = callPackage ../development/python-modules/cmd2 {};
-  cmd2 = self.cmd2_9;
+  cmd2 = callPackage ../development/python-modules/cmd2 {};
 
   warlock = callPackage ../development/python-modules/warlock { };
 
@@ -3955,7 +3979,10 @@ in {
 
   pagerduty = callPackage ../development/python-modules/pagerduty { };
 
-  pandas = callPackage ../development/python-modules/pandas { };
+  pandas = if isPy3k then
+    callPackage ../development/python-modules/pandas { }
+  else
+    callPackage ../development/python-modules/pandas/2.nix { };
 
   panel = callPackage ../development/python-modules/panel { };
 
@@ -4710,6 +4737,8 @@ in {
 
   simplegeneric = callPackage ../development/python-modules/simplegeneric { };
 
+  shamir-mnemonic = callPackage ../development/python-modules/shamir-mnemonic { };
+
   shodan = callPackage ../development/python-modules/shodan { };
 
   should-dsl = callPackage ../development/python-modules/should-dsl { };
@@ -5172,6 +5201,8 @@ in {
   svgwrite = callPackage ../development/python-modules/svgwrite { };
 
   swagger-spec-validator = callPackage ../development/python-modules/swagger-spec-validator { };
+
+  openapi-spec-validator = callPackage ../development/python-modules/openapi-spec-validator { };
 
   freezegun = callPackage ../development/python-modules/freezegun { };
 
@@ -5692,15 +5723,22 @@ in {
 
   tensorflow-tensorboard = callPackage ../development/python-modules/tensorflow-tensorboard { };
 
-  tensorflow =
-    if stdenv.isDarwin
-    then callPackage ../development/python-modules/tensorflow/bin.nix { }
-    else callPackage ../development/python-modules/tensorflow/bin.nix rec {
-      cudaSupport = pkgs.config.cudaSupport or false;
-      inherit (pkgs.linuxPackages) nvidia_x11;
-      cudatoolkit = pkgs.cudatoolkit_10_0;
-      cudnn = pkgs.cudnn_cudatoolkit_10_0;
-    };
+  tensorflow-bin = callPackage ../development/python-modules/tensorflow/bin.nix {
+    cudaSupport = pkgs.config.cudaSupport or false;
+    inherit (pkgs.linuxPackages) nvidia_x11;
+    cudatoolkit = pkgs.cudatoolkit_10;
+    cudnn = pkgs.cudnn_cudatoolkit_10;
+  };
+
+  tensorflow-build = callPackage ../development/python-modules/tensorflow {
+    cudaSupport = pkgs.config.cudaSupport or false;
+    inherit (pkgs.linuxPackages) nvidia_x11;
+    cudatoolkit = pkgs.cudatoolkit_10;
+    cudnn = pkgs.cudnn_cudatoolkit_10;
+    nccl = pkgs.nccl_cudatoolkit_10;
+  };
+
+  tensorflow = if stdenv.isDarwin then self.tensorflow-bin else self.tensorflow-build;
 
   tensorflowWithoutCuda = self.tensorflow.override {
     cudaSupport = false;
@@ -6054,6 +6092,8 @@ in {
   pydantic = callPackage ../development/python-modules/pydantic { };
 
   fastapi = callPackage ../development/python-modules/fastapi { };
+
+  stringcase = callPackage ../development/python-modules/stringcase { };
 });
 
 in fix' (extends overrides packages)
