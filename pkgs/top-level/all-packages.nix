@@ -4285,6 +4285,8 @@ in
 
     libparserutils = callPackage ../applications/misc/netsurf/libparserutils { };
 
+    libnslog = callPackage ../applications/misc/netsurf/libnslog { };
+
     libcss = callPackage ../applications/misc/netsurf/libcss { };
 
     libhubbub = callPackage ../applications/misc/netsurf/libhubbub { };
@@ -4298,6 +4300,10 @@ in
     libnsfb = callPackage ../applications/misc/netsurf/libnsfb { };
 
     libnsutils = callPackage ../applications/misc/netsurf/libnsutils { };
+
+    libsvgtiny = callPackage ../applications/misc/netsurf/libsvgtiny { };
+
+    libnspsl = callPackage ../applications/misc/netsurf/libnspsl { };
 
     libutf8proc = callPackage ../applications/misc/netsurf/libutf8proc { };
 
@@ -4386,6 +4392,8 @@ in
   leafpad = callPackage ../applications/editors/leafpad { };
 
   leatherman = callPackage ../development/libraries/leatherman { };
+
+  ledger-live-desktop = callPackage ../applications/altcoins/ledger-live-desktop { };
 
   ledmon = callPackage ../tools/system/ledmon { };
 
@@ -17243,10 +17251,7 @@ in
 
   bleachbit = callPackage ../applications/misc/bleachbit { };
 
-  blender = callPackage  ../applications/misc/blender {
-    pythonPackages = python35Packages;
-    stdenv = gcc6Stdenv;
-  };
+  blender = callPackage  ../applications/misc/blender { };
 
   bluefish = callPackage ../applications/editors/bluefish {
     gtk = gtk3;
@@ -23630,7 +23635,12 @@ in
 
   kontemplate = callPackage ../applications/networking/cluster/kontemplate { };
 
-  kops = callPackage ../applications/networking/cluster/kops { };
+  inherit (callPackage ../applications/networking/cluster/kops {})
+    mkKops
+    kops_1_12
+    kops_1_13
+    ;
+  kops = kops_1_13;
 
   lguf-brightness = callPackage ../misc/lguf-brightness { };
 
@@ -24169,6 +24179,8 @@ in
   unixcw = callPackage ../applications/radio/unixcw { };
 
   vault = callPackage ../tools/security/vault { };
+
+  vault-bin = callPackage ../tools/security/vault/vault-bin.nix { };
 
   vaultenv = haskellPackages.vaultenv;
 
