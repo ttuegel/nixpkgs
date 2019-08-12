@@ -183,7 +183,10 @@ in {
 
   asciitree = callPackage ../development/python-modules/asciitree { };
 
-  ase = callPackage ../development/python-modules/ase { };
+  ase = if isPy27 then
+          callPackage ../development/python-modules/ase/3.17.nix { }
+        else
+          callPackage ../development/python-modules/ase { };
 
   asn1crypto = callPackage ../development/python-modules/asn1crypto { };
 
@@ -476,6 +479,8 @@ in {
 
   cozy = callPackage ../development/python-modules/cozy { };
 
+  codespell = callPackage ../development/python-modules/codespell { };
+
   curio = callPackage ../development/python-modules/curio { };
 
   dendropy = callPackage ../development/python-modules/dendropy { };
@@ -573,6 +578,8 @@ in {
   fdint = callPackage ../development/python-modules/fdint { };
 
   filemagic = callPackage ../development/python-modules/filemagic { };
+
+  fsspec = callPackage ../development/python-modules/fsspec { };
 
   fuse = callPackage ../development/python-modules/fuse-python {
     inherit (pkgs) fuse pkgconfig;
@@ -744,6 +751,8 @@ in {
   nvchecker = callPackage ../development/python-modules/nvchecker { };
 
   numericalunits = callPackage ../development/python-modules/numericalunits { };
+
+  oath = callPackage ../development/python-modules/oath { };
 
   oauthenticator = callPackage ../development/python-modules/oauthenticator { };
 
@@ -1061,9 +1070,13 @@ in {
 
   python-utils = callPackage ../development/python-modules/python-utils { };
 
+  python-vipaccess = callPackage ../development/python-modules/python-vipaccess { };
+
   pytimeparse =  callPackage ../development/python-modules/pytimeparse { };
 
   pytricia =  callPackage ../development/python-modules/pytricia { };
+
+  pytrends = callPackage ../development/python-modules/pytrends { };
 
   py-vapid = callPackage ../development/python-modules/py-vapid { };
 
@@ -2187,6 +2200,8 @@ in {
   elasticsearchdsl = self.elasticsearch-dsl;
 
   elasticsearch-curator = callPackage ../development/python-modules/elasticsearch-curator { };
+
+  elementpath = callPackage ../development/python-modules/elementpath { };
 
   entrypoints = callPackage ../development/python-modules/entrypoints { };
 
@@ -4972,6 +4987,8 @@ in {
 
   xml2rfc = callPackage ../development/python-modules/xml2rfc { };
 
+  xmlschema = callPackage ../development/python-modules/xmlschema { };
+
   xmltodict = callPackage ../development/python-modules/xmltodict { };
 
   xarray = callPackage ../development/python-modules/xarray { };
@@ -6100,6 +6117,12 @@ in {
   fastapi = callPackage ../development/python-modules/fastapi { };
 
   stringcase = callPackage ../development/python-modules/stringcase { };
+
+  webrtcvad = callPackage ../development/python-modules/webrtcvad { };
+
+  wget = callPackage ../development/python-modules/wget { };
+
+  runway-python = callPackage ../development/python-modules/runway-python { };
 });
 
 in fix' (extends overrides packages)
