@@ -1160,6 +1160,8 @@ in {
 
   statistics = callPackage ../development/python-modules/statistics { };
 
+  stm32loader = callPackage ../development/python-modules/stm32loader { };
+
   stumpy = callPackage ../development/python-modules/stumpy { };
 
   sumo = callPackage ../development/python-modules/sumo { };
@@ -1492,6 +1494,8 @@ in {
   });
 
   boltztrap2 = callPackage ../development/python-modules/boltztrap2 { };
+
+  boolean-py = callPackage ../development/python-modules/boolean-py { };
 
   bumps = callPackage ../development/python-modules/bumps {};
 
@@ -2448,6 +2452,8 @@ in {
 
   libthumbor = callPackage ../development/python-modules/libthumbor { };
 
+  license-expression = callPackage ../development/python-modules/license-expression { };
+
   lightblue = callPackage ../development/python-modules/lightblue { };
 
   lightgbm = callPackage ../development/python-modules/lightgbm { };
@@ -3135,6 +3141,8 @@ in {
   ghdiff = callPackage ../development/python-modules/ghdiff { };
 
   gipc = callPackage ../development/python-modules/gipc { };
+
+  git-revise = callPackage ../development/python-modules/git-revise { };
 
   git-sweep = callPackage ../development/python-modules/git-sweep { };
 
