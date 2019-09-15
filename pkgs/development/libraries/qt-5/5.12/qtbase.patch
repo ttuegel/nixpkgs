@@ -12,7 +12,7 @@ index b77494ec..470c38e7 100644
  
  QMAKE_LFLAGS_REL_RPATH  =
 diff --git a/mkspecs/features/create_cmake.prf b/mkspecs/features/create_cmake.prf
-index c9910dda..e9bc8076 100644
+index 00da9bd3..bd166fbf 100644
 --- a/mkspecs/features/create_cmake.prf
 +++ b/mkspecs/features/create_cmake.prf
 @@ -21,7 +21,7 @@ load(cmake_functions)
@@ -24,7 +24,7 @@ index c9910dda..e9bc8076 100644
  contains(CMAKE_INSTALL_LIBS_DIR, ^(/usr)?/lib(64)?.*): CMAKE_USR_MOVE_WORKAROUND = $$CMAKE_INSTALL_LIBS_DIR
  
  CMAKE_OUT_DIR = $$MODULE_BASE_OUTDIR/lib/cmake
-@@ -60,45 +60,20 @@ split_incpath {
+@@ -70,45 +70,20 @@ split_incpath {
          $$cmake_extra_source_includes.output
  }
  
@@ -81,7 +81,7 @@ index c9910dda..e9bc8076 100644
  
  static|staticlib:CMAKE_STATIC_TYPE = true
  
-@@ -178,7 +153,7 @@ contains(CONFIG, plugin) {
+@@ -188,7 +163,7 @@ contains(CONFIG, plugin) {
        cmake_target_file
  
      cmake_qt5_plugin_file.files = $$cmake_target_file.output
@@ -90,7 +90,7 @@ index c9910dda..e9bc8076 100644
      INSTALLS += cmake_qt5_plugin_file
  
      return()
-@@ -323,7 +298,7 @@ exists($$cmake_macros_file.input) {
+@@ -333,7 +308,7 @@ exists($$cmake_macros_file.input) {
      cmake_qt5_module_files.files += $$cmake_macros_file.output
  }
  
@@ -260,10 +260,10 @@ index c7298928..c60ef16e 100644
          set_target_properties(Qt5::${Plugin} PROPERTIES
              \"IMPORTED_LOCATION_${Configuration}\" ${imported_location}
 diff --git a/mkspecs/features/mac/default_post.prf b/mkspecs/features/mac/default_post.prf
-index c46222de..18dcfbce 100644
+index 26bd3e2e..1e366c59 100644
 --- a/mkspecs/features/mac/default_post.prf
 +++ b/mkspecs/features/mac/default_post.prf
-@@ -64,202 +64,6 @@ qt {
+@@ -68,207 +68,11 @@ qt {
      }
  }
  
@@ -447,6 +447,11 @@ index c46222de..18dcfbce 100644
 -    QMAKE_PCH_OUTPUT_EXT = _${QMAKE_PCH_ARCH}$${QMAKE_PCH_OUTPUT_EXT}
 -}
 -
+ !equals(sdk_version, $$QMAKE_MAC_SDK_VERSION) {
+     # Explicit SDK version has been set, respect that
+     QMAKE_LFLAGS += -Wl,-sdk_version -Wl,$$sdk_version
+ }
+ 
 -cache(QMAKE_XCODE_DEVELOPER_PATH, stash)
 -!isEmpty(QMAKE_XCODE_VERSION): \
 -    cache(QMAKE_XCODE_VERSION, stash)
@@ -464,7 +469,7 @@ index c46222de..18dcfbce 100644
 -QMAKE_MAC_XCODE_SETTINGS += xcode_product_bundle_identifier_setting
 -
  !macx-xcode {
-     generate_xcode_project.commands = @$(QMAKE) -spec macx-xcode $(EXPORT__PRO_FILE_)
+     generate_xcode_project.commands = @$(QMAKE) -spec macx-xcode \"$(EXPORT__PRO_FILE_)\" $$QMAKE_ARGS
      generate_xcode_project.target = xcodeproj
 diff --git a/mkspecs/features/mac/default_pre.prf b/mkspecs/features/mac/default_pre.prf
 index e3534561..3b01424e 100644
@@ -911,10 +916,10 @@ index 706304cf..546420f6 100644
  set(_qt5_corelib_extra_includes \"$${CMAKE_INSTALL_DATA_DIR}mkspecs/$${CMAKE_MKSPEC}\")
  !!ENDIF
 diff --git a/src/corelib/kernel/qcore_mac_p.h b/src/corelib/kernel/qcore_mac_p.h
-index f96e7358..650946b7 100644
+index 168e0418..32542c33 100644
 --- a/src/corelib/kernel/qcore_mac_p.h
 +++ b/src/corelib/kernel/qcore_mac_p.h
-@@ -212,7 +212,7 @@ private:
+@@ -213,7 +213,7 @@ private:
  
  // --------------------------------------------------------------------------
  
@@ -923,7 +928,7 @@ index f96e7358..650946b7 100644
  
  QT_END_NAMESPACE
  #include <os/activity.h>
-@@ -290,7 +290,19 @@ QT_MAC_WEAK_IMPORT(_os_activity_current);
+@@ -291,7 +291,19 @@ QT_MAC_WEAK_IMPORT(_os_activity_current);
  
  #define QT_APPLE_SCOPED_LOG_ACTIVITY(...) QAppleLogActivity scopedLogActivity = QT_APPLE_LOG_ACTIVITY(__VA_ARGS__).enter();
  
@@ -945,10 +950,10 @@ index f96e7358..650946b7 100644
  // -------------------------------------------------------------------------
  
 diff --git a/src/corelib/kernel/qcoreapplication.cpp b/src/corelib/kernel/qcoreapplication.cpp
-index 8652c456..74562272 100644
+index db654602..cc97c460 100644
 --- a/src/corelib/kernel/qcoreapplication.cpp
 +++ b/src/corelib/kernel/qcoreapplication.cpp
-@@ -2690,6 +2690,15 @@ QStringList QCoreApplication::libraryPaths()
+@@ -2694,6 +2694,15 @@ QStringList QCoreApplication::libraryPaths()
          QStringList *app_libpaths = new QStringList;
          coreappdata()->app_libpaths.reset(app_libpaths);
  
@@ -965,10 +970,10 @@ index 8652c456..74562272 100644
          if (!libPathEnv.isEmpty()) {
              QStringList paths = libPathEnv.split(QDir::listSeparator(), QString::SkipEmptyParts);
 diff --git a/src/corelib/tools/qtimezoneprivate_tz.cpp b/src/corelib/tools/qtimezoneprivate_tz.cpp
-index 7d85bc07..c13d99b8 100644
+index 57bc000a..d7d81196 100644
 --- a/src/corelib/tools/qtimezoneprivate_tz.cpp
 +++ b/src/corelib/tools/qtimezoneprivate_tz.cpp
-@@ -71,7 +71,11 @@ typedef QHash<QByteArray, QTzTimeZone> QTzTimeZoneHash;
+@@ -77,7 +77,11 @@ typedef QHash<QByteArray, QTzTimeZone> QTzTimeZoneHash;
  // Parse zone.tab table, assume lists all installed zones, if not will need to read directories
  static QTzTimeZoneHash loadTzTimeZones()
  {
@@ -981,7 +986,7 @@ index 7d85bc07..c13d99b8 100644
      if (!QFile::exists(path))
          path = QStringLiteral("/usr/lib/zoneinfo/zone.tab");
  
-@@ -650,12 +654,16 @@ void QTzTimeZonePrivate::init(const QByteArray &ianaId)
+@@ -656,12 +660,16 @@ void QTzTimeZonePrivate::init(const QByteArray &ianaId)
          if (!tzif.open(QIODevice::ReadOnly))
              return;
      } else {
