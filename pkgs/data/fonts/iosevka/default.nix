@@ -1,5 +1,5 @@
 {
-  stdenv, lib, pkgs,
+  stdenv, lib,
   fetchFromGitHub, fetchurl,
   nodejs, ttfautohint-nox, otfcc,
 
@@ -8,9 +8,7 @@
   design ? [], upright ? [], italic ? [], oblique ? [],
   family ? null, weights ? [],
   # Custom font set name. Required if any custom settings above.
-  set ? null,
-  # Extra parameters. Can be used for ligature mapping.
-  extraParameters ? null
+  set ? null
 }:
 
 assert (design != []) -> set != null;
@@ -21,43 +19,38 @@ assert (family != null) -> set != null;
 assert (weights != []) -> set != null;
 
 let
-  system = builtins.currentSystem;
-  nodePackages = import ./node-packages.nix { inherit pkgs system nodejs; };
+  installPackageLock = import ./package-lock.nix { inherit fetchurl lib; };
 in
 
 let pname = if set != null then "iosevka-${set}" else "iosevka"; in
 
 let
-  version = "2.3.0";
+  version = "1.14.3";
   name = "${pname}-${version}";
   src = fetchFromGitHub {
     owner = "be5invis";
     repo ="Iosevka";
     rev = "v${version}";
-    sha256 = "1qnbxhx9wvij9zia226mc3sy8j7bfsw5v1cvxvsbbwjskwqdamvv";
+    sha256 = "0ba8hwxi88bp2jb9xfhk95nnlv8ykl74cv62xr4ybzm3b8ahpwqf";
   };
 in
 
 with lib;
-let quote = str: "\"" + str + "\""; in
-let toTomlList = list: "[" + (concatMapStringsSep ", " quote list) +"]"; in
-let unlines = concatStringsSep "\n"; in
+let unwords = concatStringsSep " "; in
 
 let
   param = name: options:
-    if options != [] then "${name}=${toTomlList options}" else null;
-  config = unlines (lib.filter (x: x != null) [
-    "[buildPlans.${pname}]"
+    if options != [] then "${name}='${unwords options}'" else null;
+  config = unwords (lib.filter (x: x != null) [
     (param "design" design)
     (param "upright" upright)
     (param "italic" italic)
     (param "oblique" oblique)
-    (if family != null then "family=\"${family}\"" else null)
+    (if family != null then "family='${family}'" else null)
     (param "weights" weights)
   ]);
-  installNodeModules = unlines (lib.mapAttrsToList
-    (name: value: "mkdir -p node_modules/${name}\n cp -r ${value.outPath}/lib/node_modules/. node_modules")
-    nodePackages);
+  custom = design != [] || upright != [] || italic != [] || oblique != []
+    || family != null || weights != [];
 in
 
 stdenv.mkDerivation {
@@ -65,25 +58,33 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [ nodejs ttfautohint-nox otfcc ];
 
-  passAsFile = [ "config" "extraParameters" ];
-  config = config;
-  extraParameters = extraParameters;
+  passAsFile = [ "installPackageLock" ];
+  installPackageLock = installPackageLock ./package-lock.json;
+
+  preConfigure = ''
+    HOME=$TMPDIR
+    source "$installPackageLockPath";
+    npm --offline rebuild
+  '';
 
   configurePhase = ''
-    mkdir -p node_modules/.bin
-    ${installNodeModules}
-    ${optionalString (set != null) ''mv "$configPath" private-build-plans.toml''}
-    ${optionalString (extraParameters != null) ''cat "$extraParametersPath" >> parameters.toml''}
+    runHook preConfigure
+
+    ${optionalString custom ''make custom-config set=${set} ${config}''}
+
+    runHook postConfigure
   '';
 
-  buildPhase = ''
-    npm run build -- ttf::${pname}
-  '';
+  makeFlags = lib.optionals custom [ "custom" "set=${set}" ];
 
   installPhase = ''
+    runHook preInstall
+
     fontdir="$out/share/fonts/$pname"
     install -d "$fontdir"
     install "dist/$pname/ttf"/* "$fontdir"
+
+    runHook postInstall
   '';
 
   enableParallelBuilding = true;
@@ -97,6 +98,6 @@ stdenv.mkDerivation {
     '';
     license = licenses.ofl;
     platforms = platforms.all;
-    maintainers = with maintainers; [ cstrahan jfrankenau ttuegel babariviere ];
+    maintainers = with maintainers; [ cstrahan jfrankenau ttuegel ];
   };
 }
