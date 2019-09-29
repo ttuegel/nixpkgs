@@ -13312,9 +13312,7 @@ in
 
     openbr = callPackage ../development/libraries/openbr { };
 
-    phonon = callPackage ../development/libraries/phonon {
-      withQt5 = true;
-    };
+    phonon = callPackage ../development/libraries/phonon { };
 
     phonon-backend-gstreamer = callPackage ../development/libraries/phonon/backends/gstreamer.nix {
       withQt5 = true;
