@@ -1,6 +1,5 @@
-{ stdenv, lib, fetchurl, cmake, phonon, pkgconfig, vlc
-, extra-cmake-modules, qtbase ? null, qtx11extras ? null, qt4 ? null
-, withQt4 ? false
+{ mkDerivation, lib, fetchurl, cmake, phonon, pkgconfig, vlc
+, extra-cmake-modules, qtbase, qtx11extras
 , debug ? false
 }:
 
@@ -11,14 +10,10 @@ let
   pname = "phonon-backend-vlc";
 in
 
-assert withQt4 -> qt4 != null;
-assert !withQt4 -> qtbase != null;
-assert !withQt4 -> qtx11extras != null;
+mkDerivation {
+  name = "${pname}-qt5-${v}";
 
-stdenv.mkDerivation {
-  name = "${pname}-${if withQt4 then "qt4" else "qt5"}-${v}";
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     homepage = https://phonon.kde.org/;
     description = "GStreamer backend for Phonon";
     platforms = platforms.linux;
@@ -30,13 +25,12 @@ stdenv.mkDerivation {
     sha256 = "163jqq5p9n0yfw2fqk0cqn3c6mqycxsvc4956zhkw5345g81a2a9";
   };
 
-  buildInputs =
-    [ phonon vlc ]
-    ++ (if withQt4 then [ qt4 ] else [ qtbase qtx11extras ]);
+  buildInputs = [ phonon vlc qtbase qtx11extras ];
 
-  nativeBuildInputs = [ cmake pkgconfig ] ++ optional (!withQt4) extra-cmake-modules;
+  nativeBuildInputs = [ cmake pkgconfig extra-cmake-modules ];
 
-  cmakeFlags =
-    [ "-DCMAKE_BUILD_TYPE=${if debug then "Debug" else "Release"}" ]
-    ++ optional (!withQt4) "-DPHONON_BUILD_PHONON4QT5=ON";
+  cmakeFlags = [
+    "-DCMAKE_BUILD_TYPE=${if debug then "Debug" else "Release"}"
+    "-DPHONON_BUILD_PHONON4QT5=ON"
+  ];
 }
