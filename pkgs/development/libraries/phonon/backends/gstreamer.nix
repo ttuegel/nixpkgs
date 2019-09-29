@@ -1,6 +1,5 @@
-{ stdenv, lib, fetchurl, cmake, gst_all_1, phonon, pkgconfig
-, extra-cmake-modules, qtbase ? null, qtx11extras ? null, qt4 ? null
-, withQt5 ? false
+{ mkDerivation, lib, fetchurl, cmake, gst_all_1, phonon, pkgconfig
+, extra-cmake-modules, qtbase, qtx11extras
 , debug ? false
 }:
 
@@ -11,13 +10,10 @@ let
   pname = "phonon-backend-gstreamer";
 in
 
-assert withQt5 -> qtbase != null;
-assert withQt5 -> qtx11extras != null;
+mkDerivation {
+  name = "${pname}-qt5-${v}";
 
-stdenv.mkDerivation {
-  name = "${pname}-${if withQt5 then "qt5" else "qt4"}-${v}";
-
-  meta = with stdenv.lib; {
+  meta = with lib; {
     homepage = https://phonon.kde.org/;
     description = "GStreamer backend for Phonon";
     platforms = platforms.linux;
@@ -52,17 +48,18 @@ stdenv.mkDerivation {
       ''-DGST_PLUGIN_PATH_1_0="${gstPluginPaths}"''
     ];
 
-  buildInputs = with gst_all_1;
-    [ gstreamer gst-plugins-base phonon ]
-    ++ (if withQt5 then [ qtbase qtx11extras ] else [ qt4 ]);
+  buildInputs =
+    with gst_all_1;
+    [ gstreamer gst-plugins-base phonon qtbase qtx11extras ];
 
   # cleanup: the build system creates (empty) $out/$out/share/icons (double prefix)
   # if DESTDIR is unset
   DESTDIR="/";
 
-  nativeBuildInputs = [ cmake pkgconfig ] ++ optional withQt5 extra-cmake-modules;
+  nativeBuildInputs = [ cmake pkgconfig extra-cmake-modules ];
 
-  cmakeFlags =
-    [ "-DCMAKE_BUILD_TYPE=${if debug then "Debug" else "Release"}" ]
-    ++ optional withQt5 "-DPHONON_BUILD_PHONON4QT5=ON";
+  cmakeFlags = [
+    "-DCMAKE_BUILD_TYPE=${if debug then "Debug" else "Release"}"
+    "-DPHONON_BUILD_PHONON4QT5=ON"
+  ];
 }
