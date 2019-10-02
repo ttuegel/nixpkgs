@@ -43,5 +43,6 @@ stdenv.mkDerivation rec {
     hydraPlatforms = platforms.none;
     homepage = http://www.kde.org;
     license = with licenses; [ gpl2 fdl12 lgpl21 ];
+    maintainers = with maintainers; [ gnidorah ];
   };
 }
