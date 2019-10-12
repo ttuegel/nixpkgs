@@ -64,7 +64,7 @@ let
       })
     ] ++ optional stdenv.cc.isClang ./qtwebengine-clang-fix.patch
       ++ optional stdenv.isDarwin ./qtwebengine-darwin-no-platform-check.patch;
-  
+
     qtwebkit = [ ./qtwebkit.patch ];
     qtvirtualkeyboard = [
       (fetchpatch {
@@ -161,6 +161,7 @@ let
         ++ optional (stdenv.isDarwin) qtmacextras);
 
       qmake = makeSetupHook {
+        inherit debug;
         deps = [ self.qtbase.dev ];
         substitutions = {
           fix_qmake_libtool = ../hooks/fix-qmake-libtool.sh;

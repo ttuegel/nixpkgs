@@ -2,6 +2,12 @@
 
 qmakeFlags=( $qmakeFlags )
 
+if [ -n "@debug@" ]; then
+    qmakeFlags+=( "CONFIG+=debug" )
+else
+    qmakeFlags+=( "CONFIG+=release" )
+fi
+
 qmakePrePhase() {
     qmakeFlags=( \
         "PREFIX=$out" \
