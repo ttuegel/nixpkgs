@@ -157,9 +157,9 @@ let
         ++ optional (stdenv.isDarwin) qtmacextras);
 
       qmake = makeSetupHook {
-        inherit debug;
         deps = [ self.qtbase.dev ];
         substitutions = {
+          inherit debug;
           inherit (stdenv) isDarwin;
           qtbase_dev = self.qtbase.dev;
           fix_qt_builtin_paths = ../hooks/fix-qt-builtin-paths.sh;

@@ -165,9 +165,9 @@ let
         ++ optional (stdenv.isDarwin) qtmacextras);
 
       qmake = makeSetupHook {
-        inherit debug;
         deps = [ self.qtbase.dev ];
         substitutions = {
+          inherit debug;
           fix_qmake_libtool = ../hooks/fix-qmake-libtool.sh;
         };
       } ../hooks/qmake-hook.sh;
