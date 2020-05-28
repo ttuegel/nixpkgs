@@ -22,7 +22,7 @@ let
 in
 {
   _3proxy = handleTest ./3proxy.nix {};
-  acme = handleTestOn ["x86_64-linux"] ./acme.nix {};
+  acme = handleTest ./acme.nix {};
   atd = handleTest ./atd.nix {};
   automysqlbackup = handleTest ./automysqlbackup.nix {};
   avahi = handleTest ./avahi.nix {};
@@ -51,6 +51,7 @@ in
   codimd = handleTest ./codimd.nix {};
   consul = handleTest ./consul.nix {};
   containers-bridge = handleTest ./containers-bridge.nix {};
+  containers-custom-pkgs.nix = handleTest ./containers-custom-pkgs.nix {};
   containers-ephemeral = handleTest ./containers-ephemeral.nix {};
   containers-extra_veth = handleTest ./containers-extra_veth.nix {};
   containers-hosts = handleTest ./containers-hosts.nix {};
@@ -119,12 +120,16 @@ in
   handbrake = handleTestOn ["x86_64-linux"] ./handbrake.nix {};
   haproxy = handleTest ./haproxy.nix {};
   hardened = handleTest ./hardened.nix {};
-  hibernate = handleTest ./hibernate.nix {};
+  # 9pnet_virtio used to mount /nix partition doesn't support
+  # hibernation. This test happens to work on x86_64-linux but
+  # not on other platforms.
+  hibernate = handleTestOn ["x86_64-linux"] ./hibernate.nix {};
   hitch = handleTest ./hitch {};
   hocker-fetchdocker = handleTest ./hocker-fetchdocker {};
   home-assistant = handleTest ./home-assistant.nix {};
   hound = handleTest ./hound.nix {};
   hydra = handleTest ./hydra {};
+  hydra-db-migration = handleTest ./hydra/db-migration.nix {};
   i3wm = handleTest ./i3wm.nix {};
   icingaweb2 = handleTest ./icingaweb2.nix {};
   iftop = handleTest ./iftop.nix {};

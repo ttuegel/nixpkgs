@@ -6,11 +6,18 @@
 , libjpeg, zlib, dbus, dbus-glib, bzip2, xorg
 , freetype, fontconfig, file, nspr, nss, libnotify
 , yasm, libGLU, libGL, sqlite, unzip, makeWrapper
-, hunspell, libXdamage, libevent, libstartup_notification, libvpx
+, hunspell, libXdamage, libevent, libstartup_notification
+, libvpx, libvpx_1_8
 , icu, libpng, jemalloc, glib
 , autoconf213, which, gnused, cargo, rustc, llvmPackages
 , rust-cbindgen, nodejs, nasm, fetchpatch
 , debugBuild ? false
+
+
+### backorted packages
+
+, nss_3_52
+, sqlite_3_31_1
 
 ### optionals
 
@@ -83,6 +90,13 @@ let
   execdir = if stdenv.isDarwin
             then "/Applications/${binaryNameCapitalized}.app/Contents/MacOS"
             else "/bin";
+
+# backported dependencies where the versions on the stable release did not meet
+# Firefoxs requirements
+
+nss_pkg = if lib.versionAtLeast ffversion "74" then nss_3_52 else nss;
+sqlite_pkg = if lib.versionAtLeast ffversion "74" then sqlite_3_31_1 else sqlite;
+
 in
 
 stdenv.mkDerivation ({
@@ -94,11 +108,6 @@ stdenv.mkDerivation ({
   patches = [
     ./env_var_for_system_dir.patch
   ]
-  ++ lib.optional (lib.versionAtLeast ffversion "73") (fetchpatch {
-    # https://phabricator.services.mozilla.com/D60667
-    url = "https://hg.mozilla.org/mozilla-central/raw-rev/b3d8b08265b800165d684281d19ac845a8ff9a66";
-    sha256 = "0b4s75w7sl619rglcjmlyvyibpj2ar5cpy6pnywl1xpd9qzyb27p";
-  })
   ++ patches;
 
 
@@ -113,17 +122,18 @@ stdenv.mkDerivation ({
     xorg.libX11 xorg.libXrender xorg.libXft xorg.libXt file
     libnotify xorg.pixman yasm libGLU libGL
     xorg.libXScrnSaver xorg.xorgproto
-    xorg.libXext sqlite unzip makeWrapper
-    libevent libstartup_notification libvpx /* cairo */
+    xorg.libXext unzip makeWrapper
+    libevent libstartup_notification /* cairo */
     icu libpng jemalloc glib
     nasm
     # >= 66 requires nasm for the AV1 lib dav1d
     # yasm can potentially be removed in future versions
     # https://bugzilla.mozilla.org/show_bug.cgi?id=1501796
     # https://groups.google.com/forum/#!msg/mozilla.dev.platform/o-8levmLU80/SM_zQvfzCQAJ
-    nspr nss
+    nspr nss_pkg
   ]
-
+  ++ lib.optionals  (lib.versionOlder ffversion "75") [ libvpx sqlite ]
+  ++ lib.optional  (lib.versionAtLeast ffversion "75.0") libvpx_1_8
   ++ lib.optional  alsaSupport alsaLib
   ++ lib.optional  pulseaudioSupport libpulseaudio # only headers are needed
   ++ lib.optional  gtk3Support gtk3
@@ -135,7 +145,7 @@ stdenv.mkDerivation ({
 
   NIX_CFLAGS_COMPILE = toString ([
     "-I${glib.dev}/include/gio-unix-2.0"
-    "-I${nss.dev}/include/nss"
+    "-I${nss_pkg.dev}/include/nss"
   ]
   ++ lib.optional (pname == "firefox-esr" && lib.versionOlder ffversion "69")
     "-Wno-error=format-security");
@@ -211,7 +221,6 @@ stdenv.mkDerivation ({
     "--with-system-icu"
     "--enable-system-ffi"
     "--enable-system-pixman"
-    "--enable-system-sqlite"
     #"--enable-system-cairo"
     "--enable-startup-notification"
     #"--enable-content-sandbox" # TODO: probably enable after 54
@@ -226,6 +235,7 @@ stdenv.mkDerivation ({
     "--with-system-nspr"
     "--with-system-nss"
   ]
+  ++ lib.optional (lib.versionOlder ffversion "75") "--enable-system-sqlite"
   ++ lib.optional (stdenv.isDarwin) "--disable-xcode-checks"
   ++ lib.optionals (lib.versionOlder ffversion "69") [
     "--enable-webrender=build"
@@ -296,6 +306,9 @@ stdenv.mkDerivation ({
     inherit execdir;
     inherit browserName;
   } // lib.optionalAttrs gtk3Support { inherit gtk3; };
+} //
+lib.optionalAttrs (lib.versionAtLeast ffversion "74") {
+  hardeningDisable = [ "format" ]; # -Werror=format-security
 } //
 # the build system verifies checksums of the bundled rust sources
 # ./third_party/rust is be patched by our libtool fixup code in stdenv

@@ -153,11 +153,20 @@ self: super: {
   barbly = addBuildDepend super.barbly pkgs.darwin.apple_sdk.frameworks.AppKit;
 
   # Hakyll's tests are broken on Darwin (3 failures); and they require util-linux
-  hakyll = if pkgs.stdenv.isDarwin
-    then dontCheck (overrideCabal super.hakyll (drv: {
+  hakyll = let
+      # Hakyll needs a relaxed upper bound on `warp` so that the preview server will build
+      patched-hakyll = overrideCabal super.hakyll (drv: {
+        postPatch = (drv.postPatch or "") + ''
+          substituteInPlace hakyll.cabal --replace \
+            "warp            >= 3.2   && < 3.3" \
+            "warp            >= 3.2   && < 3.4"
+        '';
+      });
+    in if pkgs.stdenv.isDarwin
+    then dontCheck (overrideCabal patched-hakyll (drv: {
       testToolDepends = [];
     }))
-    else super.hakyll;
+    else patched-hakyll;
 
   double-conversion = if !pkgs.stdenv.isDarwin
     then super.double-conversion
@@ -348,7 +357,6 @@ self: super: {
   optional = dontCheck super.optional;
   orgmode-parse = dontCheck super.orgmode-parse;
   os-release = dontCheck super.os-release;
-  pandoc-crossref = dontCheck super.pandoc-crossref;  # (most likely change when no longer 0.3.2.1) https://github.com/lierdakil/pandoc-crossref/issues/199
   persistent-redis = dontCheck super.persistent-redis;
   pipes-extra = dontCheck super.pipes-extra;
   pipes-websockets = dontCheck super.pipes-websockets;
@@ -907,7 +915,8 @@ self: super: {
   cryptohash-md5 = doJailbreak super.cryptohash-md5;
   text-short = doJailbreak super.text-short;
   gitHUD = dontCheck super.gitHUD;
-  githud = dontCheck super.githud;
+  # broken 20.03
+  githud = markBroken super.githud;
 
   # https://github.com/aisamanra/config-ini/issues/12
   config-ini = dontCheck super.config-ini;
@@ -1415,5 +1424,59 @@ self: super: {
   # https://bitbucket.org/rvlm/hakyll-contrib-hyphenation/src/master/
   # Therefore we jailbreak it.
   hakyll-contrib-hyphenation = doJailbreak super.hakyll-contrib-hyphenation;
+
+  # amqp-utils depends on amqp >= 0.19
+  amqp-utils = super.amqp-utils.override {
+    amqp = dontCheck super.amqp_0_19_1;
+  };
+
+  # HsYAML-aeson depends on a more modern version of HsYAML than the one
+  # available in stackage's LTS 14.23
+  HsYAML-aeson = super.HsYAML-aeson.override {
+    HsYAML = self.HsYAML_0_2_1_0;
+  };
+
+  stylish-haskell = super.stylish-haskell.override {
+    HsYAML = self.HsYAML_0_2_1_0;
+  };
+
+  # Needed for ghcide
+  haskell-lsp_0_19_0_0 = super.haskell-lsp_0_19_0_0.override {
+    haskell-lsp-types = self.haskell-lsp-types_0_19_0_0;
+  };
+
+  # this will probably need to get updated with every ghcide update,
+  # we need an override because ghcide is tracking haskell-lsp closely.
+  ghcide = dontCheck (super.ghcide.override rec {
+    haskell-lsp-types = self.haskell-lsp-types_0_19_0_0;
+    haskell-lsp = self.haskell-lsp_0_19_0_0;
+    regex-tdfa = self.regex-tdfa_1_3_1_0;
+    haddock-library = self.haddock-library_1_8_0;
+  });
+
+
+  # 20.03 broken packages
+
+  envy-extensible = markBroken super.envy-extensible;
+  exceptionfree-readfile = markBroken super.exceptionfree-readfile;
+  fcf-containers = markBroken super.fcf-containers;
+  first-class-instances = markBroken super.first-class-instances;
+  flp = markBroken super.flp;
+  hal = markBroken super.hal;
+  hcad = markBroken super.hcad;
+  hedis-envy = markBroken super.hedis-envy;
+  hhwloc = markBroken super.hhwloc;
+  layered-state = markBroken super.layered-state;
+  network-uri-static = markBroken super.network-uri-static;
+  pandoc-plot = markBroken super.pandoc-plot;
+  patch = markBroken super.patch;
+  prologue = markBroken super.prologue;
+  provenience = markBroken super.provenience;
+  refractor = markBroken super.refractor;
+  shwifty = markBroken super.shwifty;
+  smallcheck-kind-generics = markBroken super.smallcheck-kind-generics;
+  traversal-template = markBroken super.traversal-template;
+  vector-text = markBroken super.vector-text;
+  zbar = markBroken super.zbar;
 
 } // import ./configuration-tensorflow.nix {inherit pkgs haskellLib;} self super

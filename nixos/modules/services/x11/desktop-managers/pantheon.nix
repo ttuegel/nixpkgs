@@ -109,7 +109,7 @@ in
 
       # Without this, elementary LightDM greeter will pre-select non-existent `default` session
       # https://github.com/elementary/greeter/issues/368
-      services.xserver.displayManager.defaultSession = "pantheon";
+      services.xserver.displayManager.defaultSession = mkDefault "pantheon";
 
       services.xserver.displayManager.sessionCommands = ''
         if test "$XDG_CURRENT_DESKTOP" = "Pantheon"; then
@@ -181,7 +181,6 @@ in
         hicolor-icon-theme
         lightlocker
         onboard
-        plank
         qgnomeplatform
         shared-mime-info
         sound-theme-freedesktop
@@ -195,6 +194,7 @@ in
 
         # Desktop
         elementary-default-settings
+        elementary-dock
         elementary-session-settings
         elementary-shortcut-overlay
         gala
@@ -206,7 +206,6 @@ in
         })
 
         # Services
-        cerbere
         elementary-capnet-assist
         elementary-dpms-helper
         elementary-settings-daemon

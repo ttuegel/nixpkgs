@@ -69,6 +69,11 @@ core-packages:
 default-package-overrides:
   # pandoc-2.9 does not accept the 0.3 version yet
   - doclayout < 0.3
+  # asn1-types-0.3.4 contains a bugfix for Unicode parsing
+  - asn1-types ==0.3.4
+  # latest version does not support pandoc 2.8, remove once 2.9
+  # is available in LTS
+  - pandoc-crossref ==0.3.4.2
   # LTS Haskell 14.23
   - abstract-deque ==0.3
   - abstract-deque-tests ==0.3
@@ -134,7 +139,6 @@ default-package-overrides:
   - ascii-progress ==0.3.3.0
   - asn1-encoding ==0.9.6
   - asn1-parse ==0.9.5
-  - asn1-types ==0.3.3
   - assert-failure ==0.1.2.2
   - assoc ==1.0.1
   - astro ==0.4.2.1
@@ -2519,6 +2523,8 @@ extra-packages:
   - happy <1.19.6                       # newer versions break Agda
   - happy == 1.19.9                     # for purescript
   - haskell-gi-overloading == 0.0       # gi-* packages use this dependency to disable overloading support
+  - haskell-lsp == 0.19.*               # required for ghcide
+  - haskell-lsp-types == 0.19.*         # required for ghcide
   - haskell-src-exts == 1.19.*          # required by hindent and structured-haskell-mode
   - hinotify == 0.3.9                   # for xmonad-0.26: https://github.com/kolmodin/hinotify/issues/29
   - hoogle == 5.0.14                    # required by hie-hoogle
@@ -2916,7 +2922,6 @@ broken-packages:
   - AMI
   - ampersand
   - amqp-conduit
-  - amqp-utils
   - analyze
   - analyze-client
   - anansi-pandoc
@@ -3396,7 +3401,6 @@ broken-packages:
   - brain-bleep
   - Bravo
   - breakout
-  - breve
   - brians-brain
   - brick-dropdownmenu
   - bricks
@@ -5054,7 +5058,6 @@ broken-packages:
   - ghci-lib
   - ghci-ng
   - ghci-pretty
-  - ghcide
   - ghcjs-base-stub
   - ghcjs-dom-jsffi
   - ghcjs-fetch
@@ -5804,7 +5807,6 @@ broken-packages:
   - hiccup
   - hichi
   - hid-examples
-  - hie-bios
   - hie-core
   - hieraclus
   - hierarchical-clustering
@@ -7832,7 +7834,6 @@ broken-packages:
   - pan-os-syslog
   - panda
   - pandoc-citeproc-preamble
-  - pandoc-crossref
   - pandoc-include
   - pandoc-include-code
   - pandoc-japanese-filters
