@@ -26,7 +26,7 @@ still shows most of the available features is in `./gwenview.nix`.
 */
 
 {
-  lib, libsForQt5, fetchurl,
+  lib, libsForQt5, libsForQt515, fetchurl,
   okteta
 }:
 
@@ -34,13 +34,11 @@ let
   mirror = "mirror://kde";
   srcs = import ./srcs.nix { inherit fetchurl mirror; };
 
-  mkDerivation = args:
+  mkDerivation = mkDerivation: args:
     let
       inherit (args) name;
       sname = args.sname or name;
       inherit (srcs.${sname}) src version;
-      mkDerivation =
-        libsForQt5.callPackage ({ mkDerivation }: mkDerivation) {};
     in
       mkDerivation (args // {
         name = "${name}-${version}";
@@ -54,16 +52,22 @@ let
         } // (args.meta or {});
       });
 
-  packages = self: with self;
+  packages =
     let
-      callPackage = self.newScope {
-        inherit mkDerivation;
+      callPackage = libsForQt5.newScope {
+        mkDerivation = mkDerivation (libsForQt5.callPackage ({ mkDerivation }: mkDerivation) {});
+
+        # Team of maintainers assigned to the KDE PIM suite
+        kdepimTeam = with lib.maintainers; [ ttuegel vandenoever nyanloutre ];
+      };
+      callPackageQt515 = libsForQt515.newScope {
+        mkDerivation = mkDerivation (libsForQt515.callPackage ({ mkDerivation }: mkDerivation) {});
 
         # Team of maintainers assigned to the KDE PIM suite
         kdepimTeam = with lib.maintainers; [ ttuegel vandenoever nyanloutre ];
       };
     in {
-      akonadi = callPackage ./akonadi {};
+      akonadi = callPackageQt515 ./akonadi {};
       akonadi-calendar = callPackage ./akonadi-calendar.nix {};
       akonadi-contacts = callPackage ./akonadi-contacts.nix {};
       akonadi-import-wizard = callPackage ./akonadi-import-wizard.nix {};
@@ -138,7 +142,7 @@ let
       klines = callPackage ./klines.nix {};
       kmag = callPackage ./kmag.nix {};
       kmahjongg = callPackage ./kmahjongg.nix {};
-      kmail = callPackage ./kmail.nix {};
+      kmail = callPackageQt515 ./kmail.nix {};
       kmail-account-wizard = callPackage ./kmail-account-wizard.nix {};
       kmailtransport = callPackage ./kmailtransport.nix {};
       kmbox = callPackage ./kmbox.nix {};
@@ -214,4 +218,4 @@ let
       inherit okteta;
     };
 
-in lib.makeScope libsForQt5.newScope packages
+in packages
