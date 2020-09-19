@@ -4,8 +4,13 @@
   qtbase, qtsvg,
 }:
 
+let
+  pname = "kdiagram";
+  version = "2.7.0";
+in
+
 mkDerivation {
-  name = "kdiagram-2.6.0";
+  inherit pname version;
   src = fetchurl {
     url = "https://download.kde.org/stable/kdiagram/2.6.0/src/kdiagram-2.6.0.tar.xz";
     sha256 = "10hqk12wwgbiq4q5145s8v7v96j621ckq1yil9s4pihmgsnqsy02";
