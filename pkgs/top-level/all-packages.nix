@@ -21324,19 +21324,20 @@ in
         inherit (forQt512)
           ark
           bomber bovo
-          dolphin dragon
+          dolphin dolphin-plugins dragon
           ffmpegthumbs filelight
           granatier gwenview
           k3b
           kalzium kapptemplate kapman kate katomic
           kblackbox kblocks kbounce
           kcachegrind kcalc kcharselect kcolorchooser
-          kdenlive kdf kdialog kdiamond
+          kdegraphics-thumbnailers kdenetwork-filesharing kdenlive kdf kdialog
+          kdiamond
           keditbookmarks
           kfind kfloppy
           kget
           khelpcenter
-          kig kigo killbots
+          kig kigo killbots kio-extras
           klettres klines
           kmag kmines kmix kmplot
           knavalbattle knetwalk knights
@@ -21347,7 +21348,7 @@ in
           kwalletmanager
           marble
           okular
-          picmi
+          picmi print-manager
           spectacle
           yakuake;
       };
