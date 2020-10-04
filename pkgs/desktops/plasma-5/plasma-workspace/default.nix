@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib,
+  mkDerivation, lib, fetchurl,
 
   extra-cmake-modules, kdoctools,
 
@@ -46,6 +46,18 @@ mkDerivation {
   patches = [
     ./0001-startkde.patch
     ./0002-absolute-wallpaper-install-dir.patch
+    (# Systemd v246 hides the interface used by KDE to fetch the
+     # user session details.
+     # We're applying this commit from 5.19.90 upgrading the
+     # systementry applet to use the new sessionmanagement API.
+     # See https://github.com/NixOS/nixpkgs/issues/98141 for more
+     # details.
+     # /!\ Remove this patch for version >= v5.19.90
+      fetchurl {
+      name = "003-port-systementry-to-sessionmanagement-api.patch";
+      url = "https://invent.kde.org/plasma/plasma-workspace/-/commit/05414ed58d43d87d907326636faac53ae2e7bd60.patch";
+      sha256 = "03b5n3aqjydnc7gby5a71ijyn6fckhgfwb88j3mlaw9wycyjb1vw";
+    })
   ];
 
   postPatch = ''
