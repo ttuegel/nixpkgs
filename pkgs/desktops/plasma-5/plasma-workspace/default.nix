@@ -1,5 +1,5 @@
 {
-  mkDerivation, lib, fetchurl,
+  mkDerivation, lib, fetchpatch,
 
   extra-cmake-modules, kdoctools,
 
@@ -53,10 +53,10 @@ mkDerivation {
      # See https://github.com/NixOS/nixpkgs/issues/98141 for more
      # details.
      # /!\ Remove this patch for version >= v5.19.90
-      fetchurl {
-      name = "003-port-systementry-to-sessionmanagement-api.patch";
+      fetchpatch {
+      name = "0003-port-systementry-to-sessionmanagement-api.patch";
       url = "https://invent.kde.org/plasma/plasma-workspace/-/commit/05414ed58d43d87d907326636faac53ae2e7bd60.patch";
-      sha256 = "03b5n3aqjydnc7gby5a71ijyn6fckhgfwb88j3mlaw9wycyjb1vw";
+      sha256 = "sha256:16izfcwxjkdn99j777ywjkzl01iyl542h4hpsbpkckccj7hz8sin";
     })
   ];
 
