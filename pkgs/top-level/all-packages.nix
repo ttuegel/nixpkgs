@@ -21357,7 +21357,7 @@ in
           kwalletmanager
           marble
           okular
-          picmi
+          picmi print-manager
           spectacle
           yakuake;
       };
