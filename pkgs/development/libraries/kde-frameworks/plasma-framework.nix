@@ -14,8 +14,9 @@ mkDerivation {
   buildInputs = [
     kactivities karchive kconfig kconfigwidgets kcoreaddons kdbusaddons
     kdeclarative kglobalaccel kguiaddons ki18n kiconthemes kio knotifications
-    kwayland kwindowsystem kxmlgui qtdeclarative qtscript qtx11extras kirigami2
-    qtquickcontrols2
+    kwayland kwindowsystem kxmlgui qtdeclarative qtscript qtx11extras
   ];
-  propagatedBuildInputs = [ kpackage kservice qtbase ];
+  propagatedBuildInputs = [
+    kirigami2 kpackage kservice qtbase qtquickcontrols2
+  ];
 }
