@@ -47,9 +47,11 @@ export QMAKEMODULES
 declare -Ag qmakePathSeen=()
 qmakePathHook() {
     echo >&2 "qmakePathHook: $1"  # DEBUG
-    [[ -n "${qmakePathSeen[$1]}" ]] || return 0
+    # Skip this path if we have seen it before.
+    # MUST use 'if' because 'qmakePathSeen[$]' may be unset.
+    if [ -n "${qmakePathSeen[$1]}" ]; then return; fi
     qmakePathSeen[$1]=1
-    if [[ -d "$1/mkspecs" ]]
+    if [ -d "$1/mkspecs" ]
     then
         QMAKEMODULES="${QMAKEMODULES}${QMAKEMODULES:+:}/mkspecs"
         QMAKEPATH="${QMAKEPATH}${QMAKEPATH:+:}$1"
@@ -66,9 +68,11 @@ envBuildHostHooks+=(qmakePathHook)
 declare -Ag qtEnvHostTargetSeen=()
 qtEnvHostTargetHook() {
     echo >&2 "qtEnvHostTargetHook: $1"  # DEBUG
-    [[ -n "${qtEnvHostTargetSeen[$1]}" ]] || return 0
+    # Skip this path if we have seen it before.
+    # MUST use 'if' because 'qmakePathSeen[$]' may be unset.
+    if [ -n "${qtEnvHostTargetSeen[$1]}" ]; then return; fi
     qtEnvHostTargetSeen[$1]=1
-    if providesQtRuntime "$1" && [[ "z${!outputBin}" != "z${!outputDev}" ]]
+    if providesQtRuntime "$1" && [ "z${!outputBin}" != "z${!outputDev}" ]
     then
         propagatedBuildInputs+=" $1"
     fi
