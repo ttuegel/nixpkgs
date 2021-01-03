@@ -49,7 +49,7 @@ qmakePathHook() {
     echo >&2 "qmakePathHook: $1"  # DEBUG
     # Skip this path if we have seen it before.
     # MUST use 'if' because 'qmakePathSeen[$]' may be unset.
-    if [ -n "${qmakePathSeen[$1]}" ]; then return; fi
+    if [ -n "${qmakePathSeen[$1]-}" ]; then return; fi
     qmakePathSeen[$1]=1
     if [ -d "$1/mkspecs" ]
     then
@@ -70,7 +70,7 @@ qtEnvHostTargetHook() {
     echo >&2 "qtEnvHostTargetHook: $1"  # DEBUG
     # Skip this path if we have seen it before.
     # MUST use 'if' because 'qmakePathSeen[$]' may be unset.
-    if [ -n "${qtEnvHostTargetSeen[$1]}" ]; then return; fi
+    if [ -n "${qtEnvHostTargetSeen[$1]-}" ]; then return; fi
     qtEnvHostTargetSeen[$1]=1
     if providesQtRuntime "$1" && [ "z${!outputBin}" != "z${!outputDev}" ]
     then
