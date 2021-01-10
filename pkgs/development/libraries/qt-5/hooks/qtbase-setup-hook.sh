@@ -46,7 +46,6 @@ export QMAKEMODULES
 
 declare -Ag qmakePathSeen=()
 qmakePathHook() {
-    echo >&2 "qmakePathHook: $1"  # DEBUG
     # Skip this path if we have seen it before.
     # MUST use 'if' because 'qmakePathSeen[$]' may be unset.
     if [ -n "${qmakePathSeen[$1]-}" ]; then return; fi
@@ -67,7 +66,6 @@ envBuildHostHooks+=(qmakePathHook)
 # would not be propagated to the user environment.)
 declare -Ag qtEnvHostTargetSeen=()
 qtEnvHostTargetHook() {
-    echo >&2 "qtEnvHostTargetHook: $1"  # DEBUG
     # Skip this path if we have seen it before.
     # MUST use 'if' because 'qmakePathSeen[$]' may be unset.
     if [ -n "${qtEnvHostTargetSeen[$1]-}" ]; then return; fi
