@@ -14,6 +14,8 @@ stdenv.mkDerivation rec {
   buildInputs = [ qtbase cpp-utilities ];
   nativeBuildInputs = [ cmake qttools ];
 
+  dontWrapQtApps = true;
+
   meta = with stdenv.lib; {
     homepage = "https://github.com/Martchus/qtutilities";
     description = "Common C++ classes and routines used by @Martchus' applications featuring argument parser, IO and conversion utilities";
