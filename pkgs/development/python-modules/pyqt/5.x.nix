@@ -40,6 +40,8 @@ in buildPythonPackage rec {
 
   outputs = [ "out" "dev" ];
 
+  dontWrapQtApps = true;
+
   nativeBuildInputs = [
     pkgconfig
     qmake
