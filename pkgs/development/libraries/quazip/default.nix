@@ -15,6 +15,8 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake ]
     ++ stdenv.lib.optional stdenv.isDarwin fixDarwinDylibNames;
 
+  dontWrapQtApps = true;
+
   meta = with stdenv.lib; {
     description = "Provides access to ZIP archives from Qt programs";
     license = licenses.lgpl21Plus;
