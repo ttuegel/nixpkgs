@@ -18,6 +18,8 @@ stdenv.mkDerivation rec {
     wrapProgram $out/bin/kdbg --prefix QT_PLUGIN_PATH : ${qtbase}/${qtbase.qtPluginPrefix}
   '';
 
+  dontWrapQtApps = true;
+
   meta = with stdenv.lib; {
     homepage = "https://www.kdbg.org/";
     description = ''
