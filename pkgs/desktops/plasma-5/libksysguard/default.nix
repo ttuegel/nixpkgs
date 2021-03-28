@@ -8,7 +8,7 @@
 
 mkDerivation {
   name = "libksysguard";
-  meta.broken = lib.versionOlder qtbase.version "5.14.0";
+  meta.broken = lib.versionOlder qtbase.version "5.15";
   patches = [
     ./0001-qdiriterator-follow-symlinks.patch
   ];
