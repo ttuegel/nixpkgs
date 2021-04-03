@@ -8,7 +8,6 @@ mkDerivation {
   name = "prison";
   meta = {
     maintainers = [ lib.maintainers.ttuegel ];
-    broken = lib.versionOlder qtbase.version "5.14";
   };
   nativeBuildInputs = [ extra-cmake-modules ];
   buildInputs = [ libdmtx qrencode ];

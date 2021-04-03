@@ -7,7 +7,6 @@
 mkDerivation {
   name = "kquickcharts";
   meta = {
-    broken = lib.versionOlder qtbase.version "5.14";
     maintainers = [ lib.maintainers.ttuegel ];
   };
   nativeBuildInputs = [ extra-cmake-modules ];

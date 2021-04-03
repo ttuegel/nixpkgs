@@ -7,7 +7,6 @@ mkDerivation {
   name = "bluez-qt";
   meta = {
     maintainers = [ lib.maintainers.ttuegel ];
-    broken = lib.versionOlder qtbase.version "5.14";
   };
   nativeBuildInputs = [ extra-cmake-modules ];
   buildInputs = [ qtdeclarative ];
