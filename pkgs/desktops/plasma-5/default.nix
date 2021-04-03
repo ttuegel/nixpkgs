@@ -30,6 +30,8 @@ existing packages here and modify it as necessary.
 }:
 
 let
+  minQtVersion = "5.15";
+
   srcs = import ./srcs.nix {
     inherit fetchurl;
     mirror = "mirror://kde";
@@ -88,6 +90,7 @@ let
               platforms = lib.platforms.linux;
               maintainers = with lib.maintainers; [ ttuegel nyanloutre ];
               homepage = "http://www.kde.org";
+              broken = lib.versionOlder libsForQt5.qtbase.version minQtVersion;
             } // (args.meta or {});
           in
           mkDerivation (args // {
