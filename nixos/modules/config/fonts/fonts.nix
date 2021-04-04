@@ -43,7 +43,7 @@ with lib;
         pkgs.xorg.fontmiscmisc
         pkgs.xorg.fontcursormisc
         pkgs.unifont
-        pkgs.noto-fonts-emoji
+#        pkgs.noto-fonts-emoji
       ] ++ lib.optionals (config.nixpkgs.config.allowUnfree or false) [
         # these are unfree, and will make usage with xserver fail
         pkgs.xorg.fontbhlucidatypewriter100dpi
