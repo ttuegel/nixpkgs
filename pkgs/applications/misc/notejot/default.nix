@@ -18,13 +18,13 @@
 
 stdenv.mkDerivation rec {
   pname = "notejot";
-  version = "3.0.4";
+  version = "3.1.2";
 
   src = fetchFromGitHub {
     owner = "lainsce";
     repo = pname;
     rev = version;
-    hash = "sha256-p8rca3PsnT/3Lp6W30VvqR9aPr6EIuNrH5gsxL0lZ0Q=";
+    hash = "sha256-Exg9HxV3cxySuT8ifVyZgoATQ/FAC8umj3smJ7W/5/Y=";
   };
 
   nativeBuildInputs = [

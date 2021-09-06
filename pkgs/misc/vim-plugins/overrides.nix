@@ -126,8 +126,8 @@ self: super: {
     buildInputs = [ tabnine ];
 
     postFixup = ''
-      mkdir $target/binaries
-      ln -s ${tabnine}/bin/TabNine $target/binaries/TabNine_$(uname -s)
+      mkdir -p $target/binaries/${tabnine.version}
+      ln -s ${tabnine}/bin/ $target/binaries/${tabnine.version}/${tabnine.passthru.platform}
     '';
   });
 
@@ -203,7 +203,7 @@ self: super: {
 
   direnv-vim = super.direnv-vim.overrideAttrs (oa: {
     preFixup = oa.preFixup or "" + ''
-      substituteInPlace $out/share/vim-plugins/direnv-vim/autoload/direnv.vim \
+      substituteInPlace $out/share/vim-plugins/direnv.vim/autoload/direnv.vim \
         --replace "let s:direnv_cmd = get(g:, 'direnv_cmd', 'direnv')" \
           "let s:direnv_cmd = get(g:, 'direnv_cmd', '${lib.getBin direnv}/bin/direnv')"
     '';
@@ -212,6 +212,14 @@ self: super: {
   ensime-vim = super.ensime-vim.overrideAttrs (old: {
     passthru.python3Dependencies = ps: with ps; [ sexpdata websocket-client ];
     dependencies = with self; [ vimproc-vim vimshell-vim self.self forms ];
+  });
+
+  fcitx-vim = super.fcitx-vim.overrideAttrs (old: {
+    passthru.python3Dependencies = ps: with ps; [ dbus-python ];
+    meta = {
+      description = "Keep and restore fcitx state when leaving/re-entering insert mode or search mode";
+      license = lib.licenses.mit;
+    };
   });
 
   forms = super.forms.overrideAttrs (old: {
@@ -284,7 +292,7 @@ self: super: {
     dependencies = with self; [ plenary-nvim ];
   });
 
-  plenary-nvim = super.toVimPlugin(luaPackages.plenary-nvim);
+  # plenary-nvim = super.toVimPlugin(luaPackages.plenary-nvim);
 
   gruvbox-nvim = super.gruvbox-nvim.overrideAttrs (old: {
     dependencies = with self; [ lush-nvim ];
@@ -371,6 +379,10 @@ self: super: {
     dependencies = with self; [ vim-floaterm ];
   });
 
+  lir-nvim = super.lir-nvim.overrideAttrs (old: {
+    dependencies = with self; [ plenary-nvim ];
+  });
+
   meson = buildVimPluginFrom2Nix {
     inherit (meson) pname version src;
     preInstall = "cd data/syntax-highlighting/vim";
@@ -449,6 +461,14 @@ self: super: {
     configurePhase = "cd vim";
   });
 
+  range-highlight-nvim = super.range-highlight-nvim.overrideAttrs (old: {
+    dependencies = with self; [ cmd-parser-nvim ];
+  });
+
+  refactoring-nvim = super.refactoring-nvim.overrideAttrs (old: {
+    dependencies = with self; [ nvim-treesitter plenary-nvim ];
+  });
+
   skim = buildVimPluginFrom2Nix {
     pname = "skim";
     version = skim.version;
@@ -459,7 +479,7 @@ self: super: {
     dependencies = with self; [ skim ];
   });
 
-  sql-nvim = super.sql-nvim.overrideAttrs (old: {
+  sqlite-lua = super.sqlite-lua.overrideAttrs (old: {
     postPatch = ''
       substituteInPlace lua/sql/defs.lua \
         --replace "vim.g.sql_clib_path or" "vim.g.sql_clib_path or '${sqlite.out}/lib/libsqlite3.so' or"
@@ -496,7 +516,7 @@ self: super: {
     });
 
   telescope-frecency-nvim = super.telescope-frecency-nvim.overrideAttrs (old: {
-    dependencies = with self; [ sql-nvim telescope-nvim ];
+    dependencies = with self; [ sqlite-lua telescope-nvim ];
   });
 
   telescope-fzf-writer-nvim = super.telescope-fzf-writer-nvim.overrideAttrs (old: {
@@ -655,7 +675,7 @@ self: super: {
             libiconv
           ];
 
-          cargoSha256 = "sha256-wYxUo9zfflU7RTsTb7W9wc/WBsXhz3OLjC8CwUkRRiE=";
+          cargoSha256 = "16lcsi5mxmj79ky5lbpivravn8rjl4z3j3fsxrglb22ab4i7js3n";
         };
       in
       ''
@@ -814,7 +834,7 @@ self: super: {
   });
 
   vim-xdebug = super.vim-xdebug.overrideAttrs (old: {
-    postInstall = false;
+    postInstall = null;
   });
 
   vim-xkbswitch = super.vim-xkbswitch.overrideAttrs (old: {

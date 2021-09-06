@@ -1,25 +1,31 @@
 { lib, stdenv, fetchFromGitHub, rustPlatform, CoreServices, cmake
 , libiconv
 , useMimalloc ? false
-# FIXME: Test doesn't pass under rustc 1.52.1 due to different escaping of `'` in string.
-, doCheck ? false
+, doCheck ? true
 }:
 
 rustPlatform.buildRustPackage rec {
   pname = "rust-analyzer-unwrapped";
-  version = "2021-08-09";
-  cargoSha256 = "sha256-r01riAztIlwxRjvqQXofmqv5875nqQ0Qb9KALvKy4u8=";
+  version = "2021-08-30";
+  cargoSha256 = "sha256-ba/4mQSBJin3yoIZjzFTiEIRY2eWFQI2pY1dOCZ1ALw=";
 
   src = fetchFromGitHub {
     owner = "rust-analyzer";
     repo = "rust-analyzer";
     rev = version;
-    sha256 = "sha256-l9F/cznYHxBdnb3NerIXzOMrzRnxdka0vExzUtKkBfw=";
+    sha256 = "sha256-mgwoJfvO3W4MYk6ikgck14e+hMjA2D+4lpnkAEeLEWA=";
   };
+
+  patches = [
+    # Code format and git history check require more dependencies but don't really matter for packaging.
+    # So just ignore them.
+    ./ignore-git-and-rustfmt-tests.patch
+  ];
 
   buildAndTestSubdir = "crates/rust-analyzer";
 
   cargoBuildFlags = lib.optional useMimalloc "--features=mimalloc";
+  cargoTestFlags = lib.optional useMimalloc "--features=mimalloc";
 
   nativeBuildInputs = lib.optional useMimalloc cmake;
 

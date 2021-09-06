@@ -1,16 +1,22 @@
-{ lib, python3Packages }:
+{ lib, python3Packages, fetchFromGitHub }:
 
 python3Packages.buildPythonApplication rec {
   pname = "flexget";
-  version = "3.1.133";
+  version = "3.1.136";
 
-  src = python3Packages.fetchPypi {
-    pname = "FlexGet";
-    inherit version;
-    sha256 = "1mfmy2nbxx9k6hnhwxpf2062rwspigfhbvkpr161grd5amcs2cr6";
+  # Fetch from GitHub in order to use `requirements.in`
+  src = fetchFromGitHub {
+    owner = "flexget";
+    repo = "flexget";
+    rev = "v${version}";
+    sha256 = "058sja2miwhr6lx5j8r9d97k4ywh6dsxd05nb5w19z6a0sq1vmyb";
   };
 
   postPatch = ''
+    # Symlink requirements.in because upstream uses `pip-compile` which yields
+    # python-version dependent requirements
+    ln -sf requirements.in requirements.txt
+
     # remove dependency constraints
     sed 's/==\([0-9]\.\?\)\+//' -i requirements.txt
 

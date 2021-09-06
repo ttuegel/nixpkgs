@@ -816,12 +816,12 @@ let
         };
       };
 
-      jakebecker.elixir-ls = buildVscodeMarketplaceExtension {
+      elixir-lsp.vscode-elixir-ls = buildVscodeMarketplaceExtension {
         mktplcRef = {
           name = "elixir-ls";
           publisher = "JakeBecker";
-          version = "0.7.0";
-          sha256 = "sha256-kFrkElD7qC1SpOx1rpcHW1D2hybHCf7cqvIO7JfPuMc=";
+          version = "0.8.0";
+          sha256 = "sha256-VD1g4DJfA0vDJ0cyHFDEtCEqQo0nXfPC5vknEU91cPk=";
         };
         meta = with lib; {
           license = licenses.mit;
@@ -852,8 +852,8 @@ let
         mktplcRef = {
           name = "nix-ide";
           publisher = "jnoortheen";
-          version = "0.1.7";
-          sha256 = "1bw4wyq9abimxbhl7q9g8grvj2ax9qqq6mmqbiqlbsi2arvk0wrm";
+          version = "0.1.16";
+          sha256 = "04ky1mzyjjr1mrwv3sxz4mgjcq5ylh6n01lvhb19h3fmwafkdxbp";
         };
       };
 
@@ -911,6 +911,18 @@ let
           publisher = "kahole";
           version = "0.6.18";
           sha256 = "0sqzz5bbqqg60aypvwxcqnxrr72gmwfj9sv0amgkyaf60zg5sf7w";
+        };
+        meta = {
+          license = lib.licenses.mit;
+        };
+      };
+
+      lokalise.i18n-ally = buildVscodeMarketplaceExtension {
+        mktplcRef = {
+          name = "i18n-ally";
+          publisher = "Lokalise";
+          version = "2.7.1";
+          sha256 = "sha256-nHBYRSiPQ5ucWPr9VCUgMrosloLnVj40Fh+CEBvWONE=";
         };
         meta = {
           license = lib.licenses.mit;
@@ -1387,6 +1399,19 @@ let
       };
 
       vadimcn.vscode-lldb = callPackage ./vscode-lldb { };
+
+      viktorqvarfordt.vscode-pitch-black-theme = buildVscodeMarketplaceExtension {
+        mktplcRef = {
+          name = "vscode-pitch-black-theme";
+          publisher = "ViktorQvarfordt";
+          version = "1.2.4";
+          sha256 = "sha256-HTXToZv0WWFjuQiofEJuaZNSDTmCUcZ0B3KOn+CVALw=";
+        };
+        meta = {
+          license = lib.licenses.mit;
+        };
+      };
+
 
       vincaslt.highlight-matching-tag = buildVscodeMarketplaceExtension {
         mktplcRef = {

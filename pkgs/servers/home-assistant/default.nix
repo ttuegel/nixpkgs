@@ -24,6 +24,18 @@ let
     # Override the version of some packages pinned in Home Assistant's setup.py and requirements_all.txt
     (mkOverride "python-slugify" "4.0.1" "69a517766e00c1268e5bbfc0d010a0a8508de0b18d30ad5a1ff357f8ae724270")
 
+    (self: super: {
+      async-upnp-client = super.async-upnp-client.overridePythonAttrs (oldAttrs: rec {
+        version = "0.19.2";
+        src = fetchFromGitHub {
+          owner = "StevenLooman";
+          repo = "async_upnp_client";
+          rev = version;
+          sha256 = "1v8d2lvxihqasn7866zssys16s0lgxkk6ri2dp4rr7wr8g9ixvdr";
+        };
+      });
+    })
+
     # Pinned due to API changes in iaqualink>=2.0, remove after
     # https://github.com/home-assistant/core/pull/48137 was merged
     (self: super: {
@@ -53,31 +65,9 @@ let
       });
     })
 
-    # Pinned due to bug in ring-doorbell 0.7.0
-    # https://github.com/tchellomello/python-ring-doorbell/issues/240
-    (mkOverride "ring-doorbell" "0.6.2"
-      "fbd537722a27b3b854c26506d894b7399bb8dc57ff36083285971227a2d46560")
-
     # Pinned due to API changes in pylast 4.2.1
     (mkOverride "pylast" "4.2.0"
       "0zd0dn2l738ndz62vpa751z0ldnm91dcz9zzbvxv53r08l0s9yf3")
-
-    # Pinned due to API changes in pyopenuv>=1.1.0
-    (self: super: {
-      pyopenuv = super.pyopenuv.overridePythonAttrs (oldAttrs: rec {
-        version = "1.0.13";
-        src = fetchFromGitHub {
-          owner = "bachya";
-          repo = "pyopenuv";
-          rev = version;
-          sha256 = "1gx9xjkyvqqy8410lnbshq1j5y4cb0cdc4m505g17rwdzdwb01y8";
-        };
-        postPatch = ''
-          substituteInPlace pyproject.toml \
-            --replace "poetry.masonry.api" "poetry.core.masonry.api"
-        '';
-      });
-    })
 
     # Pinned due to API changes in pyruckus>0.12
     (self: super: {
@@ -101,6 +91,19 @@ let
           repo = "eebrightbox";
           rev = version;
           sha256 = "0d8mmpwgrd7gymw5263r1v2wjv6dx6w6pq13d62fkfm4h2hya4a4";
+        };
+      });
+    })
+
+    # Pinned due to changes in total-connect-client>0.58 which made the tests fails at the moment
+    (self: super: {
+      total-connect-client = super.total-connect-client.overridePythonAttrs (oldAttrs: rec {
+        version = "0.58";
+        src = fetchFromGitHub {
+          owner = "craigjmidwinter";
+          repo = "total-connect-client";
+          rev = version;
+          sha256 = "1dqmgvgvwjh235wghygan2jnfvmn9vz789in2as3asig9cifix9z";
         };
       });
     })
@@ -138,7 +141,7 @@ let
   extraBuildInputs = extraPackages py.pkgs;
 
   # Don't forget to run parse-requirements.py after updating
-  hassVersion = "2021.8.5";
+  hassVersion = "2021.8.8";
 
 in with py.pkgs; buildPythonApplication rec {
   pname = "homeassistant";
@@ -155,7 +158,7 @@ in with py.pkgs; buildPythonApplication rec {
     owner = "home-assistant";
     repo = "core";
     rev = version;
-    sha256 = "0alyr87vm0szljw1lgdsv7085rl0m9r16nwdprwskhcjlwllk1bh";
+    sha256 = "1fj16qva04d9qhpnfxxacsp82vqqfha5c2zg4f850kld4qhwrgky";
   };
 
   # leave this in, so users don't have to constantly update their downstream patch handling

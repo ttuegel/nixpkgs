@@ -46,7 +46,7 @@
     pname = "agda-mode";
     version = pkgs.haskellPackages.Agda.version;
 
-    phases = [ "buildPhase" "installPhase" ];
+    dontUnpack = true;
 
     # already byte-compiled by Agda builder
     buildPhase = ''
@@ -75,6 +75,31 @@
     meta = {
       description = "Standalone package providing the agda-input method without building Agda.";
       inherit (pkgs.haskellPackages.Agda.meta) homepage license;
+    };
+  };
+
+  # may be part of MELPA in the future, see
+  # https://github.com/mlochbaum/BQN/issues/10#issuecomment-912982874
+  bqn-mode = self.trivialBuild {
+    pname = "bqn-mode";
+    version = "unstable-2021-09-04";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "mlochbaum";
+      repo = "BQN";
+      rev = "e623a2fcafdf5fd6c8d31570175284805c4f34d9";
+      sha256 = "1a2lpxy3bak4724r0ns4la5d0j6484ngi73kcwp82vgbbpk7lcrp";
+    };
+
+    postUnpack = ''
+      sourceRoot="$sourceRoot/editors/emacs"
+    '';
+
+    meta = {
+      description = "Emacs mode for BQN";
+      license = lib.licenses.gpl3Only;
+      maintainers = [ lib.maintainers.sternenseemann ];
+      homepage = "https://mlochbaum.github.io/BQN/editors/index.html";
     };
   };
 
@@ -211,6 +236,25 @@
     meta = {
       description = "Standalone package providing ott-mode without building ott and with compiled bytecode.";
       inherit (pkgs.haskellPackages.Agda.meta) homepage license;
+    };
+  };
+
+  urweb-mode = self.trivialBuild {
+    pname = "urweb-mode";
+
+    inherit (pkgs.urweb) src version;
+
+    packageRequires = [
+      self.cl-lib
+      self.flycheck
+    ];
+
+    postUnpack = "sourceRoot=$sourceRoot/src/elisp";
+
+    meta = {
+      description = "Major mode for editing Ur/Web";
+      inherit (pkgs.urweb.meta) license homepage;
+      maintainers = [ lib.maintainers.sternenseemann ];
     };
   };
 

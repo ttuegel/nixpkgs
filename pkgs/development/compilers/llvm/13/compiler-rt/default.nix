@@ -1,4 +1,4 @@
-{ lib, stdenv, llvm_meta, version, src, cmake, python3, llvm, libcxxabi }:
+{ lib, stdenv, llvm_meta, version, src, cmake, python3, libllvm, libcxxabi }:
 
 let
 
@@ -16,7 +16,7 @@ stdenv.mkDerivation {
   inherit src;
   sourceRoot = "source/compiler-rt";
 
-  nativeBuildInputs = [ cmake python3 llvm.dev ];
+  nativeBuildInputs = [ cmake python3 libllvm.dev ];
   buildInputs = lib.optional stdenv.hostPlatform.isDarwin libcxxabi;
 
   NIX_CFLAGS_COMPILE = [
@@ -110,5 +110,7 @@ stdenv.mkDerivation {
     # "All of the code in the compiler-rt project is dual licensed under the MIT
     # license and the UIUC License (a BSD-like license)":
     license = with lib.licenses; [ mit ncsa ];
+    # TODO/FIXME: Build fails on Hydra:
+    broken = stdenv.isAarch64;
   };
 }
