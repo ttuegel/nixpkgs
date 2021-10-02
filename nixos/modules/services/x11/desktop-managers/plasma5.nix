@@ -16,36 +16,6 @@ let
   startplasma-x11 = "${getBin plasma5.plasma-workspace}/bin/startplasma-x11";
   sed = "${getBin pkgs.gnused}/bin/sed";
 
-  gtkrc2 = writeText "gtkrc-2.0" ''
-    # Default GTK+ 2 config for NixOS Plasma 5
-    include "/run/current-system/sw/share/themes/Breeze/gtk-2.0/gtkrc"
-    style "user-font"
-    {
-      font_name="Sans Serif Regular"
-    }
-    widget_class "*" style "user-font"
-    gtk-font-name="Sans Serif Regular 10"
-    gtk-theme-name="Breeze"
-    gtk-icon-theme-name="breeze"
-    gtk-fallback-icon-theme="hicolor"
-    gtk-cursor-theme-name="breeze_cursors"
-    gtk-toolbar-style=GTK_TOOLBAR_ICONS
-    gtk-menu-images=1
-    gtk-button-images=1
-  '';
-
-  gtk3_settings = writeText "settings.ini" ''
-    [Settings]
-    gtk-font-name=Sans Serif Regular 10
-    gtk-theme-name=Breeze
-    gtk-icon-theme-name=breeze
-    gtk-fallback-icon-theme=hicolor
-    gtk-cursor-theme-name=breeze_cursors
-    gtk-toolbar-style=GTK_TOOLBAR_ICONS
-    gtk-menu-images=1
-    gtk-button-images=1
-  '';
-
   kcminputrc = writeText "kcminputrc" ''
     [Mouse]
     cursorTheme=breeze_cursors
@@ -121,19 +91,6 @@ let
           then
               cat ${kcminputrc} >"$kcminputrc"
           fi
-
-          gtkrc2="$HOME/.gtkrc-2.0"
-          if ! [ -f "$gtkrc2" ]
-          then
-              cat ${gtkrc2} >"$gtkrc2"
-          fi
-
-          gtk3_settings="''${XDG_CONFIG_HOME}/gtk-3.0/settings.ini"
-          if ! [ -f "$gtk3_settings" ]
-          then
-              mkdir -p "$(dirname "$gtk3_settings")"
-              cat ${gtk3_settings} >"$gtk3_settings"
-          fi
       fi
 
     ''
@@ -202,6 +159,36 @@ in
         bgSupport = true;
         start = startplasma;
       };
+
+      environment.etc."gtk-2.0/gtkrc".text = ''
+         # Default GTK+ 2 config for NixOS Plasma 5
+        include "${pkgs.breeze-gtk}/share/themes/Breeze/gtk-2.0/gtkrc"
+        style "user-font"
+        {
+          font_name="Sans Serif Regular"
+        }
+        widget_class "*" style "user-font"
+        gtk-font-name="Sans Serif Regular 10"
+        gtk-theme-name="Breeze"
+        gtk-icon-theme-name="breeze"
+        gtk-fallback-icon-theme="hicolor"
+        gtk-cursor-theme-name="breeze_cursors"
+        gtk-toolbar-style=GTK_TOOLBAR_ICONS
+        gtk-menu-images=1
+        gtk-button-images=1
+      '';
+
+      environment.etc."gtk-3.0/settings.ini".text = ''
+        [Settings]
+        gtk-font-name=Sans Serif Regular 10
+        gtk-theme-name=Breeze
+        gtk-icon-theme-name=breeze
+        gtk-fallback-icon-theme=hicolor
+        gtk-cursor-theme-name=breeze_cursors
+        gtk-toolbar-style=GTK_TOOLBAR_ICONS
+        gtk-menu-images=1
+        gtk-button-images=1
+      '';
 
       security.wrappers = {
         kcheckpass.source = "${lib.getBin libsForQt5.kscreenlocker}/libexec/kcheckpass";
