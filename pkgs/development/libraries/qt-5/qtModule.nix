@@ -36,7 +36,10 @@ mkDerivation (args // {
   # string. Version tags are added by Nixpkgs maintainers and not reflected in
   # the source version.
   ''
-    if ! grep -q -F "''${version%%-*}" .qmake.conf 2>/dev/null; then
+    if [[ -z "$dontCheckQtModuleVersion" ]] \
+        && grep -q '^MODULE_VERSION' .qmake.conf 2>/dev/null \
+        && ! grep -q -F "''${version%%-*}" .qmake.conf 2>/dev/null
+    then
       echo >&2 "error: could not find version ''${version%%-*} in .qmake.conf"
       echo >&2 "hint: check .qmake.conf and update the package version in Nixpkgs"
       exit 1
