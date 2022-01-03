@@ -199,6 +199,7 @@ stdenv.mkDerivation rec {
         "S3RegionResolutionTest.PublicBucket"
         "S3RegionResolutionTest.RestrictedBucket"
         "TestMinioServer.Connect"
+        "TestS3FS.GetFileInfoRoot"
         "TestS3FS.OpenOutputStreamBackgroundWrites"
         "TestS3FS.OpenOutputStreamDestructorBackgroundWrites"
         "TestS3FS.OpenOutputStreamDestructorSyncWrite"
@@ -237,5 +238,8 @@ stdenv.mkDerivation rec {
     license = licenses.asl20;
     platforms = platforms.unix;
     maintainers = with maintainers; [ tobim veprbl cpcloud ];
+  };
+  passthru = {
+    inherit enableFlight enableJemalloc enableS3 enableGcs;
   };
 }

@@ -59,6 +59,7 @@ mapAliases ({
   hbmqtt = throw "hbmqtt was removed because it is no longer maintained"; # added 2021-11-07
   IMAPClient = imapclient; # added 2021-10-28
   jupyter_client = jupyter-client; # added 2021-10-15
+  Keras = keras; # added 2021-11-25
   lammps-cython = throw "lammps-cython no longer builds and is unmaintained"; # added 2021-07-04
   MechanicalSoup = mechanicalsoup; # added 2021-06-01
   pam = python-pam; # added 2020-09-07.
@@ -92,6 +93,7 @@ mapAliases ({
   scikitlearn = scikit-learn; # added 2021-07-21
   selectors34 = throw "selectors34 has been removed: functionality provided by Python itself; archived by upstream."; # added 2021-06-10
   setuptools_scm = setuptools-scm; # added 2021-06-03
+  ROPGadget = ropgadget; # added 2021-07-06
   smart_open = smart-open; # added 2021-03-14
   smmap2 = throw "smmap2 has been deprecated, use smmap instead."; # added 2020-03-14
   sphinxcontrib_plantuml = sphinxcontrib-plantuml; # added 2021-08-02
@@ -105,4 +107,5 @@ mapAliases ({
   WazeRouteCalculator = wazeroutecalculator; # added 2021-09-29
   websocket_client = websocket-client; # added 2021-06-15
   zc-buildout221 = zc-buildout; # added 2021-07-21
+  zc_buildout_nix = throw "zc_buildout_nix was pinned to a version no longer compatible with other modules";
 })
