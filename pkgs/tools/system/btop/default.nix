@@ -3,17 +3,18 @@
 , fetchFromGitHub
 , runCommand
 , darwin
+, removeReferencesTo
 }:
 
 stdenv.mkDerivation rec {
   pname = "btop";
-  version = "1.1.3";
+  version = "1.1.4";
 
   src = fetchFromGitHub {
     owner = "aristocratos";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-uKR1ogQwEoyxyWBiLnW8BsOsYgTpeIpKrKspq0JwYjY=";
+    sha256 = "1q8rp34fjbg9abbw5v6l5h9cmvzqq05cmkgavh8qd5xyimsx3xyh";
   };
 
   hardeningDisable = lib.optionals (stdenv.isAarch64 && stdenv.isDarwin) [ "stackprotector" ];
@@ -37,6 +38,10 @@ stdenv.mkDerivation rec {
     );
 
   installFlags = [ "PREFIX=$(out)" ];
+
+  postInstall = ''
+    ${removeReferencesTo}/bin/remove-references-to -t ${stdenv.cc.cc} $(readlink -f $out/bin/btop)
+  '';
 
   meta = with lib; {
     description = "A monitor of resources";
