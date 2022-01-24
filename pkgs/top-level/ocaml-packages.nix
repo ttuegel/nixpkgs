@@ -254,6 +254,8 @@ let
 
     data-encoding = callPackage ../development/ocaml-modules/data-encoding { };
 
+    dbf =  callPackage ../development/ocaml-modules/dbf { };
+
     decompress =  callPackage ../development/ocaml-modules/decompress { };
 
     diet =  callPackage ../development/ocaml-modules/diet { };
@@ -1279,6 +1281,8 @@ let
 
     tcslib = callPackage ../development/ocaml-modules/tcslib { };
 
+    terminal = callPackage ../development/ocaml-modules/terminal { };
+
     terminal_size = callPackage ../development/ocaml-modules/terminal_size { };
 
     tezos-010-PtGRANAD-test-helpers = callPackage ../development/ocaml-modules/tezos/010-PtGRANAD-test-helpers.nix { };
@@ -1369,6 +1373,8 @@ let
     uuuu = callPackage ../development/ocaml-modules/uuuu { };
 
     vchan = callPackage ../development/ocaml-modules/vchan { };
+
+    vector = callPackage ../development/ocaml-modules/vector { };
 
     vg = callPackage ../development/ocaml-modules/vg { };
 

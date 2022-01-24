@@ -1,19 +1,35 @@
-{ config, lib, pkgs, extendModules, noUserModules, ... }:
+{ config, options, lib, pkgs, utils, modules, baseModules, extraModules, modulesPath, ... }:
 
 with lib;
 
 let
 
   cfg = config.documentation;
+  allOpts = options;
 
   /* Modules for which to show options even when not imported. */
   extraDocModules = [ ../virtualisation/qemu-vm.nix ];
 
-  /* For the purpose of generating docs, evaluate options with each derivation
-    in `pkgs` (recursively) replaced by a fake with path "\${pkgs.attribute.path}".
-    It isn't perfect, but it seems to cover a vast majority of use cases.
-    Caveat: even if the package is reached by a different means,
-    the path above will be shown and not e.g. `${config.services.foo.package}`. */
+  canCacheDocs = m:
+    let
+      f = import m;
+      instance = f (mapAttrs (n: _: abort "evaluating ${n} for `meta` failed") (functionArgs f));
+    in
+      cfg.nixos.options.splitBuild
+        && builtins.isPath m
+        && isFunction f
+        && instance ? options
+        && instance.meta.buildDocsInSandbox or true;
+
+  docModules =
+    let
+      p = partition canCacheDocs (baseModules ++ extraDocModules);
+    in
+      {
+        lazy = p.right;
+        eager = p.wrong ++ optionals cfg.nixos.includeAllModules (extraModules ++ modules);
+      };
+
   manual = import ../../doc/manual rec {
     inherit pkgs config;
     version = config.system.nixos.release;
@@ -21,10 +37,17 @@ let
     extraSources = cfg.nixos.extraModuleSources;
     options =
       let
-        extendNixOS = if cfg.nixos.includeAllModules then extendModules else noUserModules.extendModules;
-        scrubbedEval = extendNixOS {
-          modules = extraDocModules;
-          specialArgs.pkgs = scrubDerivations "pkgs" pkgs;
+        scrubbedEval = evalModules {
+          modules = [ {
+            _module.check = false;
+          } ] ++ docModules.eager;
+          specialArgs = {
+            pkgs = scrubDerivations "pkgs" pkgs;
+            # allow access to arbitrary options for eager modules, eg for getting
+            # option types from lazy modules
+            options = allOpts;
+            inherit modulesPath utils;
+          };
         };
         scrubDerivations = namePrefix: pkgSet: mapAttrs
           (name: value:
@@ -36,6 +59,117 @@ let
           )
           pkgSet;
       in scrubbedEval.options;
+    baseOptionsJSON =
+      let
+        filterIntoStore =
+          builtins.filterSource
+            (n: t:
+              (t == "directory" -> baseNameOf n != "tests")
+              && (t == "file" -> hasSuffix ".nix" n)
+            );
+
+        # Figure out if Nix runs in pure evaluation mode. May return true in
+        # impure mode, but this is highly unlikely.
+        # We need to know because of https://github.com/NixOS/nix/issues/1888
+        # and https://github.com/NixOS/nix/issues/5868
+        isPureEval = builtins.getEnv "PATH" == "" && builtins.getEnv "_" == "";
+
+        # Return a nixpkgs subpath with minimal copying.
+        #
+        # The sources for the base options json derivation can come in one of
+        # two forms:
+        #   - single source: a store path with all of nixpkgs, postfix with
+        #     subpaths to access various directories. This has the benefit of
+        #     not creating copies of these subtrees in the Nix store, but
+        #     can cause unnecessary rebuilds if you update the Nixpkgs `pkgs`
+        #     tree often.
+        #   - split sources: multiple store paths with subdirectories of
+        #     nixpkgs that exclude the bulk of the pkgs directory.
+        #     This requires more copying and hashing during evaluation but
+        #     requires fewer files to be copied. This method produces fewer
+        #     unnecessary rebuilds of the base options json.
+        #
+        # Flake
+        #
+        # Flakes always put a copy of the full nixpkgs sources in the store,
+        # so we can use the "single source" method. This method is ideal
+        # for using nixpkgs as a dependency, as the base options json will be
+        # substitutable from cache.nixos.org.
+        #
+        # This requires that the `self.outPath` is wired into `pkgs` correctly,
+        # which is done for you if `pkgs` comes from the `lib.nixosSystem` or
+        # `legacyPackages` flake attributes.
+        #
+        # Other Nixpkgs invocation
+        #
+        # If you do not use the known-correct flake attributes, but rather
+        # invoke Nixpkgs yourself, set `config.path` to the correct path value,
+        # e.g. `import nixpkgs { config.path = nixpkgs; }`.
+        #
+        # Choosing between single or split source paths
+        #
+        # We make assumptions based on the type and contents of `pkgs.path`.
+        # By passing a different `config.path` to Nixpkgs, you can influence
+        # how your documentation cache is evaluated and rebuilt.
+        #
+        # Single source
+        #  - If pkgs.path is a string containing a store path, the code has no
+        #    choice but to create this store path, if it hasn't already been.
+        #    We assume that the "single source" method is most efficient.
+        #  - If pkgs.path is a path value containing that is a store path,
+        #    we try to convert it to a string with context without copying.
+        #    This occurs for example when nixpkgs was fetched and using its
+        #    default `config.path`, which is `./.`.
+        #    Nix currently does not allow this conversion when evaluating in
+        #    pure mode. If the conversion is not possible, we use the
+        #    "split source" method.
+        #
+        # Split source
+        #  - If pkgs.path is a path value that is not a store path, we assume
+        #    that it's unlikely for all of nixpkgs to end up in the store for
+        #    other reasons and try to keep both the copying and rebuilds low.
+        pull =
+          if builtins.typeOf pkgs.path == "string" && isStorePath pkgs.path then
+            dir: "${pkgs.path}/${dir}"
+          else if !isPureEval && isStorePath pkgs.path then
+            dir: "${builtins.storePath pkgs.path}/${dir}"
+          else
+            dir: filterIntoStore "${toString pkgs.path}/${dir}";
+      in
+        pkgs.runCommand "lazy-options.json" {
+          libPath = pull "lib";
+          pkgsLibPath = pull "pkgs/pkgs-lib";
+          nixosPath = pull "nixos";
+          modules = map (p: ''"${removePrefix "${modulesPath}/" (toString p)}"'') docModules.lazy;
+        } ''
+          export NIX_STORE_DIR=$TMPDIR/store
+          export NIX_STATE_DIR=$TMPDIR/state
+          ${pkgs.buildPackages.nix}/bin/nix-instantiate \
+            --show-trace \
+            --eval --json --strict \
+            --argstr libPath "$libPath" \
+            --argstr pkgsLibPath "$pkgsLibPath" \
+            --argstr nixosPath "$nixosPath" \
+            --arg modules "[ $modules ]" \
+            --argstr stateVersion "${options.system.stateVersion.default}" \
+            --argstr release "${config.system.nixos.release}" \
+            $nixosPath/lib/eval-cacheable-options.nix > $out \
+            || {
+              echo -en "\e[1;31m"
+              echo 'Cacheable portion of option doc build failed.'
+              echo 'Usually this means that an option attribute that ends up in documentation (eg' \
+                '`default` or `description`) depends on the restricted module arguments' \
+                '`config` or `pkgs`.'
+              echo
+              echo 'Rebuild your configuration with `--show-trace` to find the offending' \
+                'location. Remove the references to restricted arguments (eg by escaping' \
+                'their antiquotations or adding a `defaultText`) or disable the sandboxed' \
+                'build for the failing module by setting `meta.buildDocsInSandbox = false`.'
+              echo -en "\e[0m"
+              exit 1
+            } >&2
+        '';
+    inherit (cfg.nixos.options) warningsAreErrors;
   };
 
 
@@ -175,6 +309,25 @@ in
           <listitem><para>This includes the HTML manual and the <command>nixos-help</command> command if
                     <option>documentation.doc.enable</option> is set.</para></listitem>
           </itemizedlist>
+        '';
+      };
+
+      nixos.options.splitBuild = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Whether to split the option docs build into a cacheable and an uncacheable part.
+          Splitting the build can substantially decrease the amount of time needed to build
+          the manual, but some user modules may be incompatible with this splitting.
+        '';
+      };
+
+      nixos.options.warningsAreErrors = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Treat warning emitted during the option documentation build (eg for missing option
+          descriptions) as errors.
         '';
       };
 

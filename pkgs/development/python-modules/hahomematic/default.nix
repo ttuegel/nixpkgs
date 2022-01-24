@@ -1,7 +1,10 @@
 { lib
+, aiohttp
 , buildPythonPackage
 , fetchFromGitHub
-, aiohttp
+, pydevccu
+, pytest-aiohttp
+, pytestCheckHook
 , pythonOlder
 , voluptuous
 , websocket-client
@@ -10,7 +13,7 @@
 
 buildPythonPackage rec {
   pname = "hahomematic";
-  version = "0.9.0";
+  version = "0.21.2";
   format = "setuptools";
 
   disabled = pythonOlder "3.9";
@@ -19,7 +22,7 @@ buildPythonPackage rec {
     owner = "danielperna84";
     repo = pname;
     rev = version;
-    sha256 = "sha256-Tp8m5Kw+mubJXKgov+CbfwtzWYzmqyjK1Q9gRkivTxk=";
+    sha256 = "sha256-oD4HXdzlQJZ/+ceF9zfmGs6S8DEVoxzLv5h/IURJnOY=";
   };
 
   propagatedBuildInputs = [
@@ -27,8 +30,11 @@ buildPythonPackage rec {
     voluptuous
   ];
 
-  # Module has no tests
-  doCheck = false;
+  checkInputs = [
+    pydevccu
+    pytest-aiohttp
+    pytestCheckHook
+  ];
 
   pythonImportsCheck = [
     "hahomematic"
