@@ -481,7 +481,7 @@ dont-distribute-packages:
  - atuin
  - audiovisual
  - aura
- - aura_3_2_6
+ - aura_3_2_7
  - authoring
  - autonix-deps-kf5
  - avers
@@ -965,6 +965,8 @@ dont-distribute-packages:
  - diplomacy
  - diplomacy-server
  - dirfiles
+ - dirtree
+ - disco
  - discogs-haskell
  - discord-gateway
  - discord-hs
@@ -1028,6 +1030,7 @@ dont-distribute-packages:
  - edges
  - editable
  - effective-aspects-mzv
+ - eflint
  - egison
  - egison-pattern-src-haskell-mode
  - egison-pattern-src-th-mode
@@ -1625,6 +1628,7 @@ dont-distribute-packages:
  - hreq-conduit
  - hs-blake2
  - hs-brotli
+ - hs-duktape
  - hs-ffmpeg
  - hs-gen-iface
  - hs-pkpass
@@ -1658,7 +1662,7 @@ dont-distribute-packages:
  - hsfacter
  - hslogstash
  - hspec-expectations-pretty
- - hspec-expectations-pretty-diff_0_7_2_6
+ - hspec-expectations-pretty-diff
  - hspec-pg-transact
  - hspec-setup
  - hspec-shouldbe
@@ -1781,6 +1785,7 @@ dont-distribute-packages:
  - introduction-test
  - intset
  - invertible-hlist
+ - invertible-hxt
  - ion
  - ip
  - ipatch
@@ -2305,7 +2310,7 @@ dont-distribute-packages:
  - pairing
  - panda
  - pandoc-japanese-filters
- - pandoc_2_17
+ - pandoc_2_17_0_1
  - papa
  - papa-base
  - papa-base-implement
@@ -2461,6 +2466,7 @@ dont-distribute-packages:
  - puppetresources
  - pure-cdb
  - pure-priority-queue-tests
+ - purescript-bridge
  - purescript-iso
  - push-notify
  - push-notify-apn
@@ -2542,6 +2548,7 @@ dont-distribute-packages:
  - reactor
  - readpyc
  - reanimate
+ - reanimate_1_1_5_0
  - record-aeson
  - record-gl
  - record-preprocessor
@@ -2746,6 +2753,7 @@ dont-distribute-packages:
  - servant-streaming-client
  - servant-streaming-docs
  - servant-streaming-server
+ - servant-subscriber
  - servant-swagger-tags
  - servant-waargonaut
  - servant-zeppelin-client
@@ -3052,12 +3060,14 @@ dont-distribute-packages:
  - trasa-reflex
  - trasa-server
  - trasa-th
+ - traverse-code
  - treemap-html-tools
  - treersec
  - trek-app
  - trek-db
  - triangulation
  - tries
+ - trimdent
  - trimpolya
  - truelevel
  - trurl
@@ -3204,6 +3214,7 @@ dont-distribute-packages:
  - warped
  - wavesurfer
  - wavy
+ - web-inv-route
  - web-mongrel2
  - web-page
  - web-rep

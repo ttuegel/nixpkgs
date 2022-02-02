@@ -1,5 +1,6 @@
 [
   "@angular/cli"
+, "@antfu/ni"
 , "@antora/cli"
 , "@antora/site-generator-default"
 , "@astrojs/language-server"
@@ -266,6 +267,7 @@
 , "stackdriver-statsd-backend"
 , "stf"
 , "stylelint"
+, "surge"
 , "svelte-check"
 , "svelte-language-server"
 , "svgo"
