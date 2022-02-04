@@ -60,6 +60,7 @@ cl-l10n
 cl-libuv
 cl-locale
 cl-markup
+cl-mustache
 cl-mysql
 cl-paths-ttf
 cl-pattern
@@ -136,6 +137,7 @@ fast-io
 file-attributes
 fiveam
 flexi-streams
+float-features
 form-fiddle
 fset
 generic-cl
@@ -161,6 +163,7 @@ lfarm-client
 lfarm-server
 lfarm-ssl
 lift
+lisp-binary
 lisp-namespace
 lla
 local-time

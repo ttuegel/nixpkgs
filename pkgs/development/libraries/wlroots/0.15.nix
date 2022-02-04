@@ -1,7 +1,8 @@
-{ lib, stdenv, fetchFromGitLab, meson_0_60, ninja, pkg-config, wayland-scanner
+{ lib, stdenv, fetchFromGitLab, meson, ninja, pkg-config, wayland-scanner
 , libGL, wayland, wayland-protocols, libinput, libxkbcommon, pixman
 , xcbutilwm, libX11, libcap, xcbutilimage, xcbutilerrors, mesa
 , libpng, ffmpeg, xcbutilrenderutil, seatd, vulkan-loader, glslang
+, nixosTests
 
 , enableXWayland ? true, xwayland ? null
 }:
@@ -23,12 +24,12 @@ stdenv.mkDerivation rec {
 
   depsBuildBuild = [ pkg-config ];
 
-  nativeBuildInputs = [ meson_0_60 ninja pkg-config wayland-scanner ];
+  nativeBuildInputs = [ meson ninja pkg-config wayland-scanner glslang ];
 
   buildInputs = [
     libGL wayland wayland-protocols libinput libxkbcommon pixman
     xcbutilwm libX11 libcap xcbutilimage xcbutilerrors mesa
-    libpng ffmpeg xcbutilrenderutil seatd vulkan-loader glslang
+    libpng ffmpeg xcbutilrenderutil seatd vulkan-loader
   ]
     ++ lib.optional enableXWayland xwayland
   ;
@@ -48,6 +49,9 @@ stdenv.mkDerivation rec {
       cp "$binary" "$examples/bin/wlroots-$binary"
     done
   '';
+
+  # Test via TinyWL (the "minimum viable product" Wayland compositor based on wlroots):
+  passthru.tests.tinywl = nixosTests.tinywl;
 
   meta = with lib; {
     description = "A modular Wayland compositor library";
