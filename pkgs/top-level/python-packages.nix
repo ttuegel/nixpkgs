@@ -194,6 +194,8 @@ in {
 
   adax = callPackage ../development/python-modules/adax { };
 
+  adax-local = callPackage ../development/python-modules/adax-local { };
+
   adb-enhanced = callPackage ../development/python-modules/adb-enhanced { };
 
   adb-homeassistant = callPackage ../development/python-modules/adb-homeassistant { };
@@ -257,6 +259,8 @@ in {
   ailment = callPackage ../development/python-modules/ailment { };
 
   aioamqp = callPackage ../development/python-modules/aioamqp { };
+
+  aioaseko = callPackage ../development/python-modules/aioaseko { };
 
   aioasuswrt = callPackage ../development/python-modules/aioasuswrt { };
 
@@ -362,6 +366,8 @@ in {
 
   aionotion = callPackage ../development/python-modules/aionotion { };
 
+  aiooncue = callPackage ../development/python-modules/aiooncue { };
+
   aiopg = callPackage ../development/python-modules/aiopg { };
 
   aioprocessing = callPackage ../development/python-modules/aioprocessing { };
@@ -415,6 +421,8 @@ in {
   aiovlc = callPackage ../development/python-modules/aiovlc { };
 
   aiowatttime = callPackage ../development/python-modules/aiowatttime { };
+
+  aiowebostv = callPackage ../development/python-modules/aiowebostv { };
 
   aiowinreg = callPackage ../development/python-modules/aiowinreg { };
 
@@ -745,6 +753,8 @@ in {
   };
 
   auroranoaa = callPackage ../development/python-modules/auroranoaa { };
+
+  aurorapy = callPackage ../development/python-modules/aurorapy { };
 
   auth0-python = callPackage ../development/python-modules/auth0-python { };
 
@@ -1517,6 +1527,8 @@ in {
 
   cffi = callPackage ../development/python-modules/cffi { };
 
+  cffsubr = callPackage ../development/python-modules/cffsubr { };
+
   cfgv = callPackage ../development/python-modules/cfgv { };
 
   cfn-flip = callPackage ../development/python-modules/cfn-flip { };
@@ -1578,6 +1590,8 @@ in {
   ci-info = callPackage ../development/python-modules/ci-info { };
 
   ci-py = callPackage ../development/python-modules/ci-py { };
+
+  circuit-webhook = callPackage ../development/python-modules/circuit-webhook { };
 
   circuitbreaker = callPackage ../development/python-modules/circuitbreaker { };
 
@@ -1770,6 +1784,8 @@ in {
   CommonMark = callPackage ../development/python-modules/commonmark { };
 
   compiledb = callPackage ../development/python-modules/compiledb { };
+
+  compreffor = callPackage ../development/python-modules/compreffor { };
 
   concurrent-log-handler = callPackage ../development/python-modules/concurrent-log-handler { };
 
@@ -2508,8 +2524,6 @@ in {
 
   edward = callPackage ../development/python-modules/edward { };
 
-  eebrightbox = callPackage ../development/python-modules/eebrightbox { };
-
   effect = callPackage ../development/python-modules/effect { };
 
   eggdeps = callPackage ../development/python-modules/eggdeps { };
@@ -3119,7 +3133,7 @@ in {
 
   garminconnect-aio = callPackage ../development/python-modules/garminconnect-aio { };
 
-  garminconnect-ha = callPackage ../development/python-modules/garminconnect-ha { };
+  garminconnect = callPackage ../development/python-modules/garminconnect { };
 
   gast = callPackage ../development/python-modules/gast { };
 
@@ -3188,6 +3202,8 @@ in {
   geojson-client = callPackage ../development/python-modules/geojson-client { };
 
   geomet = callPackage ../development/python-modules/geomet { };
+
+  geometric = callPackage ../development/python-modules/geometric { };
 
   geopandas = callPackage ../development/python-modules/geopandas { };
 
@@ -3463,6 +3479,8 @@ in {
   grammalecte = callPackage ../development/python-modules/grammalecte { };
 
   grandalf = callPackage ../development/python-modules/grandalf { };
+
+  grapheme = callPackage ../development/python-modules/grapheme { };
 
   graphite_api = callPackage ../development/python-modules/graphite-api { };
 
@@ -3887,6 +3905,8 @@ in {
 
   ijson = callPackage ../development/python-modules/ijson { };
 
+  ilua = callPackage ../development/python-modules/ilua { };
+
   imagecodecs-lite = callPackage ../development/python-modules/imagecodecs-lite { };
 
   imagecorruptions = callPackage ../development/python-modules/imagecorruptions { };
@@ -3988,6 +4008,8 @@ in {
   intbitset = callPackage ../development/python-modules/intbitset { };
 
   intelhex = callPackage ../development/python-modules/intelhex { };
+
+  intellifire4py = callPackage ../development/python-modules/intellifire4py { };
 
   intensity-normalization = callPackage ../development/python-modules/intensity-normalization { };
 
@@ -4117,7 +4139,11 @@ in {
 
   jax = callPackage ../development/python-modules/jax { };
 
-  jaxlib-bin = callPackage ../development/python-modules/jaxlib/bin.nix { };
+  jaxlib-bin = callPackage ../development/python-modules/jaxlib/bin.nix {
+    cudaSupport = pkgs.config.cudaSupport or false;
+    cudatoolkit_11 = tensorflow_compat_cudatoolkit;
+    cudnn = tensorflow_compat_cudnn;
+  };
 
   jaxlib-build = callPackage ../development/python-modules/jaxlib {
     # Some platforms don't have `cudaSupport` defined, hence the need for 'or false'.
@@ -6321,6 +6347,8 @@ in {
 
   prettytable = callPackage ../development/python-modules/prettytable { };
 
+  primecountpy = callPackage ../development/python-modules/primecountpy { };
+
   primer3 = callPackage ../development/python-modules/primer3 { };
 
   priority = callPackage ../development/python-modules/priority { };
@@ -6523,6 +6551,8 @@ in {
   pyatv = callPackage ../development/python-modules/pyatv { };
 
   pyaudio = callPackage ../development/python-modules/pyaudio { };
+
+  pyaussiebb = callPackage ../development/python-modules/pyaussiebb { };
 
   pyautogui = callPackage ../development/python-modules/pyautogui { };
 
@@ -7328,6 +7358,8 @@ in {
   pyquaternion = callPackage ../development/python-modules/pyquaternion { };
 
   pyquil = callPackage ../development/python-modules/pyquil { };
+
+  pyqvrpro = callPackage ../development/python-modules/pyqvrpro { };
 
   pyrabbit2 = callPackage ../development/python-modules/pyrabbit2 { };
 
@@ -8378,6 +8410,8 @@ in {
 
   qscintilla = self.qscintilla-qt5;
 
+  qt5reactor = callPackage ../development/python-modules/qt5reactor { };
+
   qtawesome = callPackage ../development/python-modules/qtawesome { };
 
   qtconsole = callPackage ../development/python-modules/qtconsole { };
@@ -8712,6 +8746,8 @@ in {
   };
 
   rtslib = callPackage ../development/python-modules/rtslib { };
+
+  rtsp-to-webrtc = callPackage ../development/python-modules/rtsp-to-webrtc { };
 
   ruamel-base = callPackage ../development/python-modules/ruamel-base { };
 
@@ -9406,6 +9442,8 @@ in {
 
   statistics = callPackage ../development/python-modules/statistics { };
 
+  statmake = callPackage ../development/python-modules/statmake { };
+
   statsd = callPackage ../development/python-modules/statsd { };
 
   statsmodels = callPackage ../development/python-modules/statsmodels { };
@@ -9917,6 +9955,8 @@ in {
 
   trytond = callPackage ../development/python-modules/trytond { };
 
+  ttls = callPackage ../development/python-modules/ttls { };
+
   ttp = callPackage ../development/python-modules/ttp { };
 
   tubes = callPackage ../development/python-modules/tubes { };
@@ -9987,6 +10027,8 @@ in {
 
   txtorcon = callPackage ../development/python-modules/txtorcon { };
 
+  txzmq = callPackage ../development/python-modules/txzmq { };
+
   typecode = callPackage ../development/python-modules/typecode { };
 
   typecode-libmagic = callPackage ../development/python-modules/typecode/libmagic.nix {
@@ -10056,6 +10098,10 @@ in {
   ueberzug = callPackage ../development/python-modules/ueberzug {
     inherit (pkgs.xorg) libX11 libXext;
   };
+
+  ufo2ft = callPackage ../development/python-modules/ufo2ft { };
+
+  ufoLib2 = callPackage ../development/python-modules/ufoLib2 { };
 
   ufonormalizer = callPackage ../development/python-modules/ufonormalizer { };
 
