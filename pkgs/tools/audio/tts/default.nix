@@ -1,7 +1,6 @@
 { lib
 , python3
 , fetchFromGitHub
-, fetchpatch
 }:
 
 # USAGE:
@@ -16,22 +15,32 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "tts";
-  version = "0.4.1";
+  version = "0.5.0";
+  format = "setuptools";
 
   src = fetchFromGitHub {
     owner = "coqui-ai";
     repo = "TTS";
     rev = "v${version}";
-    sha256 = "sha256-ZcQUgr+1XTmXoyf2WNsP8Hept42JTFmKXdo0kcU6QWU=";
+    sha256 = "sha256-9fNYNhHS9wqrk2bZnrkkGU1OaDu/16RA8fz+Zj9xsyQ=";
   };
 
-  postPatch = ''
-    sed -i requirements.txt \
-      -e 's!librosa==[^"]*!librosa!' \
-      -e 's!mecab-python3==[^"]*!mecab-python3!' \
-      -e 's!numba==[^"]*!numba!' \
-      -e 's!numpy==[^"]*!numpy!' \
-      -e 's!umap-learn==[^"]*!umap-learn!'
+  postPatch = let
+    relaxedConstraints = [
+      "gruut"
+      "librosa"
+      "mecab-python3"
+      "numba"
+      "numpy"
+      "umap-learn"
+      "torch"
+    ];
+  in ''
+    sed -r -i \
+      ${lib.concatStringsSep "\n" (map (package:
+        ''-e 's/${package}.*[<>=]+.*/${package}/g' \''
+      ) relaxedConstraints)}
+    requirements.txt
   '';
 
   nativeBuildInputs = with python3.pkgs; [
@@ -43,8 +52,8 @@ python3.pkgs.buildPythonApplication rec {
     coqpit
     flask
     fsspec
-    gruut
     gdown
+    gruut
     inflect
     jieba
     librosa
@@ -54,15 +63,17 @@ python3.pkgs.buildPythonApplication rec {
     pandas
     pypinyin
     pysbd
-    pytorch
+    pytorch-bin
     pyworld
     scipy
     soundfile
     tensorboardx
     tensorflow
+    torchaudio-bin
     tqdm
     umap-learn
     unidic-lite
+    webrtcvad
   ];
 
   postInstall = ''
@@ -86,6 +97,7 @@ python3.pkgs.buildPythonApplication rec {
     "test_multiscale_stft_loss"
     # Requires network acccess to download models
     "test_synthesize"
+    "test_run_all_models"
   ];
 
   preCheck = ''

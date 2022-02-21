@@ -2,6 +2,7 @@
 , buildPythonPackage
 , fetchFromGitHub
 , graphviz
+, appdirs
 , ifaddr
 , pythonOlder
 , mock
@@ -14,17 +15,18 @@
 
 buildPythonPackage rec {
   pname = "soco";
-  version = "0.25.2";
+  version = "0.26.2";
   disabled = pythonOlder "3.6";
 
   src = fetchFromGitHub {
     owner = "SoCo";
     repo = "SoCo";
     rev = "v${version}";
-    sha256 = "sha256-Bu9RtzvQVDPekIzkVvcDkTs5Z+IDx6lSBCMv5zs8gNA=";
+    sha256 = "sha256-VOGdv3g11OzNeTlBwm8hRy6fThDKVKIlgQxR4b07y/8=";
   };
 
   propagatedBuildInputs = [
+    appdirs
     ifaddr
     requests
     xmltodict

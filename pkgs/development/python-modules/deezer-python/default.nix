@@ -13,7 +13,7 @@
 
 buildPythonPackage rec {
   pname = "deezer-python";
-  version = "4.2.1";
+  version = "5.1.0";
   format = "pyproject";
 
   disabled = pythonOlder "3.6";
@@ -22,7 +22,7 @@ buildPythonPackage rec {
     owner = "browniebroke";
     repo = pname;
     rev = "v${version}";
-    sha256 = "0gl0l7x9zqfkz3l4jfz8rb956lqj3vx1aghric36izwzl6wyj6h5";
+    sha256 = "sha256-hBZBbREPxfAkGf2KRZtO3BpscFGlYiecQjM5l1/Edo0=";
   };
 
   nativeBuildInputs = [

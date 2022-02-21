@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchurl, fetchpatch, python, zlib, pkg-config, glib
+{ lib, stdenv, fetchurl, fetchpatch, python3, python3Packages, zlib, pkg-config, glib, buildPackages
 , perl, pixman, vde2, alsa-lib, texinfo, flex
 , bison, lzo, snappy, libaio, libtasn1, gnutls, nettle, curl, ninja, meson, sigtool
 , makeWrapper, runtimeShell
@@ -9,6 +9,7 @@
 , alsaSupport ? lib.hasSuffix "linux" stdenv.hostPlatform.system && !nixosTestRunner
 , pulseSupport ? !stdenv.isDarwin && !nixosTestRunner, libpulseaudio
 , sdlSupport ? !stdenv.isDarwin && !nixosTestRunner, SDL2, SDL2_image
+, jackSupport ? !stdenv.isDarwin && !nixosTestRunner, libjack2
 , gtkSupport ? !stdenv.isDarwin && !xenSupport && !nixosTestRunner, gtk3, gettext, vte, wrapGAppsHook
 , vncSupport ? !nixosTestRunner, libjpeg, libpng
 , smartcardSupport ? !nixosTestRunner, libcacard
@@ -35,7 +36,8 @@
 let
   audio = lib.optionalString alsaSupport "alsa,"
     + lib.optionalString pulseSupport "pa,"
-    + lib.optionalString sdlSupport "sdl,";
+    + lib.optionalString sdlSupport "sdl,"
+    + lib.optionalString jackSupport "jack,";
 
 in
 
@@ -51,7 +53,9 @@ stdenv.mkDerivation rec {
     sha256 = "15iw7982g6vc4jy1l9kk1z9sl5bm1bdbwr74y7nvwjs1nffhig7f";
   };
 
-  nativeBuildInputs = [ makeWrapper python python.pkgs.sphinx python.pkgs.sphinx_rtd_theme pkg-config flex bison meson ninja ]
+  depsBuildBuild = [ buildPackages.stdenv.cc ];
+
+  nativeBuildInputs = [ makeWrapper pkg-config flex bison meson ninja perl python3 python3Packages.sphinx python3Packages.sphinx_rtd_theme ]
     ++ lib.optionals gtkSupport [ wrapGAppsHook ]
     ++ lib.optionals stdenv.isDarwin [ sigtool ];
 
@@ -66,6 +70,7 @@ stdenv.mkDerivation rec {
     ++ lib.optionals alsaSupport [ alsa-lib ]
     ++ lib.optionals pulseSupport [ libpulseaudio ]
     ++ lib.optionals sdlSupport [ SDL2 SDL2_image ]
+    ++ lib.optionals jackSupport [ libjack2 ]
     ++ lib.optionals gtkSupport [ gtk3 gettext vte ]
     ++ lib.optionals vncSupport [ libjpeg libpng ]
     ++ lib.optionals smartcardSupport [ libcacard ]
@@ -190,6 +195,8 @@ stdenv.mkDerivation rec {
     # Always use our Meson, not the bundled version, which doesn't
     # have our patches and will be subtly broken because of that.
     "--meson=meson"
+    "--cross-prefix=${stdenv.cc.targetPrefix}"
+    "--cpu=${stdenv.hostPlatform.uname.processor}"
   ] ++ lib.optional numaSupport "--enable-numa"
     ++ lib.optional seccompSupport "--enable-seccomp"
     ++ lib.optional smartcardSupport "--enable-smartcard"
@@ -236,13 +243,7 @@ stdenv.mkDerivation rec {
 
   # Add a ‘qemu-kvm’ wrapper for compatibility/convenience.
   postInstall = ''
-    install -m755 -D $emitKvmWarningsPath $out/libexec/emit-kvm-warnings
-    if [ -x $out/bin/qemu-system-${stdenv.hostPlatform.qemuArch} ]; then
-      makeWrapper $out/bin/qemu-system-${stdenv.hostPlatform.qemuArch} \
-                  $out/bin/qemu-kvm \
-                  --run $out/libexec/emit-kvm-warnings \
-                  --add-flags "\$([ -r /dev/kvm -a -w /dev/kvm ] && echo -enable-kvm)"
-    fi
+    ln -s $out/bin/qemu-system-${stdenv.hostPlatform.qemuArch} $out/bin/qemu-kvm
   '';
 
   passthru = {
@@ -252,30 +253,11 @@ stdenv.mkDerivation rec {
   # Builds in ~3h with 2 cores, and ~20m with a big-parallel builder.
   requiredSystemFeatures = [ "big-parallel" ];
 
-  emitKvmWarnings = ''
-    #!${runtimeShell}
-    WARNCOL='\033[1;35m'
-    NEUTRALCOL='\033[0m'
-    WARNING="''${WARNCOL}warning:''${NEUTRALCOL}"
-    if [ ! -e /dev/kvm ]; then
-      echo -e "''${WARNING} KVM is not available - execution will be slow" >&2
-      echo "Consider installing KVM for hardware-accelerated execution." >&2
-      echo "If KVM is already installed make sure the kernel module is loaded." >&2
-    elif [ ! -r /dev/kvm -o ! -w /dev/kvm ]; then
-      echo -e "''${WARNING} /dev/kvm is not read-/writable - execution will be slow" >&2
-      echo "/dev/kvm needs to be read-/writable by the user executing QEMU." >&2
-      echo "" >&2
-      echo "For hardware-acceleration inside the nix build sandbox /dev/kvm" >&2
-      echo "must be world-read-/writable (rw-rw-rw-)." >&2
-    fi
-  '';
-
-  passAsFile = [ "emitKvmWarnings" ];
-
   meta = with lib; {
     homepage = "http://www.qemu.org/";
     description = "A generic and open source machine emulator and virtualizer";
     license = licenses.gpl2Plus;
+    mainProgram = "qemu-kvm";
     maintainers = with maintainers; [ eelco qyliss ];
     platforms = platforms.unix;
   };

@@ -11,6 +11,7 @@
 , isSnapshot ? false
 , proprietaryCodecs ? false, vivaldi-ffmpeg-codecs ? null
 , enableWidevine ? false, vivaldi-widevine ? null
+, commandLineArgs ? ""
 }:
 
 let
@@ -18,11 +19,11 @@ let
   vivaldiName = if isSnapshot then "vivaldi-snapshot" else "vivaldi";
 in stdenv.mkDerivation rec {
   pname = "vivaldi";
-  version = "5.0.2497.32-1";
+  version = "5.0.2497.51-1";
 
   src = fetchurl {
     url = "https://downloads.vivaldi.com/${branch}/vivaldi-${branch}_${version}_amd64.deb";
-    sha256 = "1l333q002z9rr08np0r0j89j26shmsl8y2clyqwh54h22h7hmypz";
+    sha256 = "OOLTY6Q0BI65PVN/B6+Q9t4Fa5Z0p9U2KyAeCGwCCPw=";
   };
 
   unpackPhase = ''
@@ -85,6 +86,7 @@ in stdenv.mkDerivation rec {
         "$out"/share/icons/hicolor/''${d}x''${d}/apps/vivaldi.png
     done
     wrapProgram "$out/bin/vivaldi" \
+      --add-flags ${lib.escapeShellArg commandLineArgs} \
       --suffix XDG_DATA_DIRS : ${gtk3}/share/gsettings-schemas/${gtk3.name}/ \
       ${lib.optionalString enableWidevine "--suffix LD_LIBRARY_PATH : ${libPath}"}
   '' + lib.optionalString enableWidevine ''

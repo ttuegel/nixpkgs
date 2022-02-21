@@ -266,7 +266,7 @@ let
       google_api_key = "AIzaSyDGi15Zwl11UNe6Y-5XW_upsfyw31qwZPI";
 
       # Optional features:
-      use_gio = gnomeSupport;
+      use_gio = gnomeSupport || chromiumVersionAtLeast "99";
       use_gnome_keyring = gnomeKeyringSupport;
       use_cups = cupsSupport;
 
@@ -292,7 +292,6 @@ let
       enable_hangout_services_extension = false;
       enable_js_type_check = false;
       enable_mdns = false;
-      enable_nacl_nonsfi = false;
       enable_one_click_signin = false;
       enable_reading_list = false;
       enable_remoting = false;

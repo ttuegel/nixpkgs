@@ -2,16 +2,16 @@
 
 buildGoModule rec {
   pname = "driftctl";
-  version = "0.17";
+  version = "0.18.5";
 
   src = fetchFromGitHub {
     owner = "cloudskiff";
     repo = "driftctl";
     rev = "v${version}";
-    sha256 = "sha256-JloeRoW+1tepSJzhcOQu38TDQfY10NtG2EyeVhP26BQ=";
+    sha256 = "sha256-Qz/yObF1Df62Hqwl6fPHGkWcsifvgO5EfeiyU3aql3Q=";
   };
 
-  vendorSha256 = "sha256-aaJ5fpS+BiVq1K8OxN+/CBD96wy3flGDhch8O2ACIh8=";
+  vendorSha256 = "sha256-wOk4IXD9qHG8R4iddlc4TLH39jVSof9bwTDU1kyAmuA=";
 
   postUnpack = ''
     # Without this, tests fail to locate aws/3.19.0.json

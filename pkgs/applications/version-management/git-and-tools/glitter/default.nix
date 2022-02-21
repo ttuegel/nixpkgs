@@ -2,16 +2,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "glitter";
-  version = "1.5.11";
+  version = "1.5.13";
 
   src = fetchFromGitHub {
     owner = "milo123459";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-WAQ4DwPKkATLa52GE5LZRVY0YH4nRStjPuQg7kdXRjw=";
+    sha256 = "sha256-arHwIQXZYxwnFbyLoKQiv3gYHEN80DxbdaO4dM9ZBs8=";
   };
 
-  cargoSha256 = "sha256-UK3gUAs+FalqboK7MuhE9kOc/Smu/EAN0BYbgg4PWns=";
+  cargoSha256 = "sha256-d+DERHE8Nzre1MXNj4Cp9fcRkLPEC8hzh0SeTpS2C5A=";
 
   # tests require it to be in a git repository
   preCheck = ''

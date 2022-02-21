@@ -5,8 +5,8 @@ let
   description = "PrusaSlicer fork with more features and faster development cycle";
 
   versions = {
-    stable = { version = "2.3.57.8"; sha256 = "sha256-k1G9sFukYyCqVeJIbYgjJX9T8zqmFTmjmj9OXZ78+LY="; };
-    latest = { version = "2.3.57.8"; sha256 = "sha256-k1G9sFukYyCqVeJIbYgjJX9T8zqmFTmjmj9OXZ78+LY="; };
+    stable = { version = "2.3.57.10"; sha256 = "sha256-/1oZgmZpRoizVpklKaI12qP4bVIGYyVpybmuCIz3Y0M="; };
+    latest = { version = "2.3.57.10"; sha256 = "sha256-/1oZgmZpRoizVpklKaI12qP4bVIGYyVpybmuCIz3Y0M="; };
   };
 
   override = { version, sha256 }: super: {
