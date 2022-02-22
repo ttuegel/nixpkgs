@@ -595,11 +595,6 @@ self: super: builtins.intersectAttrs super {
         sha256 = "1hjdprm990vyxz86fgq14ajn0lkams7i00h8k2i2g1a0hjdwppq6";
       };
 
-      spagoWithOverrides = super.spago.override {
-        # spago has not yet been updated for the latest dhall.
-        dhall = self.dhall_1_38_1;
-      };
-
       spagoDocs = overrideCabal (drv: {
         postUnpack = (drv.postUnpack or "") + ''
           # Spago includes the following two files directly into the binary
@@ -625,7 +620,7 @@ self: super: builtins.intersectAttrs super {
             "$sourceRoot/templates/docs-search-app-0.0.11.js" \
             "$sourceRoot/templates/purescript-docs-search-0.0.11"
         '';
-      }) spagoWithOverrides;
+      }) super.spago;
 
       # Tests require network access.
       spagoWithoutChecks = dontCheck spagoDocs;
@@ -711,6 +706,10 @@ self: super: builtins.intersectAttrs super {
   } super.nix-output-monitor;
 
   haskell-language-server = overrideCabal (drv: {
+    # starting with 1.6.1.1 haskell-language-server wants to be linked dynamically
+    # by default. Unless we reflect this in the generic builder, GHC is going to
+    # produce some illegal references to /build/.
+    enableSharedExecutables = true;
     postInstall = "ln -s $out/bin/haskell-language-server $out/bin/haskell-language-server-${self.ghc.version}";
     testToolDepends = [ self.cabal-install pkgs.git ];
     testTarget = "func-test"; # wrapper test accesses internet
@@ -735,12 +734,9 @@ self: super: builtins.intersectAttrs super {
 
   # based on https://github.com/gibiansky/IHaskell/blob/aafeabef786154d81ab7d9d1882bbcd06fc8c6c4/release.nix
   ihaskell = overrideCabal (drv: {
-    configureFlags = (drv.configureFlags or []) ++ [
-      # ihaskell's cabal file forces building a shared executable,
-      # but without passing --enable-executable-dynamic, the RPATH
-      # contains /build/ and leads to a build failure with nix
-      "--enable-executable-dynamic"
-    ];
+    # ihaskell's cabal file forces building a shared executable, which we need
+    # to reflect here or RPATH will contain a reference to /build/.
+    enableSharedExecutables = true;
     preCheck = ''
       export HOME=$TMPDIR/home
       export PATH=$PWD/dist/build/ihaskell:$PATH

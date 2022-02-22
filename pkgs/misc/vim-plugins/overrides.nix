@@ -534,6 +534,11 @@ self: super: {
     dependencies = with self; [ nvim-treesitter plenary-nvim ];
   });
 
+  # needs  "http" and "json" treesitter grammars too
+  rest-nvim = super.rest-nvim.overrideAttrs (old: {
+    dependencies = with self; [ plenary-nvim ];
+  });
+
   skim = buildVimPluginFrom2Nix {
     pname = "skim";
     version = skim.version;
@@ -815,7 +820,7 @@ self: super: {
             libiconv
           ];
 
-          cargoSha256 = "sha256-y4yQ8Zv9bpfOyQrBX/TAuVYHhDsXdj0rh8nHJonxgcU=";
+          cargoSha256 = "sha256-JKi51kzCHMctUX6tT8K2Rq1slV3Ek67dCgbPjBkwPTE=";
         };
       in
       ''

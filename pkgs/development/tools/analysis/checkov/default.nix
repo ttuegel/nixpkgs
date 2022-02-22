@@ -15,6 +15,16 @@ let
         doCheck = false;
       });
 
+      jsonschema = super.jsonschema.overridePythonAttrs (oldAttrs: rec {
+        version = "3.2.0";
+        src = oldAttrs.src.override {
+          inherit version;
+          sha256 = "sha256-yKhbKNN3zHc35G4tnytPRO48Dh3qxr9G3e/HGH0weXo=";
+        };
+        SETUPTOOLS_SCM_PRETEND_VERSION = version;
+        doCheck = false;
+      });
+
     };
   };
 in
@@ -22,13 +32,13 @@ with py.pkgs;
 
 buildPythonApplication rec {
   pname = "checkov";
-  version = "2.0.795";
+  version = "2.0.875";
 
   src = fetchFromGitHub {
     owner = "bridgecrewio";
     repo = pname;
     rev = version;
-    hash = "sha256-Mlyjw9ngLlzhhgtNARWaA1KCuZkKUEcElPIH8tjmlBQ=";
+    hash = "sha256-ZM554FZayuxxf9dgbGcvfPoXm5rWjjZoNySnKpxRO/w=";
   };
 
   nativeBuildInputs = with py.pkgs; [
