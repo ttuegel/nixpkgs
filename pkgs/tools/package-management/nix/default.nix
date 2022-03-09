@@ -58,21 +58,20 @@ in lib.makeExtensible (self: {
   };
 
   nix_2_6 = common {
-    version = "2.6.0";
-    sha256 = "sha256-xEPeMcNJVOeZtoN+d+aRwolpW8mFSEQx76HTRdlhPhg=";
+    version = "2.6.1";
+    sha256 = "sha256-E9iQ7f+9Z6xFcUvvfksTEfn8LsDfzmwrcRBC//5B3V0=";
   };
 
-  # FIXME: nix_2_6 is broken on aarch64-darwin for now.
-  stable = self.nix_2_5;
+  stable = self.nix_2_6;
 
   unstable = lib.lowPrio (common rec {
     version = "2.7";
-    suffix = "pre20220124_${lib.substring 0 7 src.rev}";
+    suffix = "pre20220221_${lib.substring 0 7 src.rev}";
     src = fetchFromGitHub {
       owner = "NixOS";
       repo = "nix";
-      rev = "0a70b37b5694c769fb855c1afe7642407d1db64f";
-      sha256 = "sha256-aOM9MPNlnWNMobx4CuD4JIXH2poRlG8AKkuxY7FysWg=";
+      rev = "caf51729450d4c57d48ddbef8e855e9bf65f8792";
+      sha256 = "sha256-2fbza6fWPjyTyVEqWIp0jk/Z4epjSDe1u4lbEu+v7Iw=";
     };
   });
 })

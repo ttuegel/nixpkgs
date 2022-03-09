@@ -924,7 +924,7 @@ in
         PrivateMounts = true;
         # System Call Filtering
         SystemCallArchitectures = "native";
-        SystemCallFilter = [ "~@cpu-emulation @debug @keyring @mount @obsolete @privileged @setuid @mincore" ] ++ optionals (cfg.package != pkgs.tengine) [ "~@ipc" ];
+        SystemCallFilter = [ "~@cpu-emulation @debug @keyring @mount @obsolete @privileged @setuid" ] ++ optionals (cfg.package != pkgs.tengine) [ "~@ipc" ];
       };
     };
 
@@ -988,5 +988,17 @@ in
       nginx.gid = config.ids.gids.nginx;
     };
 
+    services.logrotate.paths.nginx = mapAttrs (_: mkDefault) {
+      path = "/var/log/nginx/*.log";
+      frequency = "weekly";
+      keep = 26;
+      extraConfig = ''
+        compress
+        delaycompress
+        postrotate
+          [ ! -f /var/run/nginx/nginx.pid ] || kill -USR1 `cat /var/run/nginx/nginx.pid`
+        endscript
+      '';
+    };
   };
 }

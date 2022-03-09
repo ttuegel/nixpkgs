@@ -1,9 +1,36 @@
-{ lib, stdenv, fetchFromGitHub, fetchpatch, pkg-config, libtool
-, bzip2, zlib, libX11, libXext, libXt, fontconfig, freetype, ghostscript, libjpeg, djvulibre
-, lcms2, openexr, libjxl, libpng, liblqr1, libraw, librsvg, libtiff, libxml2, openjpeg, libwebp, libheif
+{ lib
+, stdenv
+, fetchFromGitHub
+, pkg-config
+, libtool
+, bzip2
+, zlib
+, libX11
+, libXext
+, libXt
+, fontconfig
+, freetype
+, ghostscript
+, libjpeg
+, djvulibre
+, lcms2
+, openexr
+, libjxl
+, libpng
+, liblqr1
+, libraw
+, librsvg
+, libtiff
+, libxml2
+, openjpeg
+, libwebp
+, libheif
+, potrace
+, curl
 , ApplicationServices
 , Foundation
-, testVersion, imagemagick
+, testVersion
+, imagemagick
 }:
 
 let
@@ -11,29 +38,21 @@ let
     if stdenv.hostPlatform.system == "i686-linux" then "i686"
     else if stdenv.hostPlatform.system == "x86_64-linux" || stdenv.hostPlatform.system == "x86_64-darwin" then "x86-64"
     else if stdenv.hostPlatform.system == "armv7l-linux" then "armv7l"
-    else if stdenv.hostPlatform.system == "aarch64-linux"  || stdenv.hostPlatform.system == "aarch64-darwin" then "aarch64"
+    else if stdenv.hostPlatform.system == "aarch64-linux" || stdenv.hostPlatform.system == "aarch64-darwin" then "aarch64"
     else if stdenv.hostPlatform.system == "powerpc64le-linux" then "ppc64le"
     else null;
 in
 
 stdenv.mkDerivation rec {
   pname = "imagemagick";
-  version = "7.1.0-20";
+  version = "7.1.0-26";
 
   src = fetchFromGitHub {
     owner = "ImageMagick";
     repo = "ImageMagick";
     rev = version;
-    sha256 = "0r8zmk2cfmf09l94hqzfz4aspnzn178ggdbgm7w4hr0p864cbvc3";
+    hash = "sha256-q1CL64cfyb5fN9aVYJfls+v0XRFd4jH+B8n+UJqPE1I=";
   };
-
-  patches = [
-    # fix a type confusion bug introduced in 7.1.0-20 with commit 075565e93c71bcaaabf0ce70b7d1060bccdf0020
-    (fetchpatch {
-      url = "https://github.com/ImageMagick/ImageMagick/commit/62845d5672eca4446b952dd0ab2e3e0dab0309d4.patch";
-      sha256 = "1kni5i8b5hl69niypidm90mhir8cafi6r9i857fxdlv045h3dg4p";
-    })
-  ];
 
   outputs = [ "out" "dev" "doc" ]; # bin/ isn't really big
   outputMan = "out"; # it's tiny
@@ -49,18 +68,30 @@ stdenv.mkDerivation rec {
     # let's disable it for now to unbreak the imagemagick build.
     ++ lib.optional (libjxl != null && !stdenv.isAarch64) "--with-jxl"
     ++ lib.optionals (ghostscript != null)
-      [ "--with-gs-font-dir=${ghostscript}/share/ghostscript/fonts"
+      [
+        "--with-gs-font-dir=${ghostscript}/share/ghostscript/fonts"
         "--with-gslib"
       ]
     ++ lib.optionals stdenv.hostPlatform.isMinGW
       [ "--enable-static" "--disable-shared" ] # due to libxml2 being without DLLs ATM
-    ;
+  ;
 
   nativeBuildInputs = [ pkg-config libtool ];
 
   buildInputs =
-    [ zlib fontconfig freetype ghostscript
-      liblqr1 libpng libraw libtiff libxml2 libheif djvulibre
+    [
+      zlib
+      fontconfig
+      freetype
+      ghostscript
+      potrace
+      liblqr1
+      libpng
+      libraw
+      libtiff
+      libxml2
+      libheif
+      djvulibre
     ]
     # libjxl is broken on aarch64 (see meta.broken in libjxl) for now,
     # let's disable it for now to unbreak the imagemagick build.
@@ -74,10 +105,10 @@ stdenv.mkDerivation rec {
     ];
 
   propagatedBuildInputs =
-    [ bzip2 freetype libjpeg lcms2 ]
+    [ bzip2 freetype libjpeg lcms2 curl ]
     ++ lib.optionals (!stdenv.hostPlatform.isMinGW)
       [ libX11 libXext libXt libwebp ]
-    ;
+  ;
 
   postInstall = ''
     (cd "$dev/include" && ln -s ImageMagick* ImageMagick)
