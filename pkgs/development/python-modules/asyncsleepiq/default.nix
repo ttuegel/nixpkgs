@@ -1,18 +1,20 @@
 { lib
+, aiohttp
 , buildPythonPackage
 , fetchPypi
-, aiohttp
+, pythonOlder
 }:
 
 buildPythonPackage rec {
   pname = "asyncsleepiq";
-  version = "1.1.0";
-
+  version = "1.2.1";
   format = "setuptools";
+
+  disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "93c944ff84fd23832b188320b10681a3b1caf935dd584cdd4e508a9bcc8fec1b";
+    sha256 = "sha256-pIfEdNmtnwA+PE3lXVd7Qd8Igj+/aqZmuDqFs60PxgY=";
   };
 
   propagatedBuildInputs = [
@@ -22,7 +24,9 @@ buildPythonPackage rec {
   # upstream has no tests
   doCheck = false;
 
-  pythonImportsCheck = [ "asyncsleepiq" ];
+  pythonImportsCheck = [
+    "asyncsleepiq"
+  ];
 
   meta = with lib; {
     description = "Async interface to SleepIQ API";

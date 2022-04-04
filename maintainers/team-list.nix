@@ -65,7 +65,6 @@ with lib.maintainers; {
 
   chia = {
     members = [
-      atemu
       lourkeur
     ];
     scope = "Maintain the Chia blockchain and its dependencies";
@@ -118,6 +117,7 @@ with lib.maintainers; {
 
   gnome = {
     members = [
+      bobby285271
       hedning
       jtojnar
       dasj19

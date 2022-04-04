@@ -1,17 +1,25 @@
-{ lib, fetchFromGitHub, stdenv, rustPlatform, coreutils, bash, installShellFiles, libiconv }:
+{ lib
+, stdenv
+, fetchFromGitHub
+, rustPlatform
+, coreutils
+, bash
+, installShellFiles
+, libiconv
+}:
 
 rustPlatform.buildRustPackage rec {
   pname = "just";
-  version = "1.0.1";
+  version = "1.1.1";
 
   src = fetchFromGitHub {
     owner = "casey";
     repo = pname;
     rev = version;
-    sha256 = "sha256-ssc6djhSk0xV4jdlTmehWX6UMBPAuebtYlzWRZ/32mM=";
+    sha256 = "sha256-hgXMWQ7UlGyeb/j7V/Uw4gZjk/r1hA7lMjVL8i8st7o=";
   };
 
-  cargoSha256 = "sha256-ynYK37nCfIiy1CHBEQ/vMHOAPY/pp/lF/tSl9MJD7fY=";
+  cargoSha256 = "sha256-QJruh4voCB/q7xh5I6XnVtKA4Jbn9U84Mt2pHte7Kog=";
 
   nativeBuildInputs = [ installShellFiles ];
   buildInputs = lib.optionals stdenv.isDarwin [ libiconv ];
