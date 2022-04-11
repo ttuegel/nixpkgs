@@ -142,6 +142,7 @@ in
   engelsystem = handleTest ./engelsystem.nix {};
   enlightenment = handleTest ./enlightenment.nix {};
   env = handleTest ./env.nix {};
+  envoy = handleTest ./envoy.nix {};
   ergo = handleTest ./ergo.nix {};
   ergochat = handleTest ./ergochat.nix {};
   etc = pkgs.callPackage ../modules/system/etc/test.nix { inherit evalMinimalConfig; };
@@ -274,6 +275,7 @@ in
   login = handleTest ./login.nix {};
   logrotate = handleTest ./logrotate.nix {};
   loki = handleTest ./loki.nix {};
+  lvm2 = handleTest ./lvm2 {};
   lxd = handleTest ./lxd.nix {};
   lxd-image = handleTest ./lxd-image.nix {};
   lxd-nftables = handleTest ./lxd-nftables.nix {};
@@ -281,6 +283,7 @@ in
   #logstash = handleTest ./logstash.nix {};
   lorri = handleTest ./lorri/default.nix {};
   maddy = handleTest ./maddy.nix {};
+  maestral = handleTest ./maestral.nix {};
   magic-wormhole-mailbox-server = handleTest ./magic-wormhole-mailbox-server.nix {};
   magnetico = handleTest ./magnetico.nix {};
   mailcatcher = handleTest ./mailcatcher.nix {};
@@ -315,6 +318,7 @@ in
   moosefs = handleTest ./moosefs.nix {};
   mpd = handleTest ./mpd.nix {};
   mpv = handleTest ./mpv.nix {};
+  mtp = handleTest ./mtp.nix {};
   mumble = handleTest ./mumble.nix {};
   musescore = handleTest ./musescore.nix {};
   munin = handleTest ./munin.nix {};
@@ -341,6 +345,7 @@ in
   networking.networkd = handleTest ./networking.nix { networkd = true; };
   networking.scripted = handleTest ./networking.nix { networkd = false; };
   specialisation = handleTest ./specialisation.nix {};
+  netbox = handleTest ./web-apps/netbox.nix {};
   # TODO: put in networking.nix after the test becomes more complete
   networkingProxy = handleTest ./networking-proxy.nix {};
   nextcloud = handleTest ./nextcloud {};
@@ -511,6 +516,7 @@ in
   systemd-confinement = handleTest ./systemd-confinement.nix {};
   systemd-cryptenroll = handleTest ./systemd-cryptenroll.nix {};
   systemd-escaping = handleTest ./systemd-escaping.nix {};
+  systemd-initrd-simple = handleTest ./systemd-initrd-simple.nix {};
   systemd-journal = handleTest ./systemd-journal.nix {};
   systemd-machinectl = handleTest ./systemd-machinectl.nix {};
   systemd-networkd = handleTest ./systemd-networkd.nix {};
@@ -590,5 +596,6 @@ in
   zigbee2mqtt = handleTest ./zigbee2mqtt.nix {};
   zoneminder = handleTest ./zoneminder.nix {};
   zookeeper = handleTest ./zookeeper.nix {};
+  zrepl = handleTest ./zrepl.nix {};
   zsh-history = handleTest ./zsh-history.nix {};
 }
