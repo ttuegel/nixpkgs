@@ -80,7 +80,7 @@ let
             sname = args.sname or pname;
             inherit (srcs.${sname}) src version;
 
-            outputs = args.outputs or [ "out" ];
+            outputs = args.outputs or [ "out" "dev" ];
             hasBin = lib.elem "bin" outputs;
             hasDev = lib.elem "dev" outputs;
 
