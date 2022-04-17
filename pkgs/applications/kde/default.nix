@@ -46,7 +46,7 @@ let
       mkDerivation (args // {
         inherit pname version src;
 
-        outputs = args.outputs or [ "out" ];
+        outputs = args.outputs or [ "out" "dev" ];
 
         meta =
           let meta = args.meta or {}; in
