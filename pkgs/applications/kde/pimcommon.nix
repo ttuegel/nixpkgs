@@ -16,11 +16,12 @@ mkDerivation {
   nativeBuildInputs = [ extra-cmake-modules kdoctools ];
   buildInputs = [
     akonadi-mime grantlee karchive kcmutils kcodecs kcompletion kconfigwidgets
-    kdbusaddons kiconthemes kio kitemmodels kjobwidgets knewstuff kldap
-    kpurpose kwallet kwindowsystem libkdepim qtwebengine
+    kdbusaddons kiconthemes kio kitemmodels kjobwidgets knewstuff kldap kpurpose
+    kwallet kwindowsystem qtwebengine
   ];
   propagatedBuildInputs = [
     akonadi akonadi-contacts akonadi-search kconfig kcontacts kimap kpimtextedit
+    libkdepim
   ];
   outputs = [ "out" "dev" ];
 }
