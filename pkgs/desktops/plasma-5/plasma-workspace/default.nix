@@ -10,9 +10,9 @@
   kdbusaddons, kdeclarative, kdelibs4support, kdesu, kglobalaccel, kidletime,
   kinit, kjsembed, knewstuff, knotifyconfig, kpackage, kpeople, krunner,
   kscreenlocker, ktexteditor, ktextwidgets, kwallet, kwayland, kwin,
-  kxmlrpcclient, libkscreen, libksysguard, libqalculate, networkmanager-qt,
-  phonon, plasma-framework, prison, solid, kholidays, kquickcharts,
-  appstream-qt, plasma-wayland-protocols,
+  kxmlrpcclient, layer-shell-qt, libkscreen, libksysguard, libqalculate,
+  networkmanager-qt, phonon, plasma-framework, prison, solid, kholidays,
+  kquickcharts, appstream-qt, plasma-wayland-protocols,
 
   qtgraphicaleffects, qtquickcontrols, qtquickcontrols2, qtscript, qttools,
   qtwayland, qtx11extras, qqc2-desktop-style,
@@ -33,9 +33,9 @@ mkDerivation {
     baloo kactivities kactivities-stats kcmutils kconfig kcrash kdbusaddons
     kdeclarative kdelibs4support kdesu kglobalaccel kidletime kjsembed knewstuff
     knotifyconfig kpackage kpeople krunner kscreenlocker ktexteditor
-    ktextwidgets kwallet kwayland kwin kxmlrpcclient libkscreen libksysguard
-    libqalculate networkmanager-qt phonon plasma-framework prison solid
-    kholidays kquickcharts appstream-qt plasma-wayland-protocols
+    ktextwidgets kwallet kwayland kwin kxmlrpcclient layer-shell-qt libkscreen
+    libksysguard libqalculate networkmanager-qt phonon plasma-framework prison
+    solid kholidays kquickcharts appstream-qt plasma-wayland-protocols
 
     qtgraphicaleffects qtquickcontrols qtquickcontrols2 qtscript qtwayland
     qtx11extras qqc2-desktop-style
