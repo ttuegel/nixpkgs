@@ -17,10 +17,10 @@ mkDerivation {
   buildInputs = [
     akonadi-mime grantlee karchive kcmutils kcodecs kcompletion kconfigwidgets
     kdbusaddons kiconthemes kio kitemmodels kjobwidgets knewstuff kldap kpimtextedit
-    kpurpose kwallet kwindowsystem libkdepim qtwebengine
+    kpurpose kwallet kwindowsystem qtwebengine
   ];
   propagatedBuildInputs = [
-    akonadi akonadi-contacts akonadi-search kconfig kcontacts kimap
+    akonadi akonadi-contacts akonadi-search kconfig kcontacts kimap libkdepim
   ];
   outputs = [ "out" "dev" ];
 }
