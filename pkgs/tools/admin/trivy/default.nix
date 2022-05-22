@@ -1,22 +1,27 @@
 { lib
+, stdenv
 , buildGoModule
 , fetchFromGitHub
+, CoreFoundation
+, Security
 }:
 
 buildGoModule rec {
   pname = "trivy";
-  version = "0.26.0";
+  version = "0.28.0";
 
   src = fetchFromGitHub {
     owner = "aquasecurity";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-Se42a9Q76LsMk6b04P2C2sWSZ2UgfnQrpJUC2gwdCwY=";
+    sha256 = "sha256-zyTUGAxUAfrigRNiw03ZXFK+UkpuxwuU2xviZmAPuR8=";
   };
-
-  vendorSha256 = "sha256-y/7KhDx6p+n6nvFHWcvGbvOWsXvvL81jOgfjxsL/JDg=";
+  vendorSha256 = "sha256-dgiKWHSm49/CB4dWrNWIzkkmj6Aw4l+9iLa6xe/umq0=";
 
   excludedPackages = "misc";
+
+  buildInputs = lib.optionals (stdenv.isDarwin && stdenv.isx86_64)
+    [ CoreFoundation Security ];
 
   ldflags = [
     "-s"

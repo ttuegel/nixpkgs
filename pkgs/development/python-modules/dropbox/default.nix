@@ -8,20 +8,22 @@
 , mock
 , pytest-mock
 , pytestCheckHook
+, sphinxHook
 }:
 
 buildPythonPackage rec {
   pname = "dropbox";
-  version = "11.30.0";
+  version = "11.31.0";
   format = "setuptools";
 
   disabled = pythonOlder "3.7";
+  outputs = ["out" "doc"];
 
   src = fetchFromGitHub {
     owner = "dropbox";
     repo = "dropbox-sdk-python";
-    rev = "v${version}";
-    hash = "sha256-w07r95MBAClf0F3SICiZsHLdslzf+JuxC+BVdTACCog=";
+    rev = "refs/tags/v${version}";
+    hash = "sha256-mbBVivrpXYNuVbXeHRyy07LxPbtYvaL3JleK7QXOxi0=";
   };
 
   propagatedBuildInputs = [
@@ -46,6 +48,7 @@ buildPythonPackage rec {
   pythonImportsCheck = [
     "dropbox"
   ];
+  nativeBuildInputs = [ sphinxHook ];
 
   # Set SCOPED_USER_DROPBOX_TOKEN environment variable to a valid value.
   disabledTests = [
