@@ -252,6 +252,7 @@ in
   mailhog = handleTest ./mailhog.nix {};
   mariadb-galera-mariabackup = handleTest ./mysql/mariadb-galera-mariabackup.nix {};
   mariadb-galera-rsync = handleTest ./mysql/mariadb-galera-rsync.nix {};
+  mastodon = handleTestOn ["x86_64-linux" "i686-linux" "aarch64-linux"] ./web-apps/mastodon.nix {};
   matomo = handleTest ./matomo.nix {};
   matrix-appservice-irc = handleTest ./matrix-appservice-irc.nix {};
   matrix-synapse = handleTest ./matrix-synapse.nix {};
@@ -461,6 +462,7 @@ in
   timezone = handleTest ./timezone.nix {};
   tinc = handleTest ./tinc {};
   tinydns = handleTest ./tinydns.nix {};
+  tomcat = handleTest ./tomcat.nix {};
   tor = handleTest ./tor.nix {};
   trac = handleTest ./trac.nix {};
   # traefik test relies on docker-containers
