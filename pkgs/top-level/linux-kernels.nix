@@ -162,12 +162,7 @@ in {
 
     linux_5_16 = throw "linux 5.16 was removed because it has reached its end of life upstream";
 
-    linux_5_17 = callPackage ../os-specific/linux/kernel/linux-5.17.nix {
-      kernelPatches = [
-        kernelPatches.bridge_stp_helper
-        kernelPatches.request_key_helper
-      ];
-    };
+    linux_5_17 = throw "linux 5.17 was removed because it has reached its end of life upstream";
 
     linux_5_18 = callPackage ../os-specific/linux/kernel/linux-5.18.nix {
       kernelPatches = [
@@ -189,7 +184,7 @@ in {
        else testing;
 
     linux_testing_bcachefs = callPackage ../os-specific/linux/kernel/linux-testing-bcachefs.nix rec {
-      kernel = linux_5_17;
+      kernel = linux_5_18;
       kernelPatches = kernel.kernelPatches;
    };
 
@@ -243,7 +238,7 @@ in {
     linux_5_4_hardened = hardenedKernelFor kernels.linux_5_4 { };
     linux_5_10_hardened = hardenedKernelFor kernels.linux_5_10 { };
     linux_5_15_hardened = hardenedKernelFor kernels.linux_5_15 { };
-    linux_5_17_hardened = hardenedKernelFor kernels.linux_5_17 { };
+    linux_5_18_hardened = hardenedKernelFor kernels.linux_5_18 { };
 
   }));
   /*  Linux kernel modules are inherently tied to a specific kernel.  So
@@ -280,6 +275,8 @@ in {
     };
 
     apfs = callPackage ../os-specific/linux/apfs { };
+
+    ax99100 = callPackage ../os-specific/linux/ax99100 {};
 
     batman_adv = callPackage ../os-specific/linux/batman-adv {};
 
@@ -343,6 +340,8 @@ in {
 
     mbp2018-bridge-drv = callPackage ../os-specific/linux/mbp-modules/mbp2018-bridge-drv { };
 
+    new-lg4ff = callPackage ../os-specific/linux/new-lg4ff { };
+
     nvidiabl = callPackage ../os-specific/linux/nvidiabl { };
 
     nvidiaPackages = dontRecurseIntoAttrs (lib.makeExtensible (_: callPackage ../os-specific/linux/nvidia-x11 { }));
@@ -353,6 +352,10 @@ in {
     nvidia_x11_beta        = nvidiaPackages.beta;
     nvidia_x11_vulkan_beta = nvidiaPackages.vulkan_beta;
     nvidia_x11             = nvidiaPackages.stable;
+
+    # this is not a replacement for nvidia_x11
+    # only the opensource kernel driver exposed for hydra to build
+    nvidia_x11_beta_open   = nvidiaPackages.beta.open;
 
     openrazer = callPackage ../os-specific/linux/openrazer/driver.nix { };
 
@@ -508,7 +511,7 @@ in {
     linux_5_10 = recurseIntoAttrs (packagesFor kernels.linux_5_10);
     linux_5_15 = recurseIntoAttrs (packagesFor kernels.linux_5_15);
     linux_5_16 = throw "linux 5.16 was removed because it reached its end of life upstream"; # Added 2022-04-23
-    linux_5_17 = recurseIntoAttrs (packagesFor kernels.linux_5_17);
+    linux_5_17 = throw "linux 5.17 was removed because it reached its end of life upstream"; # Added 2022-06-23
     linux_5_18 = recurseIntoAttrs (packagesFor kernels.linux_5_18);
   };
 
@@ -548,7 +551,7 @@ in {
     });
     linux_5_10_hardened = recurseIntoAttrs (hardenedPackagesFor kernels.linux_5_10 { });
     linux_5_15_hardened = recurseIntoAttrs (hardenedPackagesFor kernels.linux_5_15 { });
-    linux_5_17_hardened = recurseIntoAttrs (hardenedPackagesFor kernels.linux_5_17 { });
+    linux_5_18_hardened = recurseIntoAttrs (hardenedPackagesFor kernels.linux_5_18 { });
 
     linux_zen = recurseIntoAttrs (packagesFor kernels.linux_zen);
     linux_lqx = recurseIntoAttrs (packagesFor kernels.linux_lqx);
@@ -563,7 +566,7 @@ in {
   });
 
   packageAliases = {
-    linux_default = if stdenv.hostPlatform.isi686 then packages.linux_5_10 else packages.linux_5_15;
+    linux_default = packages.linux_5_15;
     # Update this when adding the newest kernel major version!
     linux_latest = packages.linux_5_18;
     linux_mptcp = packages.linux_mptcp_95;

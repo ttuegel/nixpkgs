@@ -1027,10 +1027,12 @@ in
         ${pkgs.envsubst}/bin/envsubst \
           -o ${cfg.workDir}/config.json \
           -i ${prettyJSON cfg.configuration}
+        mkdir -p ${cfg.configuration.uploadsPath}
       '';
       serviceConfig = {
         WorkingDirectory = cfg.workDir;
-        StateDirectory = [ cfg.workDir cfg.configuration.uploadsPath ];
+        StateDirectory = [ (builtins.replaceStrings [ "/var/lib/"  ] [ "" ] cfg.workDir) ];
+        ReadWritePaths = [ cfg.configuration.uploadsPath ];
         ExecStart = "${cfg.package}/bin/hedgedoc";
         EnvironmentFile = mkIf (cfg.environmentFile != null) [ cfg.environmentFile ];
         Environment = [

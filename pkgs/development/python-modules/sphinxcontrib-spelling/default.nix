@@ -10,14 +10,14 @@
 
 buildPythonPackage rec {
   pname = "sphinxcontrib-spelling";
-  version = "7.4.1";
+  version = "7.5.1";
   format = "setuptools";
 
   disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-OpbyKqxq9JQHOvrLmI2U2NfCtgJ7IFA6jyDa4ysQw74=";
+    hash = "sha256-D8TCSGOezvPUigR1T+uhdEaOaza1bJAwJcUNYNbPtO8=";
   };
 
   nativeBuildInputs = [
