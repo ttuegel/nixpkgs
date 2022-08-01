@@ -1,30 +1,40 @@
 { lib
-, buildGoModule
 , fetchFromGitHub
+, buildGoModule
+, gitUpdater
 }:
 
 buildGoModule rec {
   pname = "boulder";
-  version = "release-2022-05-31";
-  rev = "99dcb9a5b31be576a55e33184581c942421bc172";
+  version = "2022-07-11";
 
   src = fetchFromGitHub {
     owner = "letsencrypt";
     repo = "boulder";
-    rev = version;
-    sha256 = "sha256-x1Vf8agwVTgSkDVEdAnG3div+MzRsMi96jKJRc2s8Ks=";
+    rev = "release-${version}";
+    sha256 = "sha256-fDKB7q2e+qdHt+t/BQWX7LkpyiZQtZSHp/x5uv0/c7c=";
+    leaveDotGit = true;
+    postFetch = ''
+      cd $out
+      git rev-parse HEAD > $out/COMMIT
+      find "$out" -name .git -print0 | xargs -0 rm -rf
+    '';
   };
 
   vendorSha256 = null;
 
   subPackages = [ "cmd/boulder" ];
 
-  ldflags = with lib;
-    mapAttrsToList (n: v: ''"-X github.com/letsencrypt/boulder/core.Build${n}=${v}"'') {
-      ID = substring 0 8 rev;
-      Host = "nixbld@localhost";
-      Time = "Thu  1 Jan 00:00:00 UTC 1970";
-    };
+  ldflags = [
+    "-s"
+    "-w"
+    "-X github.com/letsencrypt/boulder/core.BuildHost=nixbld@localhost"
+  ];
+
+  preBuild = ''
+    ldflags+=" -X \"github.com/letsencrypt/boulder/core.BuildID=$(cat COMMIT)\""
+    ldflags+=" -X \"github.com/letsencrypt/boulder/core.BuildTime=$(date -u -d @0)\""
+  '';
 
   postInstall = ''
     for i in $($out/bin/boulder --list); do
@@ -34,6 +44,11 @@ buildGoModule rec {
 
   # There are no tests for cmd/boulder.
   doCheck = false;
+
+  passthru.updateScript = gitUpdater {
+    inherit pname version;
+    rev-prefix = "release-";
+  };
 
   meta = with lib; {
     homepage = "https://github.com/letsencrypt/boulder";

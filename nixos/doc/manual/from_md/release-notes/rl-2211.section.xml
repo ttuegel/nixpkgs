@@ -135,6 +135,14 @@
       </listitem>
       <listitem>
         <para>
+          <link xlink:href="https://github.com/jtroo/kanata">kanata</link>,
+          a tool to improve keyboard comfort and usability with advanced
+          customization. Available as
+          <link xlink:href="options.html#opt-services.kanata.enable">services.kanata</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           <link xlink:href="https://github.com/aiberia/persistent-evdev">persistent-evdev</link>,
           a daemon to add virtual proxy devices that mirror a physical
           input device but persist even if the underlying hardware is
@@ -154,6 +162,13 @@
           <link xlink:href="https://www.expressvpn.com">expressvpn</link>,
           the CLI client for ExpressVPN. Available as
           <link linkend="opt-services.expressvpn.enable">services.expressvpn</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <link xlink:href="https://www.grafana.com/oss/tempo/">Grafana
+          Tempo</link>, a distributed tracing store. Available as
+          <link linkend="opt-services.tempo.enable">services.tempo</link>.
         </para>
       </listitem>
     </itemizedlist>
@@ -192,10 +207,12 @@
       <listitem>
         <para>
           <literal>i18n.supportedLocales</literal> is now by default
-          only generated with the default locale set in
-          <literal>i18n.defaultLocale</literal>. This got copied over
-          from the minimal profile and reduces the final system size by
-          200MB. If you require all locales installed set the option to
+          only generated with the locales set in
+          <literal>i18n.defaultLocale</literal> and
+          <literal>i18n.extraLocaleSettings</literal>. This got
+          partially copied over from the minimal profile and reduces the
+          final system size by up to 200MB. If you require all locales
+          installed set the option to
           <literal>[ &quot;all&quot; ]</literal>.
         </para>
       </listitem>
@@ -212,6 +229,14 @@
           a broader set of systems. If you were using this predicate,
           you can replace <literal>foo.isPowerPC</literal> with
           <literal>(with foo; isPower &amp;&amp; is32bit &amp;&amp; isBigEndian)</literal>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <literal>bsp-layout</literal> no longer uses the command
+          <literal>cycle</literal> to switch to other window layouts, as
+          it got replaced by the commands <literal>previous</literal>
+          and <literal>next</literal>.
         </para>
       </listitem>
       <listitem>
@@ -238,6 +263,23 @@
           riak package removed along with
           <literal>services.riak</literal> module, due to lack of
           maintainer to update the package.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <literal>services.graphite.api</literal> and
+          <literal>services.graphite.beacon</literal> NixOS options, and
+          the <literal>python3.pkgs.graphite_api</literal>,
+          <literal>python3.pkgs.graphite_beacon</literal> and
+          <literal>python3.pkgs.influxgraph</literal> packages, have
+          been removed due to lack of upstream maintenance.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <literal>meta.mainProgram</literal> attribute of packages
+          in <literal>wineWowPackages</literal> now defaults to
+          <literal>&quot;wine64&quot;</literal>.
         </para>
       </listitem>
       <listitem>
@@ -277,6 +319,13 @@
       </listitem>
       <listitem>
         <para>
+          The Redis module now disables RDB persistence when
+          <literal>services.redis.servers.&lt;name&gt;.save = []</literal>
+          instead of using the Redis default.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           Matrix Synapse now requires entries in the
           <literal>state_group_edges</literal> table to be unique, in
           order to prevent accidentally introducing duplicate
@@ -288,8 +337,11 @@
       </listitem>
       <listitem>
         <para>
-          <literal>zfs</literal> was updated from 2.1.4 to 2.1.5,
-          enabling it to be used with Linux kernel 5.18.
+          <literal>dockerTools.buildImage</literal> deprecates the
+          misunderstood <literal>contents</literal> parameter, in favor
+          of <literal>copyToRoot</literal>. Use
+          <literal>copyToRoot = buildEnv { ... };</literal> or similar
+          if you intend to add packages to <literal>/bin</literal>.
         </para>
       </listitem>
       <listitem>
@@ -297,6 +349,39 @@
           memtest86+ was updated from 5.00-coreboot-002 to 6.00-beta2.
           It is now the upstream version from https://www.memtest.org/,
           as coreboot’s fork is no longer available.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Add udev rules for the Teensy family of microcontrollers.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          The <literal>pass-secret-service</literal> package now
+          includes systemd units from upstream, so adding it to the
+          NixOS <literal>services.dbus.packages</literal> option will
+          make it start automatically as a systemd user service when an
+          application tries to talk to the libsecret D-Bus API.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          There is a new module for the <literal>thunar</literal>
+          program (the Xfce file manager), which depends on the
+          <literal>xfconf</literal> dbus service, and also has a dbus
+          service and a systemd unit. The option
+          <literal>services.xserver.desktopManager.xfce.thunarPlugins</literal>
+          has been renamed to
+          <literal>programs.thunar.plugins</literal>, and in a future
+          release it may be removed.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          There is a new module for the <literal>xfconf</literal>
+          program (the Xfce configuration storage system), which has a
+          dbus service.
         </para>
       </listitem>
     </itemizedlist>
