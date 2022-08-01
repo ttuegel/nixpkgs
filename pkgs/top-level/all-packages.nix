@@ -14704,7 +14704,7 @@ with pkgs;
     stdenv = clangStdenv;
   };
 
-  jacinda = haskell.lib.compose.justStaticExecutables haskell.packages.ghc923.jacinda;
+  jacinda = haskell.lib.compose.justStaticExecutables haskell.packages.ghc924.jacinda;
 
   janet = callPackage ../development/interpreters/janet {};
 
