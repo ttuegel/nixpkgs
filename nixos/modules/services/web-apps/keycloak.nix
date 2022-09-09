@@ -20,11 +20,12 @@ let
     mkDefault
     literalExpression
     isAttrs
-    literalDocBook
+    literalMD
     maintainers
     catAttrs
     collect
     splitString
+    hasPrefix
     ;
 
   inherit (builtins)
@@ -165,7 +166,7 @@ in
           mkOption {
             type = port;
             default = dbPorts.${cfg.database.type};
-            defaultText = literalDocBook "default port of selected database";
+            defaultText = literalMD "default port of selected database";
             description = lib.mdDoc ''
               Port of the database to connect to.
             '';
@@ -312,8 +313,9 @@ in
 
             http-relative-path = mkOption {
               type = str;
-              default = "";
+              default = "/";
               example = "/auth";
+              apply = x: if !(hasPrefix "/") x then "/" + x else x;
               description = ''
                 The path relative to <literal>/</literal> for serving
                 resources.
@@ -562,7 +564,7 @@ in
             shopt -s inherit_errexit
 
             create_role="$(mktemp)"
-            trap 'rm -f "$create_role"' ERR EXIT
+            trap 'rm -f "$create_role"' EXIT
 
             db_password="$(<"$CREDENTIALS_DIRECTORY/db_password")"
             echo "CREATE ROLE keycloak WITH LOGIN PASSWORD '$db_password' CREATEDB" > "$create_role"
@@ -658,7 +660,7 @@ in
             '' + ''
               export KEYCLOAK_ADMIN=admin
               export KEYCLOAK_ADMIN_PASSWORD=${cfg.initialAdminPassword}
-              kc.sh start
+              kc.sh start --optimized
             '';
           };
 
