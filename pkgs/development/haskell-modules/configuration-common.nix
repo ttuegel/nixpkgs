@@ -99,7 +99,7 @@ self: super: {
       name = "git-annex-${super.git-annex.version}-src";
       url = "git://git-annex.branchable.com/";
       rev = "refs/tags/" + super.git-annex.version;
-      sha256 = "0p9qd7yasdji5kwxn4d0hrv9hnxbzfsczknldh8jav3ynhg8k6c9";
+      sha256 = "19n60rx4mpr52551mvm0i5kgy32099rvgnihvmh5np09n2f81c2r";
       # delete android and Android directories which cause issues on
       # darwin (case insensitive directory). Since we don't need them
       # during the build process, we can delete it to prevent a hash
@@ -237,6 +237,11 @@ self: super: {
   # base bound
   digit = doJailbreak super.digit;
 
+  # matterhorn-50200.17.0 won't work with brick >= 0.71
+  matterhorn = doJailbreak (super.matterhorn.overrideScope (self: super: {
+    brick = self.brick_0_70_1;
+  }));
+
   # 2020-06-05: HACK: does not pass own build suite - `dontCheck`
   # 2022-06-17: Use hnix-store 0.5 until hnix 0.17
   hnix = generateOptparseApplicativeCompletion "hnix" (dontCheck (
@@ -351,24 +356,6 @@ self: super: {
   lensref = dontCheck super.lensref;
   lvmrun = disableHardening ["format"] (dontCheck super.lvmrun);
   matplotlib = dontCheck super.matplotlib;
-
-  brick_0_73 = doDistribute (super.brick_0_73.overrideScope (self: super: {
-    vty = self.vty_5_36;
-    text-zipper = self.text-zipper_0_12;
-  }));
-
-  # https://github.com/matterhorn-chat/matterhorn/issues/679 they do not want to be on stackage
-  matterhorn = doJailbreak (appendPatches [
-    # Fix build with brick 0.73
-    (fetchpatch {
-      name = "matterhorn-brick-0.72.patch";
-      url = "https://github.com/matterhorn-chat/matterhorn/commit/d52df3342b8420e219095aad477205e47fbef11b.patch";
-      sha256 = "1ifvv926g9m8niyc9nl1hy9bkx4kf12ciyv2v8vnrzz3njp4fsrz";
-    })
-  ] (super.matterhorn.overrideScope (self: super: {
-    brick = self.brick_0_73;
-  })));
-
   memcache = dontCheck super.memcache;
   metrics = dontCheck super.metrics;
   milena = dontCheck super.milena;
@@ -833,9 +820,9 @@ self: super: {
     testHaskellDepends = drv.testHaskellDepends or [] ++ [ self.hspec-meta_2_9_3 ];
     testToolDepends = drv.testToolDepends or [] ++ [ pkgs.git ];
   }) (super.sensei.override {
-    hspec = self.hspec_2_10_0;
+    hspec = self.hspec_2_10_1;
     hspec-wai = super.hspec-wai.override {
-      hspec = self.hspec_2_10_0;
+      hspec = self.hspec_2_10_1;
     };
   });
 
@@ -1236,9 +1223,18 @@ self: super: {
 
   # The test suite depends on an impure cabal-install installation in
   # $HOME, which we don't have in our build sandbox.
-  cabal-install-parsers = dontCheck (super.cabal-install-parsers.override {
-    Cabal = self.Cabal_3_6_3_0;
-  });
+  # 2022-08-31: Jailbreak is done to allow aeson 2.0.*:
+  # https://github.com/haskell-CI/haskell-ci/commit/6ad0d5d701cbe101013335d597acaf5feadd3ab9#r82681900
+  cabal-install-parsers = doJailbreak (dontCheck (super.cabal-install-parsers.override {
+    Cabal-syntax = self.Cabal-syntax_3_8_1_0;
+  }));
+  cabal-install-parsers_0_4_5 = doDistribute (
+    dontCheck (
+      super.cabal-install-parsers_0_4_5.override {
+        Cabal = self.Cabal_3_6_3_0;
+      }
+    )
+  );
 
   # 2022-03-12: Pick patches from master for compat with Stackage Nightly
   gitit = appendPatches [
@@ -1646,14 +1642,14 @@ self: super: {
   servant-openapi3 = dontCheck super.servant-openapi3;
 
   # Give hspec 2.10.* correct dependency versions without overrideScope
-  hspec_2_10_0 = doDistribute (super.hspec_2_10_0.override {
-    hspec-discover = self.hspec-discover_2_10_0;
-    hspec-core = self.hspec-core_2_10_0;
+  hspec_2_10_1 = doDistribute (super.hspec_2_10_1.override {
+    hspec-discover = self.hspec-discover_2_10_1;
+    hspec-core = self.hspec-core_2_10_1;
   });
-  hspec-discover_2_10_0 = super.hspec-discover_2_10_0.override {
+  hspec-discover_2_10_1 = super.hspec-discover_2_10_1.override {
     hspec-meta = self.hspec-meta_2_9_3;
   };
-  hspec-core_2_10_0 = super.hspec-core_2_10_0.override {
+  hspec-core_2_10_1 = super.hspec-core_2_10_1.override {
     hspec-meta = self.hspec-meta_2_9_3;
   };
 
@@ -1785,21 +1781,6 @@ self: super: {
   # Test suite fails, upstream not reachable for simple fix (not responsive on github)
   vivid-osc = dontCheck super.vivid-osc;
   vivid-supercollider = dontCheck super.vivid-supercollider;
-
-  # cabal-install switched to build type simple in 3.2.0.0
-  # as a result, the cabal(1) man page is no longer installed
-  # automatically. Instead we need to use the `cabal man`
-  # command which generates the man page on the fly and
-  # install it to $out/share/man/man1 ourselves in this
-  # override.
-  # The commit that introduced this change:
-  # https://github.com/haskell/cabal/commit/91ac075930c87712eeada4305727a4fa651726e7
-  cabal-install = overrideCabal (old: {
-    postInstall = old.postInstall + ''
-      mkdir -p "$out/share/man/man1"
-      "$out/bin/cabal" man --raw > "$out/share/man/man1/cabal.1"
-    '';
-  }) super.cabal-install;
 
   # while waiting for a new release: https://github.com/brendanhay/amazonka/pull/572
   amazonka = appendPatches [
@@ -2050,18 +2031,8 @@ self: super: {
   haskell-ci = super.haskell-ci.overrideScope (self: super: {
     Cabal = self.Cabal_3_6_3_0;
     ShellCheck = self.ShellCheck_0_7_2;
+    cabal-install-parsers = self.cabal-install-parsers_0_4_5;
   });
-
-  # Build haskell-ci from git repository
-  haskell-ci-unstable = overrideSrc rec {
-    version = "0.14.1-${builtins.substring 0 7 src.rev}";
-    src = pkgs.fetchFromGitHub {
-      owner = "haskell-CI";
-      repo = "haskell-ci";
-      rev = "8311a999b8e8be3aa31f65f314def256aa2d5535";
-      sha256 = "169jaqm4xs2almmvqsk567wayxs0g6kn0l5877c03hzr3d9ykrav";
-    };
-  } self.haskell-ci;
 
   large-hashable = lib.pipe (super.large-hashable.override {
     # https://github.com/factisresearch/large-hashable/commit/5ec9d2c7233fc4445303564047c992b693e1155c
@@ -2214,7 +2185,19 @@ self: super: {
 
   # Fixes https://github.com/NixOS/nixpkgs/issues/140613
   # https://github.com/recursion-schemes/recursion-schemes/issues/128
-  recursion-schemes = appendPatch ./patches/recursion-schemes-128.patch super.recursion-schemes;
+  recursion-schemes = overrideCabal (drv: {
+    patches = drv.patches or [] ++ [
+      ./patches/recursion-schemes-128.patch
+    ];
+    # make sure line endings don't break the patch
+    prePatch = drv.prePatch or "" + ''
+      "${pkgs.buildPackages.dos2unix}/bin/dos2unix" *.cabal
+    '';
+  }) super.recursion-schemes;
+
+  # 2022-08-30 Too strict bounds on finite-typelits
+  # https://github.com/jumper149/blucontrol/issues/1
+  blucontrol = doJailbreak super.blucontrol;
 
   # Fix from https://github.com/brendanhay/gogol/pull/144 which has seen no release
   # Can't use fetchpatch as it required tweaking the line endings as the .cabal
@@ -2357,6 +2340,10 @@ self: super: {
   # https://github.com/tree-sitter/haskell-tree-sitter/issues/298
   tree-sitter = doJailbreak super.tree-sitter;
 
+  # 2022-08-07: Bounds are too restrictive: https://github.com/marcin-rzeznicki/libjwt-typed/issues/2
+  # Also, the tests fail.
+  libjwt-typed = dontCheck (doJailbreak super.libjwt-typed);
+
   # Test suite fails to compile
   # https://github.com/kuribas/mfsolve/issues/8
   mfsolve = dontCheck super.mfsolve;
@@ -2388,6 +2375,9 @@ self: super: {
       rm Setup.hs
     '';
   }) super.linear-base;
+
+  # https://github.com/peti/hopenssl/issues/5
+  hopenssl = super.hopenssl.override { openssl = pkgs.openssl_1_1; };
 
   # Fixes compilation with GHC 9.0 and above
   # https://hub.darcs.net/shelarcy/regex-compat-tdfa/issue/3
@@ -2426,13 +2416,12 @@ self: super: {
     }))
   ];
 
-  # 2022-02-25: Not compatible with relude 1.0
-  ema = assert super.ema.version == "0.6.0.0";
-    super.ema.overrideScope (self: super: { relude = doJailbreak self.relude_0_7_0_0; });
+  # Tests require ghc-9.2.
+  ema = dontCheck super.ema;
 
-  glirc = super.glirc.override {
+  glirc = doJailbreak (super.glirc.override {
     vty = self.vty_5_35_1;
-  };
+  });
 
   # 2022-02-25: Unmaintained and to strict upper bounds
   paths = doJailbreak super.paths;
@@ -2500,11 +2489,6 @@ self: super: {
     url = "https://github.com/erebe/wstunnel/pull/107/commits/47c1f62bdec1dbe77088d9e3ceb6d872f922ce34.patch";
     sha256 = "sha256-fW5bVbAGQxU/gd9zqgVNclwKraBtUjkKDek7L0c4+O0=";
   }) super.wstunnel;
-
-  # Adjustment of bounds on servant is unreleased
-  # https://github.com/haskell-servant/servant-cassava/commit/66617547851d38d48f5f1d1b786db1286bdafa9d
-  servant-cassava = assert super.servant-cassava.version == "0.10.1";
-    doJailbreak super.servant-cassava;
 
   # Test data missing from sdist
   # https://github.com/ngless-toolkit/ngless/issues/152
@@ -2574,6 +2558,10 @@ self: super: {
     testTarget = "regex-tdfa-unittest";
   } super.regex-tdfa;
 
+  # 2022-09-01:
+  # Restrictive upper bound on base.
+  # Remove once version 1.* is released
+  monad-bayes = doJailbreak super.monad-bayes;
 } // import ./configuration-tensorflow.nix {inherit pkgs haskellLib;} self super // (let
   # We need to build purescript with these dependencies and thus also its reverse
   # dependencies to avoid version mismatches in their dependency closure.
@@ -2622,4 +2610,11 @@ in {
   purescript-ast = purescriptStOverride super.purescript-ast;
 
   purenix = purescriptStOverride super.purenix;
+
+  # Needs update for ghc-9:
+  # https://github.com/haskell/text-format/issues/27
+  text-format = appendPatch (fetchpatch {
+    url = "https://github.com/hackage-trustees/text-format/pull/4/commits/949383aa053497b8c251219c10506136c29b4d32.patch";
+    sha256 = "QzpZ7lDedsz1mZcq6DL4x7LBnn58rx70+ZVvPh9shRo=";
+  }) super.text-format;
 })

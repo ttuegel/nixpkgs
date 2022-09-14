@@ -1,4 +1,5 @@
 { lib
+, async-timeout
 , bluez
 , buildPythonPackage
 , dbus-next
@@ -10,17 +11,18 @@
 
 buildPythonPackage rec {
   pname = "bleak";
-  version = "0.14.3";
-  format = "setuptools";
+  version = "0.16.0";
+  format = "pyproject";
 
   disabled = pythonOlder "3.7";
 
   src = fetchPypi {
     inherit pname version;
-    hash = "sha256-dg5bsegECH92JXa5uVY9Y7R9UhsWUpiOKMPLXmS2GZA=";
+    hash = "sha256-pUn0PjxdjeRkxytLkFU0w/R4F0bpgV7NUxtyVd4uGcc=";
   };
 
   propagatedBuildInputs = [
+    async-timeout
     dbus-next
     typing-extensions
   ];

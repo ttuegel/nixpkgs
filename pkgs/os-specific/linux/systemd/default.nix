@@ -83,13 +83,13 @@
 , withHostnamed ? true
 , withHwdb ? true
 , withImportd ? !stdenv.hostPlatform.isMusl
-, withLibBPF ? false # currently fails while generating BPF objects
+, withLibBPF ? true
 , withLocaled ? true
 , withLogind ? true
 , withMachined ? true
 , withNetworkd ? true
 , withNss ? !stdenv.hostPlatform.isMusl
-, withOomd ? false
+, withOomd ? true
 , withPCRE2 ? true
 , withPolkit ? true
 , withPortabled ? false
@@ -100,6 +100,7 @@
 , withTimesyncd ? true
 , withTpm2Tss ? !stdenv.hostPlatform.isMusl
 , withUserDb ? !stdenv.hostPlatform.isMusl
+, withUtmp ? !stdenv.hostPlatform.isMusl
   # tests assume too much system access for them to be feasible for us right now
 , withTests ? false
 
@@ -127,7 +128,7 @@ assert withCryptsetup -> (cryptsetup != null);
 let
   wantCurl = withRemote || withImportd;
   wantGcrypt = withResolved || withImportd;
-  version = "251.3";
+  version = "251.4";
 
   # Bump this variable on every (major) version change. See below (in the meson options list) for why.
   # command:
@@ -144,12 +145,13 @@ stdenv.mkDerivation {
     owner = "systemd";
     repo = "systemd-stable";
     rev = "v${version}";
-    sha256 = "sha256-vcj+k/duRID2R+wGQIyq+dVRrFYNQTsjHya6k0hmZxk=";
+    sha256 = "sha256-lfG6flT1k8LZBAdDK+cF9RjmJMkHMJquMjQK3MINFd8=";
   };
 
   # On major changes, or when otherwise required, you *must* reformat the patches,
   # `git am path/to/00*.patch` them into a systemd worktree, rebase to the more recent
-  # systemd version, and export the patches again via `git -c format.signoff=false format-patch v${version}`.
+  # systemd version, and export the patches again via
+  # `git -c format.signoff=false format-patch v${version} --no-numbered --zero-commit --no-signature`.
   # Use `find . -name "*.patch" | sort` to get an up-to-date listing of all patches
   patches = [
     ./0001-Start-device-units-for-uninitialised-encrypted-devic.patch
@@ -166,10 +168,9 @@ stdenv.mkDerivation {
     ./0012-add-rootprefix-to-lookup-dir-paths.patch
     ./0013-systemd-shutdown-execute-scripts-in-etc-systemd-syst.patch
     ./0014-systemd-sleep-execute-scripts-in-etc-systemd-system-.patch
-    ./0015-kmod-static-nodes.service-Update-ConditionFileNotEmp.patch
-    ./0016-path-util.h-add-placeholder-for-DEFAULT_PATH_NORMAL.patch
-    ./0017-pkg-config-derive-prefix-from-prefix.patch
-    ./0018-inherit-systemd-environment-when-calling-generators.patch
+    ./0015-path-util.h-add-placeholder-for-DEFAULT_PATH_NORMAL.patch
+    ./0016-pkg-config-derive-prefix-from-prefix.patch
+    ./0017-inherit-systemd-environment-when-calling-generators.patch
   ] ++ lib.optional stdenv.hostPlatform.isMusl (
     let
       oe-core = fetchzip {
@@ -207,6 +208,12 @@ stdenv.mkDerivation {
       --replace \
       "run_command(cc.cmd_array(), '-print-prog-name=objcopy', check: true).stdout().strip()" \
       "'${stdenv.cc.bintools.targetPrefix}objcopy'"
+  '' + lib.optionalString withLibBPF ''
+    substituteInPlace meson.build \
+      --replace "find_program('clang'" "find_program('${stdenv.cc.targetPrefix}clang'"
+    # BPF does not work with stack protector
+    substituteInPlace src/core/bpf/meson.build \
+      --replace "clang_flags = [" "clang_flags = [ '-fno-stack-protector',"
   '' + (
     let
       # The following patches references to dynamic libraries to ensure that
@@ -348,7 +355,7 @@ stdenv.mkDerivation {
       docbook_xml_dtd_45
       (buildPackages.python3Packages.python.withPackages (ps: with ps; [ lxml jinja2 ]))
     ]
-    ++ lib.optional withLibBPF [
+    ++ lib.optionals withLibBPF [
       bpftools
       llvmPackages.clang
       llvmPackages.libllvm
@@ -496,9 +503,10 @@ stdenv.mkDerivation {
     "-Dbpf-framework=true"
   ] ++ lib.optionals withTpm2Tss [
     "-Dtpm2=true"
+  ] ++ lib.optionals (!withUtmp) [
+    "-Dutmp=false"
   ] ++ lib.optionals stdenv.hostPlatform.isMusl [
     "-Dgshadow=false"
-    "-Dutmp=false"
     "-Didn=false"
   ];
   preConfigure =
@@ -677,7 +685,7 @@ stdenv.mkDerivation {
     # runtime; otherwise we can't and we need to reboot.
     interfaceVersion = 2;
 
-    inherit withCryptsetup withHostnamed withImportd withLocaled withMachined withTimedated util-linux kmod kbd;
+    inherit withCryptsetup withHostnamed withImportd withLocaled withMachined withTimedated withUtmp util-linux kmod kbd;
 
     tests = {
       inherit (nixosTests) switchTest;

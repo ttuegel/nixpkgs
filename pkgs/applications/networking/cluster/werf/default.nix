@@ -11,16 +11,16 @@
 
 buildGoModule rec {
   pname = "werf";
-  version = "1.2.144";
+  version = "1.2.168";
 
   src = fetchFromGitHub {
     owner = "werf";
     repo = "werf";
     rev = "v${version}";
-    sha256 = "sha256-5hfXHoU7hmiuLaS9nS6MAS6tJAmTwxE9VqBZ29hv56A=";
+    hash = "sha256-/Shmnnpme1ffN7GMTryb4ddPlcAsruyWhFdjr1PJ3HM=";
   };
 
-  vendorSha256 = "sha256-m+qt+pqLzQyzQkKzEbBkzgTlRjpaqJNF8tcirBx4Htc=";
+  vendorHash = "sha256-E5yDk48O7zze8QTeLQ999QmB8XLkpKNZ8JQ2wVRMGCU=";
 
   proxyVendor = true;
 
@@ -28,6 +28,8 @@ buildGoModule rec {
 
   nativeBuildInputs = [ installShellFiles ];
   buildInputs = lib.optionals stdenv.isLinux [ btrfs-progs glibc.static ];
+
+  CGO_ENABLED = if stdenv.isLinux then 1 else 0;
 
   ldflags = [
     "-s"
@@ -50,8 +52,16 @@ buildGoModule rec {
     "static_build"
   ];
 
-  # There are no tests for cmd/werf.
-  doCheck = false;
+  preCheck = ''
+    # Test all targets.
+    unset subPackages
+
+    # Remove tests that require external services.
+    rm -rf \
+      integration/suites \
+      pkg/true_git/*test.go \
+      test/e2e
+  '';
 
   postInstall = ''
     installShellCompletion --cmd werf \
