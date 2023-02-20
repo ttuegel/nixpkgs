@@ -44,14 +44,6 @@ let
       makeWrapper ${glib.dev}/bin/glib-mkenums $out/bin/glib-mkenums --unset PYTHONPATH
     '';
   };
-  # make-dconf-override-db.sh needs to execute dbus-launch in the sandbox,
-  # it will fail to read /etc/dbus-1/session.conf unless we add this flag
-  dbus-launch = runCommand "sandbox-dbus-launch" {
-    nativeBuildInputs = [ makeWrapper ];
-  } ''
-      makeWrapper ${dbus}/bin/dbus-launch $out/bin/dbus-launch \
-        --add-flags --config-file=${dbus}/share/dbus-1/session.conf
-  '';
 in
 
 stdenv.mkDerivation rec {
@@ -71,6 +63,7 @@ stdenv.mkDerivation rec {
       pythonInterpreter = python3Runtime.interpreter;
       pythonSitePackages = python3.sitePackages;
     })
+    ./build-without-dbus-launch.patch
   ];
 
   outputs = [ "out" "dev" "installedTests" ];
@@ -111,7 +104,6 @@ stdenv.mkDerivation rec {
     python3BuildEnv
     vala
     wrapGAppsHook
-    dbus-launch
   ];
 
   propagatedBuildInputs = [
