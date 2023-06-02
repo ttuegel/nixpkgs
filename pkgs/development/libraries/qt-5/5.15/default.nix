@@ -19,6 +19,7 @@ Check for any minor version changes.
 , decryptSslTraffic ? false
 , debug ? false
 , config
+, pkgs
 }:
 
 let
@@ -328,6 +329,7 @@ let
         name = "wrap-qt5-apps-hook";
         propagatedBuildInputs = [ self.qtbase.dev buildPackages.makeBinaryWrapper ]
           ++ lib.optional stdenv.isLinux self.qtwayland.dev;
+        substitutions = { lndir = "${pkgs.xorg.lndir}/bin/lndir"; };
       } ../hooks/wrap-qt-apps-hook.sh;
     } // lib.optionalAttrs config.allowAliases {
       # remove before 23.11

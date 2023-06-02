@@ -3,6 +3,8 @@ __nix_wrapQtAppsHook=1  # Don't run this hook more than once.
 
 # Inherit arguments given in mkDerivation
 qtWrapperArgs=( ${qtWrapperArgs-} )
+qtPluginPaths=()
+qtQmlPaths=()
 
 declare -gA qtHostPathsSeen
 
@@ -25,13 +27,13 @@ qtHostPathHook() {
     local pluginDir="$1/${qtPluginPrefix:?}"
     if [ -d "$pluginDir" ]
     then
-        qtWrapperArgs+=(--prefix QT_PLUGIN_PATH : "$pluginDir")
+        qtPluginPaths+=("$pluginDir")
     fi
 
     local qmlDir="$1/${qtQmlPrefix:?}"
     if [ -d "$qmlDir" ]
     then
-        qtWrapperArgs+=(--prefix QML2_IMPORT_PATH : "$qmlDir")
+        qtQmlPaths+=("$qmlDir")
     fi
 }
 addEnvHooks "$targetOffset" qtHostPathHook
@@ -64,8 +66,27 @@ qtOwnPathsHook() {
 
     qtHostPathHook "${!outputBin}"
 }
-
 preFixupPhases+=" qtOwnPathsHook"
+
+buildQtEnv() {
+    local prefix="$1"; shift
+    local envDir="${prefix}/nix-support/env"
+    local envPluginDir="${envDir}/${qtPluginPrefix:?}"
+    local envQmlDir="${envDir}/${qtQmlPrefix:?}"
+
+    mkdir -p "$envPluginDir"
+    for qtPluginPath in "${qtPluginPaths[@]}"
+    do
+        @lndir@ "$qtPluginPath" "$envPluginDir"
+    done
+
+    mkdir -p "$envQmlDir"
+    for qtQmlPath in "${qtQmlPaths[@]}"
+    do
+        @lndir@ "$qtQmlPath" "$envQmlDir"
+    done
+}
+preFixupPhases+=" qtLinkEnv"
 
 # Note: $qtWrapperArgs still gets defined even if ${dontWrapQtApps-} is set.
 wrapQtAppsHook() {
@@ -79,6 +100,7 @@ wrapQtAppsHook() {
     local targetDirs=( "$prefix/bin" "$prefix/sbin" "$prefix/libexec" "$prefix/Applications" "$prefix/"*.app )
     echo "wrapping Qt applications in ${targetDirs[@]}"
 
+    local didWrapQtApp=
     for targetDir in "${targetDirs[@]}"
     do
         [ -d "$targetDir" ] || continue
@@ -90,16 +112,23 @@ wrapQtAppsHook() {
             if [ -f "$file" ]
             then
                 echo "wrapping $file"
-                wrapQtApp "$file"
+                didWrapQtApp=1
+                wrapQtApp "$file" --suffix QT_PLUGIN_PATH : "$prefix/nix-support/env/${qtPluginPrefix:?}" --suffix QML2_IMPORT_PATH : "$prefix/nix-support/env/${qtQmlPrefix:?}"
             elif [ -h "$file" ]
             then
                 target="$(readlink -e "$file")"
                 echo "wrapping $file -> $target"
+                didWrapQtApp=1
                 rm "$file"
-                makeQtWrapper "$target" "$file"
+                makeQtWrapper "$target" "$file" --suffix QT_PLUGIN_PATH : "$prefix/nix-support/env/${qtPluginPrefix:?}" --suffix QML2_IMPORT_PATH : "$prefix/nix-support/env/${qtQmlPrefix:?}"
             fi
         done
     done
+
+    if [ -n "$didWrapQtApp" ]
+    then
+        buildQtEnv "$prefix"
+    fi
 }
 
 fixupOutputHooks+=(wrapQtAppsHook)
