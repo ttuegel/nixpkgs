@@ -101,6 +101,9 @@ wrapQtAppsHook() {
     echo "wrapping Qt applications in ${targetDirs[@]}"
 
     local didWrapQtApp=
+    local prefixQtWrapperArgs=()
+    prefixQtWrapperArgs+=(--suffix QT_PLUGIN_PATH : "$prefix/nix-support/env/${qtPluginPrefix:?}")
+    prefixQtWrapperArgs+=(--suffix QML2_IMPORT_PATH : "$prefix/nix-support/env/${qtQmlPrefix:?}")
     for targetDir in "${targetDirs[@]}"
     do
         [ -d "$targetDir" ] || continue
@@ -113,14 +116,14 @@ wrapQtAppsHook() {
             then
                 echo "wrapping $file"
                 didWrapQtApp=1
-                wrapQtApp "$file" --suffix QT_PLUGIN_PATH : "$prefix/nix-support/env/${qtPluginPrefix:?}" --suffix QML2_IMPORT_PATH : "$prefix/nix-support/env/${qtQmlPrefix:?}"
+                wrapQtApp "$file" "${prefixQtWrapperArgs[@]}"
             elif [ -h "$file" ]
             then
                 target="$(readlink -e "$file")"
                 echo "wrapping $file -> $target"
                 didWrapQtApp=1
                 rm "$file"
-                makeQtWrapper "$target" "$file" --suffix QT_PLUGIN_PATH : "$prefix/nix-support/env/${qtPluginPrefix:?}" --suffix QML2_IMPORT_PATH : "$prefix/nix-support/env/${qtQmlPrefix:?}"
+                makeQtWrapper "$target" "$file" "${prefixQtWrapperArgs[@]}"
             fi
         done
     done
