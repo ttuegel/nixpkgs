@@ -4,19 +4,19 @@ __nix_wrapQtAppsHook=1  # Don't run this hook more than once.
 # Inherit arguments given in mkDerivation
 qtWrapperArgs=( ${qtWrapperArgs-} )
 
-qtHostPathSeen=()
+declare -gA qtHostPathsSeen
 
 qtUnseenHostPath() {
-    for pkg in "${qtHostPathSeen[@]}"
-    do
-        if [ "${pkg:?}" == "$1" ]
-        then
-            return 1
-        fi
-    done
-
-    qtHostPathSeen+=("$1")
-    return 0
+    if [[ -n "${qtHostPathsSeen["$1"]:-}" ]]
+    then
+        # The path has been seen before.
+        return 1
+    else
+        # The path has not been seen before.
+        # Now it is seen, so record it.
+        qtHostPathsSeen["$1"]=1
+        return 0
+    fi
 }
 
 qtHostPathHook() {
