@@ -86,7 +86,6 @@ buildQtEnv() {
         @lndir@ "$qtQmlPath" "$envQmlDir"
     done
 }
-preFixupPhases+=" qtLinkEnv"
 
 # Note: $qtWrapperArgs still gets defined even if ${dontWrapQtApps-} is set.
 wrapQtAppsHook() {
