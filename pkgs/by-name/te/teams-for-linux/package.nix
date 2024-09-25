@@ -15,13 +15,13 @@
 
 buildNpmPackage rec {
   pname = "teams-for-linux";
-  version = "1.9.5";
+  version = "1.10.2";
 
   src = fetchFromGitHub {
     owner = "IsmaelMartinez";
     repo = "teams-for-linux";
     rev = "refs/tags/v${version}";
-    hash = "sha256-+rEGDg+/qvjCMhGHccb4p+CKOo/65RpkFT/WnCDlCgU=";
+    hash = "sha256-AcKjh3DAUoIpsMr+K/T0FT5knbBx54pZmJKCK9HRZVQ=";
   };
 
   npmDepsHash = "sha256-vDRFFxkIQo5qU9gmkSwUhPz4FG2XbUNkTw6SCuvMqCc=";

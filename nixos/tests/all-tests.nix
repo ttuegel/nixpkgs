@@ -128,6 +128,7 @@ in {
   apcupsd = handleTest ./apcupsd.nix {};
   apfs = runTest ./apfs.nix;
   appliance-repart-image = runTest ./appliance-repart-image.nix;
+  appliance-repart-image-verity-store = runTest ./appliance-repart-image-verity-store.nix;
   apparmor = handleTest ./apparmor.nix {};
   archi = handleTest ./archi.nix {};
   aria2 = handleTest ./aria2.nix {};
@@ -260,7 +261,6 @@ in {
   disable-installer-tools = handleTest ./disable-installer-tools.nix {};
   discourse = handleTest ./discourse.nix {};
   dnscrypt-proxy2 = handleTestOn ["x86_64-linux"] ./dnscrypt-proxy2.nix {};
-  dnscrypt-wrapper = runTestOn ["x86_64-linux"] ./dnscrypt-wrapper;
   dnsdist = import ./dnsdist.nix { inherit pkgs runTest; };
   doas = handleTest ./doas.nix {};
   docker = handleTestOn ["aarch64-linux" "x86_64-linux"] ./docker.nix {};
@@ -364,6 +364,7 @@ in {
   ft2-clone = handleTest ./ft2-clone.nix {};
   legit = handleTest ./legit.nix {};
   mimir = handleTest ./mimir.nix {};
+  gancio = handleTest ./gancio.nix {};
   garage = handleTest ./garage {};
   gemstash = handleTest ./gemstash.nix {};
   geoserver = runTest ./geoserver.nix;
@@ -443,7 +444,6 @@ in {
   hibernate-systemd-stage-1 = handleTestOn ["x86_64-linux"] ./hibernate.nix { systemdStage1 = true; };
   hitch = handleTest ./hitch {};
   hledger-web = handleTest ./hledger-web.nix {};
-  hocker-fetchdocker = handleTest ./hocker-fetchdocker {};
   hockeypuck = handleTest ./hockeypuck.nix { };
   home-assistant = handleTest ./home-assistant.nix {};
   hostname = handleTest ./hostname.nix {};
@@ -570,7 +570,7 @@ in {
   mate-wayland = handleTest ./mate-wayland.nix {};
   matter-server = handleTest ./matter-server.nix {};
   matomo = handleTest ./matomo.nix {};
-  matrix-appservice-irc = handleTest ./matrix/appservice-irc.nix {};
+  matrix-appservice-irc = runTest ./matrix/appservice-irc.nix;
   matrix-conduit = handleTest ./matrix/conduit.nix {};
   matrix-synapse = handleTest ./matrix/synapse.nix {};
   matrix-synapse-workers = handleTest ./matrix/synapse-workers.nix {};
@@ -686,7 +686,7 @@ in {
   nix-misc = handleTest ./nix/misc.nix {};
   nix-upgrade = handleTest ./nix/upgrade.nix {inherit (pkgs) nixVersions;};
   nix-required-mounts = runTest ./nix-required-mounts;
-  nix-serve = handleTest ./nix-serve.nix {};
+  nix-serve = runTest ./nix-serve.nix;
   nix-serve-ssh = handleTest ./nix-serve-ssh.nix {};
   nixops = handleTest ./nixops/default.nix {};
   nixos-generate-config = handleTest ./nixos-generate-config.nix {};
@@ -805,6 +805,7 @@ in {
   postgresql-jit = handleTest ./postgresql-jit.nix {};
   postgresql-wal-receiver = handleTest ./postgresql-wal-receiver.nix {};
   postgresql-tls-client-cert = handleTest ./postgresql-tls-client-cert.nix {};
+  postgresql-wal2json = handleTest ./postgresql-wal2json.nix {};
   powerdns = handleTest ./powerdns.nix {};
   powerdns-admin = handleTest ./powerdns-admin.nix {};
   power-profiles-daemon = handleTest ./power-profiles-daemon.nix {};
@@ -1046,6 +1047,7 @@ in {
   txredisapi = handleTest ./txredisapi.nix {};
   tuptime = handleTest ./tuptime.nix {};
   turbovnc-headless-server = handleTest ./turbovnc-headless-server.nix {};
+  turn-rs = handleTest ./turn-rs.nix {};
   tuxguitar = handleTest ./tuxguitar.nix {};
   twingate = runTest ./twingate.nix;
   typesense = handleTest ./typesense.nix {};
@@ -1101,7 +1103,7 @@ in {
   without-nix = handleTest ./without-nix.nix {};
   wmderland = handleTest ./wmderland.nix {};
   workout-tracker = handleTest ./workout-tracker.nix {};
-  wpa_supplicant = handleTest ./wpa_supplicant.nix {};
+  wpa_supplicant = import ./wpa_supplicant.nix { inherit pkgs runTest; };
   wordpress = handleTest ./wordpress.nix {};
   wrappers = handleTest ./wrappers.nix {};
   writefreely = handleTest ./web-apps/writefreely.nix {};

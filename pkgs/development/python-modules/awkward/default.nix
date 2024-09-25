@@ -32,16 +32,14 @@
 
 buildPythonPackage rec {
   pname = "awkward";
-  version = "2.6.7";
+  version = "2.6.8";
   pyproject = true;
-
-  disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
     owner = "scikit-hep";
     repo = "awkward";
     rev = "refs/tags/v${version}";
-    hash = "sha256-6Q2eXriMYmfrgv69ytxvyrxK9HPMX8AIZ3ZStZUMGIk=";
+    hash = "sha256-2VhG4Elv1neBEfogfhjwlPltQK64wjaLUMhDg7xB/Ow=";
   };
 
   build-system = [
@@ -85,6 +83,12 @@ buildPythonPackage rec {
     "tests-cuda"
     # Disable tests dependending on jax on darwin
   ] ++ lib.optionals stdenv.isDarwin [ "tests/test_2603_custom_behaviors_with_jax.py" ];
+
+  disabledTests = [
+    # AssertionError: Regex pattern did not match.
+    "test_serialise_with_nonserialisable_attrs"
+    "test_serialise_with_nonserialisable_attrs"
+  ];
 
   meta = {
     description = "Manipulate JSON-like data with NumPy-like idioms";

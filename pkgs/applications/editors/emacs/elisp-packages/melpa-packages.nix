@@ -30,37 +30,13 @@ in
 
 { lib, pkgs }: variant: self:
 let
-  dontConfigure = pkg:
-    if pkg != null then pkg.override (args: {
-      melpaBuild = drv: args.melpaBuild (drv // {
-        dontConfigure = true;
-      });
-    }) else null;
-
-  markBroken = pkg:
-    if pkg != null then pkg.override (args: {
-      melpaBuild = drv: args.melpaBuild (drv // {
-        meta = (drv.meta or { }) // { broken = true; };
-      });
-    }) else null;
-
-  externalSrc = pkg: epkg:
-    if pkg != null then pkg.override (args: {
-      melpaBuild = drv: args.melpaBuild (drv // {
-        inherit (epkg) src version;
-
-        propagatedUserEnvPkgs = [ epkg ];
-      });
-    }) else null;
-
-  buildWithGit = pkg: pkg.overrideAttrs (attrs: {
-    nativeBuildInputs =
-      (attrs.nativeBuildInputs or [ ]) ++ [ pkgs.git ];
-  });
-
-  fix-rtags = pkg:
-    if pkg != null then dontConfigure (externalSrc pkg pkgs.rtags)
-    else null;
+  inherit (import ./lib-override-helper.nix pkgs)
+    buildWithGit
+    dontConfigure
+    externalSrc
+    fix-rtags
+    markBroken
+    ;
 
   generateMelpa = lib.makeOverridable ({ archiveJson ? defaultArchive
                                        }:
@@ -130,7 +106,7 @@ let
         ligo-mode =
           if super.ligo-mode.version == "0.3"
           then markBroken super.ligo-mode
-          else null; # auto-updater is failing; use manual one
+          else super.ligo-mode;
 
         # upstream issue: missing file header
         link = markBroken super.link;
@@ -451,6 +427,13 @@ let
 
         orgit-forge = buildWithGit super.orgit-forge;
 
+        ormolu = super.ormolu.overrideAttrs (attrs: {
+          postPatch = attrs.postPatch or "" + ''
+            substituteInPlace ormolu.el \
+              --replace-fail 'ormolu-process-path "ormolu"' 'ormolu-process-path "${lib.getExe pkgs.ormolu}"'
+          '';
+        });
+
         ox-rss = buildWithGit super.ox-rss;
 
         python-isort = super.python-isort.overrideAttrs (attrs: {
@@ -544,9 +527,23 @@ let
           '';
         });
 
+        units-mode = super.units-mode.overrideAttrs (attrs: {
+          postPatch = attrs.postPatch or "" + ''
+            substituteInPlace units-mode.el \
+              --replace-fail 'units-binary-path "units"' 'units-binary-path "${lib.getExe pkgs.units}"'
+          '';
+        });
+
         vdiff-magit = super.vdiff-magit.overrideAttrs (attrs: {
           nativeBuildInputs =
             (attrs.nativeBuildInputs or [ ]) ++ [ pkgs.git ];
+        });
+
+        zig-mode = super.zig-mode.overrideAttrs (attrs: {
+          postPatch = attrs.postPatch or "" + ''
+            substituteInPlace zig-mode.el \
+              --replace-fail 'zig-zig-bin "zig"' 'zig-zig-bin "${lib.getExe pkgs.zig}"'
+          '';
         });
 
         zmq = super.zmq.overrideAttrs (old: {

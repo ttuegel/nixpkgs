@@ -63,20 +63,6 @@ let
   GO111MODULE = "on";
   GOTOOLCHAIN = "local";
 
-  toExtension =
-    overlay0:
-    if lib.isFunction overlay0 then
-      final: prev:
-      if lib.isFunction (overlay0 prev) then
-        # `overlay0` is `final: prev: { ... }`
-        overlay0 final prev
-      else
-        # `overlay0` is `prev: { ... }`
-        overlay0 prev
-    else
-      # `overlay0` is `{ ... }`
-      final: prev: overlay0;
-
 in
 (stdenv.mkDerivation (finalAttrs:
   args
@@ -136,6 +122,7 @@ in
         exit 10
       fi
 
+      export GIT_SSL_CAINFO=$NIX_SSL_CERT_FILE
       ${if finalAttrs.proxyVendor then ''
         mkdir -p "''${GOPATH}/pkg/mod/cache/download"
         go mod download
@@ -176,7 +163,8 @@ in
     # Handle empty vendorHash; avoid
     # error: empty hash requires explicit hash algorithm
     outputHashAlgo = if finalAttrs.vendorHash == "" then "sha256" else null;
-  }).overrideAttrs finalAttrs.passthru.overrideModAttrs;
+    # in case an overlay clears passthru by accident, don't fail evaluation
+  }).overrideAttrs (finalAttrs.passthru.overrideModAttrs or overrideModAttrs);
 
     nativeBuildInputs = [ go ] ++ nativeBuildInputs;
 
@@ -331,7 +319,7 @@ in
       # Canonicallize `overrideModAttrs` as an attribute overlay.
       # `passthru.overrideModAttrs` will be overridden
       # when users want to override `goModules`.
-      overrideModAttrs = toExtension overrideModAttrs;
+      overrideModAttrs = lib.toExtension overrideModAttrs;
     } // passthru;
 
     meta = {
