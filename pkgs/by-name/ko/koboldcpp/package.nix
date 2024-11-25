@@ -53,13 +53,13 @@ let
 in
 effectiveStdenv.mkDerivation (finalAttrs: {
   pname = "koboldcpp";
-  version = "1.76";
+  version = "1.78";
 
   src = fetchFromGitHub {
     owner = "LostRuins";
     repo = "koboldcpp";
     rev = "refs/tags/v${finalAttrs.version}";
-    hash = "sha256-0zV9aZIfNnbV/K6xYUp+ucdJvdEfuGdKgE/Q7vcBopQ=";
+    hash = "sha256-6RvodNWO/IVGlKxC/zt0itYDzymhk+hEBpbmQ1jHigU=";
   };
 
   enableParallelBuilding = true;
@@ -140,6 +140,10 @@ effectiveStdenv.mkDerivation (finalAttrs: {
     install -Dm755 koboldcpp.py "$out/bin/koboldcpp.unwrapped"
     cp *.so "$out/bin"
     cp *.embd "$out/bin"
+
+    ${lib.optionalString metalSupport ''
+      cp *.metal "$out/bin"
+    ''}
 
     ${lib.optionalString (!koboldLiteSupport) ''
       rm "$out/bin/kcpp_docs.embd"

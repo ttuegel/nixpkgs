@@ -12,7 +12,7 @@
 
   activationScript = ''
     # will be rebuilt automatically
-    rm -fv $HOME/.cache/ksycoca*
+    rm -fv "$HOME/.cache/ksycoca"*
   '';
 in {
   options = {
@@ -73,12 +73,14 @@ in {
         kguiaddons # provides geo URL handlers
         kiconthemes # provides Qt plugins
         kimageformats # provides Qt plugins
+        qtimageformats # provides optional image formats such as .webp and .avif
         kio # provides helper service + a bunch of other stuff
         kio-admin # managing files as admin
         kio-extras # stuff for MTP, AFC, etc
         kio-fuse # fuse interface for KIO
         kpackage # provides kpackagetool tool
         kservice # provides kbuildsycoca6 tool
+        kunifiedpush # provides a background service and a KCM
         kwallet # provides helper service
         kwallet-pam # provides helper service
         kwalletmanager # provides KCMs and stuff

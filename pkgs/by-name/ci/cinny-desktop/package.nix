@@ -4,7 +4,7 @@
   darwin,
   fetchFromGitHub,
   rustPlatform,
-  cargo-tauri,
+  cargo-tauri_1,
   cinny,
   desktop-file-utils,
   wrapGAppsHook3,
@@ -20,18 +20,18 @@
 rustPlatform.buildRustPackage rec {
   pname = "cinny-desktop";
   # We have to be using the same version as cinny-web or this isn't going to work.
-  version = "4.2.1";
+  version = "4.2.3";
 
   src = fetchFromGitHub {
     owner = "cinnyapp";
     repo = "cinny-desktop";
     rev = "refs/tags/v${version}";
-    hash = "sha256-W73ma8ScF3LGv45yhZCV80zhh7URLuWhbi+JumyTp+4=";
+    hash = "sha256-yNGzgkZXz/VroGGnZFqo5n2v3cE6/tvpQv5U4p27row=";
   };
 
   sourceRoot = "${src.name}/src-tauri";
 
-  cargoHash = "sha256-ved2W4+Dt7pN9j9vIaDlAkaY517nBEgPKgu8ArcHXsM=";
+  cargoHash = "sha256-0EIKozFwy7XihFRpjLZ3Am7h1wOU7ZGcHSoTnFnYzTU=";
 
   postPatch =
     let
@@ -71,7 +71,7 @@ rustPlatform.buildRustPackage rec {
   nativeBuildInputs = [
     wrapGAppsHook3
     pkg-config
-    cargo-tauri.hook
+    cargo-tauri_1.hook
     desktop-file-utils
   ];
 
