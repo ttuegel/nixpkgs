@@ -70,11 +70,14 @@ in
       ibusPackage
     ];
 
-    environment.variables = {
-      GTK_IM_MODULE = "ibus";
-      QT_IM_MODULE = "ibus";
-      XMODIFIERS = "@im=ibus";
-    };
+    environment.extraInit = ''
+      if [ -z "$WAYLAND_DISPLAY" ]
+      then
+        export GTK_IM_MODULE="ibus"
+        export QT_IM_MODULE="ibus"
+        export XMODIFIERS="@im=ibus"
+      fi
+    '';
 
     xdg.portal.extraPortals = mkIf config.xdg.portal.enable [
       ibusPackage
