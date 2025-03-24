@@ -16,8 +16,7 @@
   # optional-dependencies
   pyarrow,
 
-  # checks
-  dask-histogram,
+  # tests
   distributed,
   hist,
   pandas,
@@ -27,14 +26,14 @@
 
 buildPythonPackage rec {
   pname = "dask-awkward";
-  version = "2024.9.0";
+  version = "2025.3.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "dask-contrib";
     repo = "dask-awkward";
-    rev = "refs/tags/${version}";
-    hash = "sha256-4CwixPj0bJHVjnwZ7fPkRdiDHs8/IzvNlwSPynXvcAo=";
+    tag = version;
+    hash = "sha256-z4dRGNoqwIEOwaz5U0DqCh/chZtopiLNvvvfl0bJxxI=";
   };
 
   build-system = [
@@ -53,8 +52,8 @@ buildPythonPackage rec {
     io = [ pyarrow ];
   };
 
-  checkInputs = [
-    dask-histogram
+  nativeCheckInputs = [
+    # dask-histogram (circular dependency)
     distributed
     hist
     pandas
