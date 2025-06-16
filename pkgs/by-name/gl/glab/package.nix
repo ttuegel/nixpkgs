@@ -5,31 +5,29 @@
   installShellFiles,
   stdenv,
   nix-update-script,
+  writableTmpDirAsHomeHook,
 }:
 
-buildGoModule rec {
+buildGoModule (finalAttrs: {
   pname = "glab";
-  version = "1.54.0";
+  version = "1.59.2";
 
   src = fetchFromGitLab {
     owner = "gitlab-org";
     repo = "cli";
-    rev = "v${version}";
-    hash = "sha256-CtzTZ4PryY2zDCvoAp/cf0E0jpFPGH7SzFDaCwf48gg=";
+    rev = "v${finalAttrs.version}";
+    hash = "sha256-YJ22nIB97MWeiv8anx4W3vugbNyBOC0oHRQ5Fihmt2k=";
   };
 
-  vendorHash = "sha256-r9HRDKf4EOjAeHo9rT69+nAf8zGZFWtXVo9nHuBOgaQ=";
+  vendorHash = "sha256-yJ9E6zJqDgSDLT+IbVHFvb6rGJQnrqgWHtgkGsO8Gb4=";
 
   ldflags = [
     "-s"
     "-w"
-    "-X main.version=${version}"
+    "-X main.version=${finalAttrs.version}"
   ];
 
-  preCheck = ''
-    # failed to read configuration:  mkdir /homeless-shelter: permission denied
-    export HOME=$TMPDIR
-  '';
+  nativeCheckInputs = [ writableTmpDirAsHomeHook ];
 
   subPackages = [ "cmd/glab" ];
 
@@ -50,11 +48,11 @@ buildGoModule rec {
     description = "GitLab CLI tool bringing GitLab to your command line";
     license = lib.licenses.mit;
     homepage = "https://gitlab.com/gitlab-org/cli";
-    changelog = "https://gitlab.com/gitlab-org/cli/-/releases/v${version}";
+    changelog = "https://gitlab.com/gitlab-org/cli/-/releases/v${finalAttrs.version}";
     maintainers = with lib.maintainers; [
       freezeboy
       luftmensch-luftmensch
     ];
     mainProgram = "glab";
   };
-}
+})

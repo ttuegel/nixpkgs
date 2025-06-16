@@ -20,19 +20,18 @@
   pyarrow,
   pytest-xdist,
   pytestCheckHook,
-  pythonAtLeast,
 }:
 
 buildPythonPackage rec {
   pname = "awkward";
-  version = "2.8.0";
+  version = "2.8.3";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "scikit-hep";
     repo = "awkward";
     tag = "v${version}";
-    hash = "sha256-dr8DUY6T6fvtMASdM9U+XQN0dVP8AKvwa1gwHfOz3Dw=";
+    hash = "sha256-l7XCgD5UvQTva3lsKZmFSIT0nxReGuslWWuar31+pQQ=";
   };
 
   build-system = [
@@ -74,7 +73,7 @@ buildPythonPackage rec {
   meta = {
     description = "Manipulate JSON-like data with NumPy-like idioms";
     homepage = "https://github.com/scikit-hep/awkward";
-    changelog = "https://github.com/scikit-hep/awkward/releases/tag/v${version}";
+    changelog = "https://github.com/scikit-hep/awkward/releases/tag/${src.tag}";
     license = lib.licenses.bsd3;
     maintainers = with lib.maintainers; [ veprbl ];
   };

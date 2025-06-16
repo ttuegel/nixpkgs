@@ -6,17 +6,14 @@
   versionCheckHook,
   nix-update-script,
 }:
-let
-  version = "0.0.73";
-in
-buildGoModule {
+buildGoModule (finalAttrs: {
   pname = "bsky-cli";
-  inherit version;
+  version = "0.0.73";
 
   src = fetchFromGitHub {
     owner = "mattn";
     repo = "bsky";
-    tag = "v${version}";
+    tag = "v${finalAttrs.version}";
     hash = "sha256-GTuF/ZbZ84tTcbjp8eXKdpUGCsOkg2rxEcslKTsgpu4=";
   };
 
@@ -33,17 +30,17 @@ buildGoModule {
 
   doInstallCheck = true;
   versionCheckProgram = "${placeholder "out"}/bin/bsky";
-  versionCheckProgramArg = [ "--version" ];
+  versionCheckProgramArg = "--version";
   nativeBuildInputs = [ versionCheckHook ];
 
   passthru.updateScript = nix-update-script { };
 
   meta = {
-    description = "A cli application for bluesky social";
+    description = "Cli application for bluesky social";
     homepage = "https://github.com/mattn/bsky";
-    changelog = "https://github.com/mattn/bsky/releases/tag/v${version}";
+    changelog = "https://github.com/mattn/bsky/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ isabelroses ];
     mainProgram = "bsky";
   };
-}
+})

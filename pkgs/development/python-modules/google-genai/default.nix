@@ -1,4 +1,5 @@
 {
+  anyio,
   buildPythonPackage,
   fetchFromGitHub,
   google-auth,
@@ -8,27 +9,32 @@
   pytestCheckHook,
   requests,
   setuptools,
+  twine,
   typing-extensions,
   websockets,
 }:
 
 buildPythonPackage rec {
   pname = "google-genai";
-  version = "1.6.0";
+  version = "1.19.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "googleapis";
     repo = "python-genai";
     tag = "v${version}";
-    hash = "sha256-HXLo4dmlZNXXXpchO5sRlBzzQBU4cFS5qDpka2NdLTM=";
+    hash = "sha256-p9W34v1ToLwketM+wOfrouLLl9pFBljL5doykuZRINo=";
   };
 
-  build-system = [ setuptools ];
+  build-system = [
+    setuptools
+    twine
+  ];
 
   pythonRelaxDeps = [ "websockets" ];
 
   dependencies = [
+    anyio
     google-auth
     httpx
     pydantic

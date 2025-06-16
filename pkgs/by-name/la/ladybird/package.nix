@@ -6,6 +6,8 @@
   cacert,
   unicode-emoji,
   unicode-character-database,
+  unicode-idna,
+  publicsuffix-list,
   cmake,
   ninja,
   pkg-config,
@@ -27,35 +29,22 @@
   nixosTests,
   unstableGitUpdater,
   apple-sdk_14,
+  libtommath,
 }:
 
 let
-  unicode-idna = fetchurl {
-    url = "https://www.unicode.org/Public/idna/${unicode-character-database.version}/IdnaMappingTable.txt";
-    hash = "sha256-QCy9KF8flS/NCDS2NUHVT2nT2PG4+Fmb9xoaFJNfgsQ=";
-  };
-  adobe-icc-profiles = fetchurl {
-    url = "https://download.adobe.com/pub/adobe/iccprofiles/win/AdobeICCProfilesCS4Win_end-user.zip";
-    hash = "sha256-kgQ7fDyloloPaXXQzcV9tgpn3Lnr37FbFiZzEb61j5Q=";
-    name = "adobe-icc-profiles.zip";
-  };
-  public_suffix_commit = "9094af5c6cb260e69137c043c01be18fee01a540";
-  public-suffix-list = fetchurl {
-    url = "https://raw.githubusercontent.com/publicsuffix/list/${public_suffix_commit}/public_suffix_list.dat";
-    hash = "sha256-0szHUz1T0MXOQ9tcXoKY2F/bI3s7hsYCjURqywZsf1w=";
-  };
   # Note: The cacert version is synthetic and must match the version in the package's CMake
   cacert_version = "2023-12-12";
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "ladybird";
-  version = "0-unstable-2025-03-16";
+  version = "0-unstable-2025-06-03";
 
   src = fetchFromGitHub {
     owner = "LadybirdWebBrowser";
     repo = "ladybird";
-    rev = "7a2cc28932a7b0f85e7bde6bae273fba8155f573";
-    hash = "sha256-yJ51v30Mh9S93ZInafm9kxr0c9hg7LoBufmwyevX/FY=";
+    rev = "4c54a28c45be4e8185158d40a37e083e038a6465";
+    hash = "sha256-YHWkG2RJk6NaouRvis2L+njtYWKB7T569y1Tq+mYdz0=";
   };
 
   postPatch = ''
@@ -80,7 +69,7 @@ stdenv.mkDerivation (finalAttrs: {
     cp -r ${unicode-character-database}/share/unicode build/Caches/UCD
     chmod +w build/Caches/UCD
     cp ${unicode-emoji}/share/unicode/emoji/emoji-test.txt build/Caches/UCD
-    cp ${unicode-idna} build/Caches/UCD/IdnaMappingTable.txt
+    cp ${unicode-idna}/share/unicode/idna/IdnaMappingTable.txt build/Caches/UCD
     echo -n ${unicode-character-database.version} > build/Caches/UCD/version.txt
     chmod -w build/Caches/UCD
 
@@ -89,11 +78,7 @@ stdenv.mkDerivation (finalAttrs: {
     echo -n ${cacert_version} > build/Caches/CACERT/version.txt
 
     mkdir build/Caches/PublicSuffix
-    cp ${public-suffix-list} build/Caches/PublicSuffix/public_suffix_list.dat
-
-    mkdir build/Caches/AdobeICCProfiles
-    cp ${adobe-icc-profiles} build/Caches/AdobeICCProfiles/adobe-icc-profiles.zip
-    chmod +w build/Caches/AdobeICCProfiles
+    cp ${publicsuffix-list}/share/publicsuffix/public_suffix_list.dat build/Caches/PublicSuffix
   '';
 
   nativeBuildInputs = [
@@ -102,6 +87,7 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
     python3
     qt6Packages.wrapQtAppsHook
+    libtommath
   ];
 
   buildInputs =
@@ -138,6 +124,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   cmakeFlags =
     [
+      # Takes an enormous amount of resources, even with mold
+      (lib.cmakeBool "ENABLE_LTO_FOR_RELEASE" false)
       # Disable network operations
       "-DSERENITY_CACHE_DIR=Caches"
       "-DENABLE_NETWORK_DOWNLOADS=OFF"
@@ -151,7 +139,7 @@ stdenv.mkDerivation (finalAttrs: {
   # ld: [...]/OESVertexArrayObject.cpp.o: undefined reference to symbol 'glIsVertexArrayOES'
   # ld: [...]/libGL.so.1: error adding symbols: DSO missing from command line
   # https://github.com/LadybirdBrowser/ladybird/issues/371#issuecomment-2616415434
-  env.NIX_LDFLAGS = "-lGL";
+  env.NIX_LDFLAGS = "-lGL -lfontconfig";
 
   postInstall = lib.optionalString stdenv.hostPlatform.isDarwin ''
     mkdir -p $out/Applications $out/bin

@@ -62,7 +62,7 @@ stdenv.mkDerivation rec {
       zlib
       zstd
     ]
-    ++ lib.optionals stdenv.isLinux [
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
       libselinux
       libsepol
     ];
@@ -73,7 +73,7 @@ stdenv.mkDerivation rec {
   ];
 
   env.NIX_CFLAGS_COMPILE = (
-    if stdenv.isDarwin then
+    if stdenv.hostPlatform.isDarwin then
       toString [
         "-Wno-error=deprecated-non-prototype"
         "-Wno-error=format"
@@ -111,13 +111,13 @@ stdenv.mkDerivation rec {
     version = "myloader v${version}";
   };
 
-  meta = with lib; {
+  meta = {
     description = "High-performance MySQL backup tool";
     homepage = "https://github.com/mydumper/mydumper";
     changelog = "https://github.com/mydumper/mydumper/releases/tag/v${version}";
-    license = licenses.gpl3Plus;
+    license = lib.licenses.gpl3Plus;
     platforms = lib.platforms.unix;
-    maintainers = with maintainers; [
+    maintainers = with lib.maintainers; [
       izorkin
       michaelglass
     ];

@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "bpfilter";
-  version = "0.2.1";
+  version = "0.4.0";
 
   src = fetchFromGitHub {
     owner = "facebook";
     repo = "bpfilter";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-8oF4YuVlxWwl0JgAAe3JRz0Sy5xe77Ayhvour9K3zeY=";
+    hash = "sha256-Z0L4sY944cj/rqfOwwjNWOU0tZDAsZ1ocf4/djHad2Q=";
   };
 
   nativeBuildInputs = [

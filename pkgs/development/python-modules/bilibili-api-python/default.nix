@@ -24,19 +24,20 @@
 }:
 buildPythonPackage rec {
   pname = "bilibili-api-python";
-  version = "17.1.3";
+  version = "17.2.0";
   pyproject = true;
 
   src = fetchPypi {
     pname = "bilibili_api_python";
     inherit version;
-    hash = "sha256-mTBn20gKVhxdK7s/0KcC25C1uwnFlyWUuV6jK4jnrYE=";
+    hash = "sha256-WzNuoVpl2ZDkuGgfWm3surJJyRVdYDUf+MqF5jUil/s=";
   };
 
   # The upstream uses requirements.txt, which overly strict version constraints.
   pythonRelaxDeps = [
     "beautifulsoup4"
     "lxml"
+    "pillow"
   ];
 
   build-system = [
