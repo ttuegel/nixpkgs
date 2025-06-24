@@ -247,13 +247,21 @@ in
     _module.args.compression = "xz";
   };
   bind = runTest ./bind.nix;
-  bird = handleTest ./bird.nix { };
+  bird2 = import ./bird.nix {
+    inherit runTest;
+    package = pkgs.bird2;
+  };
+  bird3 = import ./bird.nix {
+    inherit runTest;
+    package = pkgs.bird3;
+  };
   birdwatcher = handleTest ./birdwatcher.nix { };
   bitbox-bridge = runTest ./bitbox-bridge.nix;
   bitcoind = runTest ./bitcoind.nix;
   bittorrent = runTest ./bittorrent.nix;
   blockbook-frontend = runTest ./blockbook-frontend.nix;
   blocky = handleTest ./blocky.nix { };
+  bookstack = runTest ./bookstack.nix;
   boot = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./boot.nix { };
   bootspec = handleTestOn [ "x86_64-linux" ] ./bootspec.nix { };
   boot-stage1 = runTest ./boot-stage1.nix;
@@ -306,7 +314,7 @@ in
   cinnamon-wayland = runTest ./cinnamon-wayland.nix;
   cjdns = runTest ./cjdns.nix;
   clatd = runTest ./clatd.nix;
-  clickhouse = runTest ./clickhouse.nix;
+  clickhouse = import ./clickhouse { inherit runTest; };
   cloud-init = handleTest ./cloud-init.nix { };
   cloud-init-hostname = handleTest ./cloud-init-hostname.nix { };
   cloudlog = runTest ./cloudlog.nix;
@@ -938,6 +946,7 @@ in
   nix-required-mounts = runTest ./nix-required-mounts;
   nix-serve = runTest ./nix-serve.nix;
   nix-serve-ssh = runTest ./nix-serve-ssh.nix;
+  nix-store-veritysetup = runTest ./nix-store-veritysetup.nix;
   nixops = handleTest ./nixops/default.nix { };
   nixos-generate-config = runTest ./nixos-generate-config.nix;
   nixos-rebuild-install-bootloader = handleTestOn [
@@ -1281,14 +1290,7 @@ in
   swapspace = handleTestOn [ "aarch64-linux" "x86_64-linux" ] ./swapspace.nix { };
   sway = runTest ./sway.nix;
   swayfx = runTest ./swayfx.nix;
-  switchTest = runTest {
-    imports = [ ./switch-test.nix ];
-    defaults.system.switch.enableNg = false;
-  };
-  switchTestNg = runTest {
-    imports = [ ./switch-test.nix ];
-    defaults.system.switch.enableNg = true;
-  };
+  switchTest = runTest ./switch-test.nix;
   sx = runTest ./sx.nix;
   sympa = runTest ./sympa.nix;
   syncthing = runTest ./syncthing.nix;
@@ -1372,6 +1374,7 @@ in
   systemd-homed = runTest ./systemd-homed.nix;
   systemtap = handleTest ./systemtap.nix { };
   startx = import ./startx.nix { inherit pkgs runTest; };
+  szurubooru = handleTest ./szurubooru.nix { };
   taler = handleTest ./taler { };
   tandoor-recipes = runTest ./tandoor-recipes.nix;
   tandoor-recipes-script-name = runTest ./tandoor-recipes-script-name.nix;
@@ -1396,6 +1399,7 @@ in
   tinydns = runTest ./tinydns.nix;
   tinyproxy = runTest ./tinyproxy.nix;
   tinywl = runTest ./tinywl.nix;
+  tlsrpt = runTest ./tlsrpt.nix;
   tmate-ssh-server = runTest ./tmate-ssh-server.nix;
   tomcat = runTest ./tomcat.nix;
   tor = runTest ./tor.nix;
@@ -1462,7 +1466,7 @@ in
   vault-postgresql = runTest ./vault-postgresql.nix;
   vaultwarden = discoverTests (import ./vaultwarden.nix);
   vdirsyncer = runTest ./vdirsyncer.nix;
-  vector = handleTest ./vector { };
+  vector = import ./vector { inherit runTest; };
   velocity = runTest ./velocity.nix;
   vengi-tools = runTest ./vengi-tools.nix;
   victoriametrics = handleTest ./victoriametrics { };
