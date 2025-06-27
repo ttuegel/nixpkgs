@@ -9,6 +9,13 @@ on:
   schedule:
     - cron: '07,17,27,37,47,57 * * * *'
   workflow_call:
+    inputs:
+      headBranch:
+        required: true
+        type: string
+    secrets:
+      NIXPKGS_CI_APP_PRIVATE_KEY:
+        required: true
   workflow_dispatch:
     inputs:
       updatedWithin:
@@ -24,6 +31,10 @@ concurrency:
   # PR- and manually-triggered runs will be cancelled, but scheduled runs will be queued.
   cancel-in-progress: ${{ github.event_name != 'schedule' }}
 
+# This is used as fallback without app only.
+# This happens when testing in forks without setting up that app.
+# Labels will most likely not exist in forks, yet. For this case,
+# we add the issues permission only here.
 permissions:
   issues: write # needed to create *new* labels
   pull-requests: write
@@ -40,9 +51,20 @@ jobs:
       - name: Install dependencies
         run: npm install @actions/artifact bottleneck
 
+      # Use a GitHub App, because it has much higher rate limits: 12,500 instead of 5,000 req / hour.
+      - uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
+        if: vars.NIXPKGS_CI_APP_ID
+        id: app-token
+        with:
+          app-id: ${{ vars.NIXPKGS_CI_APP_ID }}
+          private-key: ${{ secrets.NIXPKGS_CI_APP_PRIVATE_KEY }}
+          # No issues: write permission here, because labels in Nixpkgs should
+          # be created explicitly via the UI with color and description.
+          permission-pull-requests: write
+
       - name: Log current API rate limits
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
         run: gh api /rate_limit | jq
 
       - name: Labels from API data and Eval results
@@ -50,6 +72,7 @@ jobs:
         env:
           UPDATED_WITHIN: ${{ inputs.updatedWithin }}
         with:
+          github-token: ${{ steps.app-token.outputs.token || github.token }}
           script: |
             const Bottleneck = require('bottleneck')
             const path = require('node:path')
@@ -70,21 +93,40 @@ jobs:
             const allLimits = new Bottleneck({
               // Avoid concurrent requests
               maxConcurrent: 1,
-              // Hourly limit is at 5000, but other jobs need some, too!
-              // https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api
-              reservoir: 500,
-              reservoirRefreshAmount: 500,
-              reservoirRefreshInterval: 60 * 60 * 1000
+              // Will be updated with first `updateReservoir()` call below.
+              reservoir: 0
             })
             // Pause between mutative requests
             const writeLimits = new Bottleneck({ minTime: 1000 }).chain(allLimits)
             github.hook.wrap('request', async (request, options) => {
+              // Requests to the /rate_limit endpoint do not count against the rate limit.
+              if (options.url == '/rate_limit') return request(options)
               stats.requests++
               if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method))
                 return writeLimits.schedule(request.bind(null, options))
               else
                 return allLimits.schedule(request.bind(null, options))
             })
+
+            async function updateReservoir() {
+              let response
+              try {
+                response = await github.rest.rateLimit.get()
+              } catch (err) {
+                core.error(`Failed updating reservoir:\n${err}`)
+                // Keep retrying on failed rate limit requests instead of exiting the script early.
+                return
+              }
+              // Always keep 1000 spare requests for other jobs to do their regular duty.
+              // They normally use below 100, so 1000 is *plenty* of room to work with.
+              const reservoir = Math.max(0, response.data.resources.core.remaining - 1000)
+              core.info(`Updating reservoir to: ${reservoir}`)
+              allLimits.updateSettings({ reservoir })
+            }
+            await updateReservoir()
+            // Update remaining requests every minute to account for other jobs running in parallel.
+            const reservoirUpdater = setInterval(updateReservoir, 60 * 1000)
+            process.on('uncaughtException', () => clearInterval(reservoirUpdater))
 
             if (process.env.UPDATED_WITHIN && !/^\d+$/.test(process.env.UPDATED_WITHIN))
               throw new Error('Please enter "updated within" as integer in hours.')
@@ -194,19 +236,15 @@ jobs:
                     expectedHash: artifact.digest
                   })
 
-                  // Get all currently set labels that we manage
-                  const before =
+                  // Create a map (Label -> Boolean) of all currently set labels.
+                  // Each label is set to True and can be disabled later.
+                  const before = Object.fromEntries(
                     (await github.paginate(github.rest.issues.listLabelsOnIssue, {
                       ...context.repo,
                       issue_number: pull_request.number
                     }))
-                    .map(({ name }) => name)
-                    .filter(name =>
-                      name.startsWith('10.rebuild') ||
-                      name == '11.by: package-maintainer' ||
-                      name.startsWith('12.approvals:') ||
-                      name == '12.approved-by: package-maintainer'
-                    )
+                    .map(({ name }) => [name, true])
+                  )
 
                   const approvals = new Set(
                     (await github.paginate(github.rest.pulls.listReviews, {
@@ -221,35 +259,43 @@ jobs:
                     JSON.parse(await readFile(`${pull_request.number}/maintainers.json`, 'utf-8'))
                   ).map(m => Number.parseInt(m, 10)))
 
-                  // And the labels that should be there
-                  const after = JSON.parse(await readFile(`${pull_request.number}/changed-paths.json`, 'utf-8')).labels
-                  if (approvals.size > 0) after.push(`12.approvals: ${approvals.size > 2 ? '3+' : approvals.size}`)
-                  if (Array.from(maintainers).some(m => approvals.has(m))) after.push('12.approved-by: package-maintainer')
+                  const evalLabels = JSON.parse(await readFile(`${pull_request.number}/changed-paths.json`, 'utf-8')).labels
 
-                  if (context.eventName == 'pull_request') {
-                    core.info('Skipping labeling on a pull_request event (no privileges).')
-                    return
-                  }
-
-                  // Remove the ones not needed anymore
-                  await Promise.all(
-                    before.filter(name => !after.includes(name))
-                    .map(name => github.rest.issues.removeLabel({
-                      ...context.repo,
-                      issue_number: pull_request.number,
-                      name
-                    }))
+                  // Manage the labels
+                  const after = Object.assign(
+                    {},
+                    before,
+                    // Ignore `evalLabels` if it's an array.
+                    // This can happen for older eval runs, before we switched to objects.
+                    // The old eval labels would have been set by the eval run,
+                    // so now they'll be present in `before`.
+                    // TODO: Simplify once old eval results have expired (~2025-10)
+                    (Array.isArray(evalLabels) ? undefined : evalLabels),
+                    {
+                      '12.approvals: 1': approvals.size == 1,
+                      '12.approvals: 2': approvals.size == 2,
+                      '12.approvals: 3+': approvals.size >= 3,
+                      '12.approved-by: package-maintainer': Array.from(maintainers).some(m => approvals.has(m)),
+                      '12.first-time contribution':
+                        [ 'NONE', 'FIRST_TIMER', 'FIRST_TIME_CONTRIBUTOR' ].includes(pull_request.author_association),
+                    }
                   )
 
-                  // And add the ones that aren't set already
-                  const added = after.filter(name => !before.includes(name))
-                  if (added.length > 0) {
-                    await github.rest.issues.addLabels({
-                      ...context.repo,
-                      issue_number: pull_request.number,
-                      labels: added
-                    })
-                  }
+                  // No need for an API request, if all labels are the same.
+                  const hasChanges = Object.keys(after).some(name => (before[name] ?? false) != after[name])
+                  if (log('Has changes', hasChanges, !hasChanges))
+                    return;
+
+                  // Skipping labeling on a pull_request event, because we have no privileges.
+                  const labels = Object.entries(after).filter(([,value]) => value).map(([name]) => name)
+                  if (log('Set labels', labels, context.eventName == 'pull_request'))
+                    return;
+
+                  await github.rest.issues.setLabels({
+                    ...context.repo,
+                    issue_number: pull_request.number,
+                    labels
+                  })
                 } catch (cause) {
                   throw new Error(`Labeling PR #${pull_request.number} failed.`, { cause })
                 }
@@ -261,19 +307,20 @@ jobs:
               .map(({ reason }) => core.setFailed(`${reason.message}\n${reason.cause.stack}`))
 
             core.notice(`Processed ${stats.prs} PRs, made ${stats.requests + stats.artifacts} API requests and downloaded ${stats.artifacts} artifacts.`)
+            clearInterval(reservoirUpdater)
+
+      - name: Log current API rate limits
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+        run: gh api /rate_limit | jq
 
       - uses: actions/labeler@8558fd74291d67161a8a78ce36a881fa63b766a9 # v5.0.0
         name: Labels from touched files
         if: |
           github.event_name == 'pull_request_target' &&
-          (github.event.pull_request.head.repo.owner.login != 'NixOS' || !(
-            github.head_ref == 'haskell-updates' ||
-            github.head_ref == 'python-updates' ||
-            github.head_ref == 'staging-next' ||
-            startsWith(github.head_ref, 'staging-next-')
-          ))
+          !contains(fromJSON(inputs.headBranch).type, 'development')
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ steps.app-token.outputs.token }}
           configuration-path: .github/labeler.yml # default
           sync-labels: true
 
@@ -281,14 +328,9 @@ jobs:
         name: Labels from touched files (no sync)
         if: |
           github.event_name == 'pull_request_target' &&
-          (github.event.pull_request.head.repo.owner.login != 'NixOS' || !(
-            github.head_ref == 'haskell-updates' ||
-            github.head_ref == 'python-updates' ||
-            github.head_ref == 'staging-next' ||
-            startsWith(github.head_ref, 'staging-next-')
-          ))
+          !contains(fromJSON(inputs.headBranch).type, 'development')
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ steps.app-token.outputs.token }}
           configuration-path: .github/labeler-no-sync.yml
           sync-labels: false
 
@@ -299,13 +341,13 @@ jobs:
         # the backport labels.
         if: |
           github.event_name == 'pull_request_target' &&
-          (github.event.pull_request.head.repo.owner.login == 'NixOS' && (
-            github.head_ref == 'haskell-updates' ||
-            github.head_ref == 'python-updates' ||
-            github.head_ref == 'staging-next' ||
-            startsWith(github.head_ref, 'staging-next-')
-          ))
+          contains(fromJSON(inputs.headBranch).type, 'development')
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ steps.app-token.outputs.token }}
           configuration-path: .github/labeler-development-branches.yml
           sync-labels: true
+
+      - name: Log current API rate limits
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+        run: gh api /rate_limit | jq
