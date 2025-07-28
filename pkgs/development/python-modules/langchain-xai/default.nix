@@ -1,5 +1,6 @@
 {
   lib,
+  stdenvNoCC,
   buildPythonPackage,
   fetchFromGitHub,
 
@@ -58,7 +59,14 @@ buildPythonPackage rec {
     pytestCheckHook
   ];
 
-  pytestFlagsArray = [ "tests/unit_tests" ];
+  enabledTestPaths = [ "tests/unit_tests" ];
+
+  disabledTests =
+    lib.optionals (stdenvNoCC.hostPlatform.isLinux && stdenvNoCC.hostPlatform.isAarch64)
+      [
+        # Compares a diff to a string literal and misses platform differences
+        "test_serdes"
+      ];
 
   pythonImportsCheck = [ "langchain_xai" ];
 

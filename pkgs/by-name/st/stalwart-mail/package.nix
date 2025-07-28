@@ -29,7 +29,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
     hash = "sha256-MUbWGBbb8+b5cp+M5w27A/cHHkMcoEtkN13++FyBvbM=";
   };
 
-  useFetchCargoVendor = true;
   cargoHash = "sha256-G1c7hh0nScc4Cx7A1UUXv6slA6pP0fC6h00zR71BJIo=";
 
   nativeBuildInputs = [
@@ -43,22 +42,22 @@ rustPlatform.buildRustPackage (finalAttrs: {
     openssl
     sqlite
     zstd
-  ] ++ lib.optionals (stdenv.hostPlatform.isLinux && withFoundationdb) [ foundationdb ];
+  ]
+  ++ lib.optionals (stdenv.hostPlatform.isLinux && withFoundationdb) [ foundationdb ];
 
   # Issue: https://github.com/stalwartlabs/stalwart/issues/1104
   buildNoDefaultFeatures = true;
-  buildFeatures =
-    [
-      "sqlite"
-      "postgres"
-      "mysql"
-      "rocks"
-      "elastic"
-      "s3"
-      "redis"
-    ]
-    ++ lib.optionals withFoundationdb [ "foundationdb" ]
-    ++ lib.optionals stalwartEnterprise [ "enterprise" ];
+  buildFeatures = [
+    "sqlite"
+    "postgres"
+    "mysql"
+    "rocks"
+    "elastic"
+    "s3"
+    "redis"
+  ]
+  ++ lib.optionals withFoundationdb [ "foundationdb" ]
+  ++ lib.optionals stalwartEnterprise [ "enterprise" ];
 
   env = {
     OPENSSL_NO_VENDOR = true;
@@ -162,6 +161,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   passthru = {
     inherit rocksdb; # make used rocksdb version available (e.g., for backup scripts)
     webadmin = callPackage ./webadmin.nix { };
+    spam-filter = callPackage ./spam-filter.nix { };
     updateScript = nix-update-script { };
     tests.stalwart-mail = nixosTests.stalwart-mail;
   };
@@ -170,16 +170,17 @@ rustPlatform.buildRustPackage (finalAttrs: {
     description = "Secure & Modern All-in-One Mail Server (IMAP, JMAP, SMTP)";
     homepage = "https://github.com/stalwartlabs/mail-server";
     changelog = "https://github.com/stalwartlabs/mail-server/blob/main/CHANGELOG.md";
-    license =
-      [ lib.licenses.agpl3Only ]
-      ++ lib.optionals stalwartEnterprise [
-        {
-          fullName = "Stalwart Enterprise License 1.0 (SELv1) Agreement";
-          url = "https://github.com/stalwartlabs/mail-server/blob/main/LICENSES/LicenseRef-SEL.txt";
-          free = false;
-          redistributable = false;
-        }
-      ];
+    license = [
+      lib.licenses.agpl3Only
+    ]
+    ++ lib.optionals stalwartEnterprise [
+      {
+        fullName = "Stalwart Enterprise License 1.0 (SELv1) Agreement";
+        url = "https://github.com/stalwartlabs/mail-server/blob/main/LICENSES/LicenseRef-SEL.txt";
+        free = false;
+        redistributable = false;
+      }
+    ];
 
     mainProgram = "stalwart";
     maintainers = with lib.maintainers; [
@@ -187,6 +188,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
       onny
       oddlama
       pandapip1
+      norpol
     ];
   };
 })
