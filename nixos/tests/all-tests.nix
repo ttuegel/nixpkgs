@@ -210,6 +210,7 @@ in
   amd-sev = runTest ./amd-sev.nix;
   android-translation-layer = runTest ./android-translation-layer.nix;
   angie-api = runTest ./angie-api.nix;
+  angrr = runTest ./angrr.nix;
   anki-sync-server = runTest ./anki-sync-server.nix;
   anubis = runTest ./anubis.nix;
   anuko-time-tracker = runTest ./anuko-time-tracker.nix;
@@ -273,8 +274,10 @@ in
   bitbox-bridge = runTest ./bitbox-bridge.nix;
   bitcoind = runTest ./bitcoind.nix;
   bittorrent = runTest ./bittorrent.nix;
+  blint = runTest ./blint.nix;
   blockbook-frontend = runTest ./blockbook-frontend.nix;
   blocky = runTest ./blocky.nix;
+  bluesky-pds = runTest ./bluesky-pds.nix;
   bookstack = runTest ./bookstack.nix;
   boot = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./boot.nix { };
   bootspec = handleTestOn [ "x86_64-linux" ] ./bootspec.nix { };
@@ -332,7 +335,14 @@ in
   cinnamon-wayland = runTest ./cinnamon-wayland.nix;
   cjdns = runTest ./cjdns.nix;
   clatd = runTest ./clatd.nix;
-  clickhouse = import ./clickhouse { inherit runTest; };
+  clickhouse = import ./clickhouse {
+    inherit runTest;
+    package = pkgs.clickhouse;
+  };
+  clickhouse-lts = import ./clickhouse {
+    inherit runTest;
+    package = pkgs.clickhouse-lts;
+  };
   cloud-init = runTest ./cloud-init.nix;
   cloud-init-hostname = runTest ./cloud-init-hostname.nix;
   cloudlog = runTest ./cloudlog.nix;
@@ -414,7 +424,6 @@ in
   dconf = runTest ./dconf.nix;
   ddns-updater = runTest ./ddns-updater.nix;
   deconz = runTest ./deconz.nix;
-  deepin = runTest ./deepin.nix;
   deluge = runTest ./deluge.nix;
   dendrite = runTest ./matrix/dendrite.nix;
   dependency-track = runTest ./dependency-track.nix;
@@ -499,6 +508,7 @@ in
   etcd-cluster = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./etcd/etcd-cluster.nix;
   etebase-server = runTest ./etebase-server.nix;
   etesync-dav = runTest ./etesync-dav.nix;
+  dep-scan = runTest ./dep-scan.nix;
   evcc = runTest ./evcc.nix;
   fail2ban = runTest ./fail2ban.nix;
   fakeroute = runTest ./fakeroute.nix;
@@ -530,10 +540,6 @@ in
     # used in `tested` job
     imports = [ ./firefox.nix ];
     _module.args.firefoxPackage = pkgs.firefox-esr;
-  };
-  firefox-esr-128 = runTest {
-    imports = [ ./firefox.nix ];
-    _module.args.firefoxPackage = pkgs.firefox-esr-128;
   };
   firefox-esr-140 = runTest {
     imports = [ ./firefox.nix ];
@@ -710,6 +716,7 @@ in
   };
   oku = runTest ./oku.nix;
   oncall = runTest ./web-apps/oncall.nix;
+  overseerr = runTest ./overseerr.nix;
   # 9pnet_virtio used to mount /nix partition doesn't support
   # hibernation. This test happens to work on x86_64-linux but
   # not on other platforms.
@@ -729,8 +736,10 @@ in
   i3wm = runTest ./i3wm.nix;
   icingaweb2 = runTest ./icingaweb2.nix;
   ifm = runTest ./ifm.nix;
+  ifstate = import ./ifstate { inherit runTest; };
   iftop = runTest ./iftop.nix;
   immich = runTest ./web-apps/immich.nix;
+  immich-vectorchord-migration = runTest ./web-apps/immich-vectorchord-migration.nix;
   immich-public-proxy = runTest ./web-apps/immich-public-proxy.nix;
   incron = runTest ./incron.nix;
   incus = pkgs.recurseIntoAttrs (
@@ -761,6 +770,7 @@ in
   isso = runTest ./isso.nix;
   jackett = runTest ./jackett.nix;
   jellyfin = runTest ./jellyfin.nix;
+  jellyseerr = runTest ./jellyseerr.nix;
   jenkins = runTest ./jenkins.nix;
   jenkins-cli = runTest ./jenkins-cli.nix;
   jibri = runTest ./jibri.nix;
@@ -838,6 +848,7 @@ in
   litellm = runTest ./litellm.nix;
   litestream = runTest ./litestream.nix;
   lk-jwt-service = runTest ./matrix/lk-jwt-service.nix;
+  llama-swap = runTest ./web-servers/llama-swap.nix;
   lldap = runTest ./lldap.nix;
   localsend = runTest ./localsend.nix;
   locate = runTest ./locate.nix;
@@ -902,7 +913,6 @@ in
   metabase = runTest ./metabase.nix;
   mihomo = runTest ./mihomo.nix;
   mindustry = runTest ./mindustry.nix;
-  minecraft = runTest ./minecraft.nix;
   minecraft-server = runTest ./minecraft-server.nix;
   minidlna = runTest ./minidlna.nix;
   miniflux = runTest ./miniflux.nix;
@@ -918,6 +928,7 @@ in
   modularService = pkgs.callPackage ../modules/system/service/systemd/test.nix {
     inherit evalSystem;
   };
+  modular-service-etc = runTest ./modular-service-etc/test.nix;
   molly-brown = runTest ./molly-brown.nix;
   mollysocket = runTest ./mollysocket.nix;
   monado = runTest ./monado.nix;
@@ -1026,7 +1037,10 @@ in
   nix-config = runTest ./nix-config.nix;
   nix-ld = runTest ./nix-ld.nix;
   nix-misc = handleTest ./nix/misc.nix { };
-  nix-upgrade = handleTest ./nix/upgrade.nix { inherit (pkgs) nixVersions; };
+  nix-upgrade = handleTest ./nix/upgrade.nix {
+    inherit (pkgs) nixVersions;
+    inherit system;
+  };
   nix-required-mounts = runTest ./nix-required-mounts;
   nix-serve = runTest ./nix-serve.nix;
   nix-serve-ssh = runTest ./nix-serve-ssh.nix;
@@ -1057,6 +1071,7 @@ in
   };
   nixpkgs = pkgs.callPackage ../modules/misc/nixpkgs/test.nix { inherit evalMinimalConfig; };
   nixseparatedebuginfod = runTest ./nixseparatedebuginfod.nix;
+  nixseparatedebuginfod2 = runTest ./nixseparatedebuginfod2.nix;
   node-red = runTest ./node-red.nix;
   nomad = runTest ./nomad.nix;
   nominatim = runTest ./nominatim.nix;
@@ -1074,6 +1089,7 @@ in
   ntpd-rs = runTest ./ntpd-rs.nix;
   nvidia-container-toolkit = runTest ./nvidia-container-toolkit.nix;
   nvmetcfg = runTest ./nvmetcfg.nix;
+  nyxt = runTest ./nyxt.nix;
   nzbget = runTest ./nzbget.nix;
   nzbhydra2 = runTest ./nzbhydra2.nix;
   ocis = runTest ./ocis.nix;
@@ -1120,10 +1136,12 @@ in
   osquery = handleTestOn [ "x86_64-linux" ] ./osquery.nix { };
   osrm-backend = runTest ./osrm-backend.nix;
   overlayfs = runTest ./overlayfs.nix;
+  oxidized = handleTest ./oxidized.nix { };
   pacemaker = runTest ./pacemaker.nix;
   packagekit = runTest ./packagekit.nix;
   paisa = runTest ./paisa.nix;
   pam-file-contents = runTest ./pam/pam-file-contents.nix;
+  pam-lastlog = runTest ./pam/pam-lastlog.nix;
   pam-oath-login = runTest ./pam/pam-oath-login.nix;
   pam-u2f = runTest ./pam/pam-u2f.nix;
   pam-ussh = runTest ./pam/pam-ussh.nix;
@@ -1138,7 +1156,6 @@ in
   parsedmarc = handleTest ./parsedmarc { };
   password-option-override-ordering = runTest ./password-option-override-ordering.nix;
   pdns-recursor = runTest ./pdns-recursor.nix;
-  pds = runTest ./pds.nix;
   peerflix = runTest ./peerflix.nix;
   peering-manager = runTest ./web-apps/peering-manager.nix;
   peertube = handleTestOn [ "x86_64-linux" ] ./web-apps/peertube.nix { };
@@ -1176,11 +1193,9 @@ in
   pict-rs = runTest ./pict-rs.nix;
   pingvin-share = runTest ./pingvin-share.nix;
   pinnwand = runTest ./pinnwand.nix;
+  pihole-ftl = import ./pihole-ftl { inherit runTest; };
   plantuml-server = runTest ./plantuml-server.nix;
-  plasma-bigscreen = runTest ./plasma-bigscreen.nix;
-  plasma5 = runTest ./plasma5.nix;
   plasma6 = runTest ./plasma6.nix;
-  plasma5-systemd-start = runTest ./plasma5-systemd-start.nix;
   plausible = runTest ./plausible.nix;
   playwright-python = runTest ./playwright-python.nix;
   please = runTest ./please.nix;
@@ -1238,7 +1253,7 @@ in
   privoxy = runTest ./privoxy.nix;
   prometheus = import ./prometheus { inherit runTest; };
   prometheus-exporters = handleTest ./prometheus-exporters.nix { };
-  prosody = handleTest ./xmpp/prosody.nix { };
+  prosody = runTest ./xmpp/prosody.nix;
   prosody-mysql = handleTest ./xmpp/prosody-mysql.nix { };
   proxy = runTest ./proxy.nix;
   prowlarr = runTest ./prowlarr.nix;
@@ -1276,6 +1291,7 @@ in
   redis = handleTest ./redis.nix { };
   redlib = runTest ./redlib.nix;
   redmine = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./redmine.nix { };
+  refind = runTest ./refind.nix;
   renovate = runTest ./renovate.nix;
   replace-dependencies = handleTest ./replace-dependencies { };
   reposilite = runTest ./reposilite.nix;
@@ -1316,7 +1332,6 @@ in
   scx = runTest ./scx/default.nix;
   sddm = import ./sddm.nix { inherit runTest; };
   sdl3 = runTest ./sdl3.nix;
-  seafile = runTest ./seafile.nix;
   searx = runTest ./searx.nix;
   seatd = runTest ./seatd.nix;
   send = runTest ./send.nix;
@@ -1336,6 +1351,7 @@ in
   simple = runTest ./simple.nix;
   sing-box = runTest ./sing-box.nix;
   slimserver = runTest ./slimserver.nix;
+  slipshow = runTest ./slipshow.nix;
   slurm = runTest ./slurm.nix;
   snmpd = runTest ./snmpd.nix;
   smokeping = runTest ./smokeping.nix;
@@ -1391,6 +1407,7 @@ in
   syncthing-folders = runTest ./syncthing-folders.nix;
   syncthing-relay = runTest ./syncthing-relay.nix;
   sysinit-reactivation = runTest ./sysinit-reactivation.nix;
+  sysfs = runTest ./sysfs.nix;
   systemd = runTest ./systemd.nix;
   systemd-analyze = runTest ./systemd-analyze.nix;
   systemd-binfmt = handleTestOn [ "x86_64-linux" ] ./systemd-binfmt.nix { };
@@ -1478,8 +1495,9 @@ in
   teleport = handleTest ./teleport.nix { };
   teleports = runTest ./teleports.nix;
   thelounge = handleTest ./thelounge.nix { };
+  temporal = runTest ./temporal.nix;
   terminal-emulators = handleTest ./terminal-emulators.nix { };
-  thanos = handleTest ./thanos.nix { };
+  thanos = runTest ./thanos.nix;
   tiddlywiki = runTest ./tiddlywiki.nix;
   tigervnc = handleTest ./tigervnc.nix { };
   tika = runTest ./tika.nix;
@@ -1561,7 +1579,7 @@ in
   vector = import ./vector { inherit runTest; };
   velocity = runTest ./velocity.nix;
   vengi-tools = runTest ./vengi-tools.nix;
-  victorialogs = runTest ./victorialogs.nix;
+  victorialogs = import ./victorialogs { inherit runTest; };
   victoriametrics = import ./victoriametrics { inherit runTest; };
   vikunja = runTest ./vikunja.nix;
   virtualbox = handleTestOn [ "x86_64-linux" ] ./virtualbox.nix { };
@@ -1619,14 +1637,7 @@ in
   zenohd = runTest ./zenohd.nix;
   zeronet-conservancy = runTest ./zeronet-conservancy.nix;
   zfs = handleTest ./zfs.nix { };
-  zigbee2mqtt_1 = runTest {
-    imports = [ ./zigbee2mqtt.nix ];
-    _module.args.package = pkgs.zigbee2mqtt_1;
-  };
-  zigbee2mqtt_2 = runTest {
-    imports = [ ./zigbee2mqtt.nix ];
-    _module.args.package = pkgs.zigbee2mqtt_2;
-  };
+  zigbee2mqtt = runTest ./zigbee2mqtt.nix;
   zipline = runTest ./zipline.nix;
   zoneminder = runTest ./zoneminder.nix;
   zookeeper = runTest ./zookeeper.nix;
