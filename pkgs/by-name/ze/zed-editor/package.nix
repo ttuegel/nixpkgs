@@ -99,7 +99,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "zed-editor";
-  version = "0.202.7";
+  version = "0.204.2";
 
   outputs = [
     "out"
@@ -112,7 +112,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "zed-industries";
     repo = "zed";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-0Ro/8d0EAb44SrPp34tpLLA8LDPiddzZiwZzQhJrjQ8=";
+    hash = "sha256-WYdSWyWkCberMBJlow/V7FGQTL0ww1SQ5L0zNsnNg58=";
   };
 
   patches = [
@@ -143,7 +143,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
         --replace-fail '$CARGO_ABOUT_VERSION' '${cargo-about.version}'
     '';
 
-  cargoHash = "sha256-ehFq0e5G+3242nMHFIDFXVhZCyjwxfMckjhKQ7Iwbu0=";
+  cargoHash = "sha256-cDlcwbxE+52YAHLPb+ijJZE9zQwvtm7glfru0qyQWwA=";
 
   nativeBuildInputs = [
     cmake
@@ -323,6 +323,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
       extraArgs = [
         "--version-regex"
         "^v(?!.*(?:-pre|0\.999999\.0|0\.9999-temporary)$)(.+)$"
+
+        # use github releases instead of git tags
+        # zed sometimes moves git tags, making them unreliable
+        # see: https://github.com/NixOS/nixpkgs/pull/439893#issuecomment-3250497178
+        "--use-github-releases"
       ];
     };
     fhs = fhs { zed-editor = finalAttrs.finalPackage; };
