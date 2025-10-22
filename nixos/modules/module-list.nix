@@ -66,6 +66,7 @@
   ./hardware/decklink.nix
   ./hardware/device-tree.nix
   ./hardware/digitalbitbox.nix
+  ./hardware/facter
   ./hardware/flipperzero.nix
   ./hardware/flirc.nix
   ./hardware/fw-fanctrl.nix
@@ -1053,6 +1054,7 @@
   ./services/monitoring/zabbix-agent.nix
   ./services/monitoring/zabbix-proxy.nix
   ./services/monitoring/zabbix-server.nix
+  ./services/network-filesystems/a2boot.nix
   ./services/network-filesystems/cachefilesd.nix
   ./services/network-filesystems/ceph.nix
   ./services/network-filesystems/davfs2.nix
@@ -1294,6 +1296,7 @@
   ./services/networking/openconnect.nix
   ./services/networking/opengfw.nix
   ./services/networking/openvpn.nix
+  ./services/networking/opkssh/opkssh.nix
   ./services/networking/ostinato.nix
   ./services/networking/owamp.nix
   ./services/networking/pangolin.nix
@@ -1487,6 +1490,7 @@
   ./services/security/tor.nix
   ./services/security/torify.nix
   ./services/security/torsocks.nix
+  ./services/security/tsidp.nix
   ./services/security/usbguard.nix
   ./services/security/vault-agent.nix
   ./services/security/vault.nix
@@ -1571,6 +1575,7 @@
   ./services/web-apps/dex.nix
   ./services/web-apps/discourse.nix
   ./services/web-apps/documize.nix
+  ./services/web-apps/docuseal.nix
   ./services/web-apps/dokuwiki.nix
   ./services/web-apps/dolibarr.nix
   ./services/web-apps/drupal.nix
@@ -1582,7 +1587,6 @@
   ./services/web-apps/fediwall.nix
   ./services/web-apps/fider.nix
   ./services/web-apps/filebrowser.nix
-  ./services/web-apps/filesender.nix
   ./services/web-apps/firefly-iii-data-importer.nix
   ./services/web-apps/firefly-iii.nix
   ./services/web-apps/flarum.nix
@@ -1630,6 +1634,7 @@
   ./services/web-apps/lasuite-docs.nix
   ./services/web-apps/lasuite-meet.nix
   ./services/web-apps/lemmy.nix
+  ./services/web-apps/librespeed.nix
   ./services/web-apps/libretranslate.nix
   ./services/web-apps/limesurvey.nix
   ./services/web-apps/linkwarden.nix
@@ -1667,6 +1672,7 @@
   ./services/web-apps/openvscode-server.nix
   ./services/web-apps/openwebrx.nix
   ./services/web-apps/outline.nix
+  ./services/web-apps/pairdrop.nix
   ./services/web-apps/part-db.nix
   ./services/web-apps/peering-manager.nix
   ./services/web-apps/peertube-runner.nix
@@ -1698,7 +1704,6 @@
   ./services/web-apps/shiori.nix
   ./services/web-apps/sillytavern.nix
   ./services/web-apps/silverbullet.nix
-  ./services/web-apps/simplesamlphp.nix
   ./services/web-apps/slskd.nix
   ./services/web-apps/snipe-it.nix
   ./services/web-apps/snips-sh.nix

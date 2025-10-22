@@ -183,7 +183,10 @@ in
   # keep-sorted start case=no numeric=no block=yes
   _3proxy = runTest ./3proxy.nix;
   aaaaxy = runTest ./aaaaxy.nix;
-  acme = import ./acme/default.nix { inherit runTest; };
+  acme = import ./acme/default.nix {
+    inherit runTest;
+    inherit (pkgs) lib;
+  };
   acme-dns = runTest ./acme-dns.nix;
   activation = pkgs.callPackage ../modules/system/activation/test.nix { };
   activation-bashless = runTest ./activation/bashless.nix;
@@ -377,7 +380,7 @@ in
   consul = runTest ./consul.nix;
   consul-template = runTest ./consul-template.nix;
   containers-bridge = runTest ./containers-bridge.nix;
-  containers-custom-pkgs.nix = runTest ./containers-custom-pkgs.nix;
+  containers-custom-pkgs = runTest ./containers-custom-pkgs.nix;
   containers-ephemeral = runTest ./containers-ephemeral.nix;
   containers-extra_veth = runTest ./containers-extra_veth.nix;
   containers-hosts = runTest ./containers-hosts.nix;
@@ -468,6 +471,8 @@ in
   docling-serve = runTest ./docling-serve.nix;
   documentation = pkgs.callPackage ../modules/misc/documentation/test.nix { inherit nixosLib; };
   documize = runTest ./documize.nix;
+  docuseal-psql = runTest ./docuseal-postgres.nix;
+  docuseal-sqlite = runTest ./docuseal-sqlite.nix;
   doh-proxy-rust = runTest ./doh-proxy-rust.nix;
   dokuwiki = runTest ./dokuwiki.nix;
   dolibarr = runTest ./dolibarr.nix;
@@ -515,6 +520,7 @@ in
   etebase-server = runTest ./etebase-server.nix;
   etesync-dav = runTest ./etesync-dav.nix;
   evcc = runTest ./evcc.nix;
+  facter = runTest ./facter;
   fail2ban = runTest ./fail2ban.nix;
   fakeroute = runTest ./fakeroute.nix;
   fancontrol = runTest ./fancontrol.nix;
@@ -526,7 +532,6 @@ in
   ferretdb = import ./ferretdb.nix { inherit pkgs runTest; };
   fider = runTest ./fider.nix;
   filebrowser = runTest ./filebrowser.nix;
-  filesender = runTest ./filesender.nix;
   filesystems-overlayfs = runTest ./filesystems-overlayfs.nix;
   firefly-iii = runTest ./firefly-iii.nix;
   firefly-iii-data-importer = runTest ./firefly-iii-data-importer.nix;
@@ -569,6 +574,7 @@ in
   fluent-bit = runTest ./fluent-bit.nix;
   fluentd = runTest ./fluentd.nix;
   fluidd = runTest ./fluidd.nix;
+  fontconfig-bitmap-fonts = runTest ./fontconfig-bitmap-fonts.nix;
   fontconfig-default-fonts = runTest ./fontconfig-default-fonts.nix;
   forgejo = import ./forgejo.nix {
     inherit runTest;
@@ -711,6 +717,7 @@ in
   homepage-dashboard = runTest ./homepage-dashboard.nix;
   homer = handleTest ./homer { };
   honk = runTest ./honk.nix;
+  hoogle = runTest ./hoogle.nix;
   hostname = handleTest ./hostname.nix { };
   hound = runTest ./hound.nix;
   hub = runTest ./git/hub.nix;
@@ -780,7 +787,7 @@ in
   keepalived = runTest ./keepalived.nix;
   keepassxc = runTest ./keepassxc.nix;
   kerberos = handleTest ./kerberos/default.nix { };
-  kernel-generic = handleTest ./kernel-generic.nix { };
+  kernel-generic = handleTest ./kernel-generic { };
   kernel-latest-ath-user-regd = runTest ./kernel-latest-ath-user-regd.nix;
   kernel-rust = handleTest ./kernel-rust.nix { };
   keter = runTest ./keter.nix;
@@ -986,7 +993,6 @@ in
   neo4j = runTest ./neo4j.nix;
   netbird = runTest ./netbird.nix;
   netbox-upgrade = runTest ./web-apps/netbox-upgrade.nix;
-  netbox_4_1 = handleTest ./web-apps/netbox/default.nix { netbox = pkgs.netbox_4_1; };
   netbox_4_2 = handleTest ./web-apps/netbox/default.nix { netbox = pkgs.netbox_4_2; };
   netbox_4_3 = handleTest ./web-apps/netbox/default.nix { netbox = pkgs.netbox_4_3; };
   netdata = runTest ./netdata.nix;
@@ -1143,6 +1149,7 @@ in
   oxidized = handleTest ./oxidized.nix { };
   pacemaker = runTest ./pacemaker.nix;
   packagekit = runTest ./packagekit.nix;
+  pairdrop = runTest ./web-apps/pairdrop.nix;
   paisa = runTest ./paisa.nix;
   pam-file-contents = runTest ./pam/pam-file-contents.nix;
   pam-lastlog = runTest ./pam/pam-lastlog.nix;
