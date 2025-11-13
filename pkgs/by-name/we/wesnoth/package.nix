@@ -39,7 +39,7 @@ in
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "wesnoth${suffix}";
-  version = if enableDevel then "1.19.16.1" else "1.18.5";
+  version = if enableDevel then "1.19.17" else "1.18.5";
 
   src = fetchFromGitHub {
     owner = "wesnoth";
@@ -47,7 +47,7 @@ stdenv.mkDerivation (finalAttrs: {
     tag = finalAttrs.version;
     hash =
       if enableDevel then
-        "sha256-ekpyQnP5r3jl98qyNkO6SwUGc9qvz2OTidUu0k3m28c="
+        "sha256-8JFJR4ghL2uSI5zG63MPX5NwlvIc3/xR0SQ2FjG5JCw="
       else
         "sha256-0VZJAmaCg12x4S07H1kl5s2NGMEo/NSVnzMniREmPJk=";
   };
@@ -158,10 +158,7 @@ stdenv.mkDerivation (finalAttrs: {
     homepage = "https://www.wesnoth.org/";
     changelog = "https://github.com/wesnoth/wesnoth/blob/${finalAttrs.version}/changelog.md";
     license = lib.licenses.gpl2Plus;
-    maintainers = with lib.maintainers; [
-      niklaskorz
-      iedame
-    ];
+    maintainers = with lib.maintainers; [ niklaskorz ];
     platforms = lib.platforms.unix;
     mainProgram = "wesnoth${suffix}";
   };

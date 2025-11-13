@@ -106,12 +106,12 @@ in
 # Note: when upgrading this package, please run the list-missing-tools.sh script as described below!
 python.pkgs.buildPythonApplication rec {
   pname = "diffoscope";
-  version = "304";
+  version = "308";
   pyproject = true;
 
   src = fetchurl {
     url = "https://diffoscope.org/archive/diffoscope-${version}.tar.bz2";
-    hash = "sha256-lJdZRIyoVq1PsmiicsSxJ0Mgsy5IcAUar6l8QvJoxOw=";
+    hash = "sha256-ahHy7E2bkNB3IeiY4P8/ksn68O+uXJ2DVscZPw7wGRI=";
   };
 
   outputs = [

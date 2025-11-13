@@ -277,6 +277,7 @@
   ./programs/nix-index.nix
   ./programs/nix-ld.nix
   ./programs/nix-required-mounts.nix
+  ./programs/nixbit.nix
   ./programs/nm-applet.nix
   ./programs/nncp.nix
   ./programs/noisetorch.nix
@@ -352,6 +353,7 @@
   ./programs/wayland/uwsm.nix
   ./programs/wayland/waybar.nix
   ./programs/wayland/wayfire.nix
+  ./programs/wayland/wayvnc.nix
   ./programs/weylus.nix
   ./programs/winbox.nix
   ./programs/wireshark.nix
@@ -360,6 +362,7 @@
   ./programs/xfconf.nix
   ./programs/xfs_quota.nix
   ./programs/xonsh.nix
+  ./programs/xppen.nix
   ./programs/xss-lock.nix
   ./programs/xwayland.nix
   ./programs/yazi.nix
@@ -397,7 +400,6 @@
   ./security/pam_mount.nix
   ./security/please.nix
   ./security/polkit.nix
-  ./security/rngd.nix
   ./security/rtkit.nix
   ./security/soteria.nix
   ./security/sudo-rs.nix
@@ -599,7 +601,6 @@
   ./services/development/livebook.nix
   ./services/development/lorri.nix
   ./services/development/nixseparatedebuginfod2.nix
-  ./services/development/nixseparatedebuginfod.nix
   ./services/development/rstudio-server/default.nix
   ./services/development/vsmartcard-vpcd.nix
   ./services/development/zammad.nix
@@ -857,6 +858,7 @@
   ./services/misc/heisenbridge.nix
   ./services/misc/homepage-dashboard.nix
   ./services/misc/ihaskell.nix
+  ./services/misc/iio-niri.nix
   ./services/misc/input-remapper.nix
   ./services/misc/invidious-router.nix
   ./services/misc/irkerd.nix
@@ -900,7 +902,6 @@
   ./services/misc/packagekit.nix
   ./services/misc/paisa.nix
   ./services/misc/paperless.nix
-  ./services/misc/parsoid.nix
   ./services/misc/persistent-evdev.nix
   ./services/misc/pghero.nix
   ./services/misc/pinchflat.nix
@@ -924,6 +925,7 @@
   ./services/misc/rkvm.nix
   ./services/misc/rmfakecloud.nix
   ./services/misc/rshim.nix
+  ./services/misc/rsync.nix
   ./services/misc/safeeyes.nix
   ./services/misc/sdrplay.nix
   ./services/misc/servarr/lidarr.nix
@@ -973,6 +975,8 @@
   ./services/monitoring/apcupsd.nix
   ./services/monitoring/arbtt.nix
   ./services/monitoring/below.nix
+  ./services/monitoring/beszel-agent.nix
+  ./services/monitoring/beszel-hub.nix
   ./services/monitoring/bosun.nix
   ./services/monitoring/cadvisor.nix
   ./services/monitoring/certspotter.nix
@@ -987,6 +991,7 @@
   ./services/monitoring/gitwatch.nix
   ./services/monitoring/glances.nix
   ./services/monitoring/glpi-agent.nix
+  ./services/monitoring/go-csp-collector.nix
   ./services/monitoring/goss.nix
   ./services/monitoring/grafana-image-renderer.nix
   ./services/monitoring/grafana-reporter.nix
@@ -1314,7 +1319,6 @@
   ./services/networking/pyload.nix
   ./services/networking/quassel.nix
   ./services/networking/quicktun.nix
-  ./services/networking/quorum.nix
   ./services/networking/r53-ddns.nix
   ./services/networking/radicale.nix
   ./services/networking/radvd.nix
@@ -1455,6 +1459,7 @@
   ./services/security/certmgr.nix
   ./services/security/cfssl.nix
   ./services/security/clamav.nix
+  ./services/security/crowdsec-firewall-bouncer.nix
   ./services/security/crowdsec.nix
   ./services/security/e-imzo.nix
   ./services/security/endlessh-go.nix
@@ -1495,6 +1500,7 @@
   ./services/security/vault-agent.nix
   ./services/security/vault.nix
   ./services/security/vaultwarden/default.nix
+  ./services/security/warpgate.nix
   ./services/security/yubikey-agent.nix
   ./services/system/automatic-timezoned.nix
   ./services/system/bpftune.nix

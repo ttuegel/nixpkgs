@@ -314,6 +314,14 @@ assertNoAdditions {
     };
   });
 
+  blink-cmp-env = super.blink-cmp-env.overrideAttrs {
+    dependencies = [ self.blink-cmp ];
+  };
+
+  blink-cmp-yanky = super.blink-cmp-yanky.overrideAttrs {
+    dependencies = [ self.blink-cmp ];
+  };
+
   bluloco-nvim = super.bluloco-nvim.overrideAttrs {
     dependencies = [ self.lush-nvim ];
   };
@@ -500,6 +508,10 @@ assertNoAdditions {
   };
 
   cmp-digraphs = super.cmp-digraphs.overrideAttrs {
+    checkInputs = [ self.nvim-cmp ];
+  };
+
+  cmp-dotenv = super.cmp-dotenv.overrideAttrs {
     checkInputs = [ self.nvim-cmp ];
   };
 
@@ -1203,6 +1215,10 @@ assertNoAdditions {
     dependencies = [ self.leap-nvim ];
   };
 
+  floaterm = super.floaterm.overrideAttrs {
+    dependencies = [ self.nvzone-volt ];
+  };
+
   flutter-tools-nvim = super.flutter-tools-nvim.overrideAttrs {
     # Optional dap integration
     checkInputs = [ self.nvim-dap ];
@@ -1614,6 +1630,7 @@ assertNoAdditions {
       "lazyvim.plugins.extras.editor.snacks_picker"
       "lazyvim.plugins.extras.editor.telescope"
       "lazyvim.plugins.extras.formatting.prettier"
+      "lazyvim.plugins.extras.lang.dotnet"
       "lazyvim.plugins.extras.lang.markdown"
       "lazyvim.plugins.extras.lang.omnisharp"
       "lazyvim.plugins.extras.lang.python"
@@ -1859,6 +1876,10 @@ assertNoAdditions {
         pyperclip
         pnglatex
       ];
+  };
+
+  maple-nvim = super.maple-nvim.overrideAttrs {
+    dependencies = [ self.plenary-nvim ];
   };
 
   markdown-preview-nvim =
@@ -3185,6 +3206,12 @@ assertNoAdditions {
       "snacks.dashboard"
       "snacks.debug"
       "snacks.dim"
+      "snacks.explorer.init"
+      "snacks.gh.actions"
+      "snacks.gh.buf"
+      "snacks.gh.init"
+      "snacks.gh.render"
+      "snacks.gh.render.init"
       "snacks.git"
       "snacks.image.convert"
       "snacks.image.image"
@@ -3197,6 +3224,8 @@ assertNoAdditions {
       "snacks.picker.actions"
       "snacks.picker.config.highlights"
       "snacks.picker.core.list"
+      "snacks.picker.source.gh"
+      "snacks.picker.util.diff"
       "snacks.scratch"
       "snacks.scroll"
       "snacks.terminal"
@@ -4085,8 +4114,9 @@ assertNoAdditions {
 
   wiki-vim = super.wiki-vim.overrideAttrs {
     checkInputs = [
-      # Optional telescope integration
+      # Optional picker integration
       self.telescope-nvim
+      self.fzf-lua
     ];
   };
 

@@ -7,13 +7,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "unordered-dense";
-  version = "4.7.0";
+  version = "4.8.1";
 
   src = fetchFromGitHub {
     owner = "martinus";
     repo = "unordered_dense";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-j+iBqmedykRYJm8Q6WudQrfPc1CHP9URHip+gkFhK0I=";
+    hash = "sha256-JdPlyShWnAcdgixDHRaroFg7YWdPtD4Nl1PmpcQ1SAk=";
   };
 
   nativeBuildInputs = [
