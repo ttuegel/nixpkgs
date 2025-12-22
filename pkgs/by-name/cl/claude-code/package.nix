@@ -1,3 +1,7 @@
+# NOTE: Use the following command to update the package
+# ```sh
+# nix-shell maintainers/scripts/update.nix --argstr commit true --arg predicate '(path: pkg: builtins.elem path [["claude-code"] ["vscode-extensions" "anthropic" "claude-code"]])'
+# ```
 {
   lib,
   buildNpmPackage,
@@ -7,14 +11,14 @@
 }:
 buildNpmPackage (finalAttrs: {
   pname = "claude-code";
-  version = "2.0.36";
+  version = "2.0.74";
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-${finalAttrs.version}.tgz";
-    hash = "sha256-6tbbCaF1HIgdk1vpbgQnBKWghaKKphGIGZoXtmnhY2I=";
+    hash = "sha256-J3m1KUO8Bkzwh3fLI96LoWw6VsSwoETcSq2IufeRW9E=";
   };
 
-  npmDepsHash = "sha256-hgIWGAXqT517B+v/M15acseSf9NJGeHk2G4gZozFssw=";
+  npmDepsHash = "sha256-kwJDSBAepJ1IVLzf4sydTZpvr6pERD9d7kr+KYC5Y/o=";
 
   postPatch = ''
     cp ${./package-lock.json} package-lock.json
@@ -49,6 +53,7 @@ buildNpmPackage (finalAttrs: {
     downloadPage = "https://www.npmjs.com/package/@anthropic-ai/claude-code";
     license = lib.licenses.unfree;
     maintainers = with lib.maintainers; [
+      adeci
       malo
       markus1189
       omarjatoi

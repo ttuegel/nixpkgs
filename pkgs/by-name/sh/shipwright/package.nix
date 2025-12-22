@@ -1,5 +1,4 @@
 {
-  apple-sdk_13,
   stdenv,
   cmake,
   lsb-release,
@@ -178,10 +177,6 @@ stdenv.mkDerivation (finalAttrs: {
   ++ lib.optionals stdenv.hostPlatform.isLinux [
     libpulseaudio
     zenity
-  ]
-  ++ lib.optionals stdenv.hostPlatform.isDarwin [
-    # Metal.hpp requires macOS 13.x min.
-    apple-sdk_13
   ];
 
   cmakeFlags = [
@@ -293,10 +288,7 @@ stdenv.mkDerivation (finalAttrs: {
     description = "PC port of Ocarina of Time with modern controls, widescreen, high-resolution, and more";
     mainProgram = "soh";
     platforms = lib.platforms.linux ++ lib.platforms.darwin;
-    maintainers = with lib.maintainers; [
-      j0lol
-      matteopacini
-    ];
+    maintainers = with lib.maintainers; [ matteopacini ];
     license = with lib.licenses; [
       # OTRExporter, OTRGui, ZAPDTR, libultraship
       mit

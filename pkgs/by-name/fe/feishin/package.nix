@@ -3,9 +3,11 @@
   stdenv,
   buildNpmPackage,
   fetchFromGitHub,
-  electron_36,
+  electron_38,
   dart-sass,
-  pnpm_10,
+  fetchPnpmDeps,
+  pnpmConfigHook,
+  pnpm,
   darwin,
   copyDesktopItems,
   makeDesktopItem,
@@ -21,18 +23,17 @@ let
     hash = "sha256-F5m0hsN1BLfiUcl2Go54bpFnN8ktn6Rqa/df1xxoCA4=";
   };
 
-  electron = electron_36;
-  pnpm = pnpm_10;
+  electron = electron_38;
 in
 buildNpmPackage {
   inherit pname version;
 
   inherit src;
 
-  npmConfigHook = pnpm.configHook;
+  npmConfigHook = pnpmConfigHook;
 
   npmDeps = null;
-  pnpmDeps = pnpm.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit
       pname
       version
@@ -44,9 +45,11 @@ buildNpmPackage {
 
   env.ELECTRON_SKIP_BINARY_DOWNLOAD = "1";
 
-  nativeBuildInputs =
-    lib.optionals (stdenv.hostPlatform.isLinux) [ copyDesktopItems ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [ darwin.autoSignDarwinBinariesHook ];
+  nativeBuildInputs = [
+    pnpm
+  ]
+  ++ lib.optionals (stdenv.hostPlatform.isLinux) [ copyDesktopItems ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [ darwin.autoSignDarwinBinariesHook ];
 
   postPatch = ''
     # release/app dependencies are installed on preConfigure
