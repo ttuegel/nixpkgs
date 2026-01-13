@@ -830,8 +830,9 @@ with pkgs;
     inherit (darwin) signingUtils;
   };
 
-  # No callPackage.  In particular, we don't want `img` *package* in parameters.
-  vmTools = makeOverridable (import ../build-support/vm) { inherit pkgs lib; };
+  vmTools = callPackage ../build-support/vm {
+    img = stdenv.hostPlatform.linux-kernel.target;
+  };
 
   releaseTools = callPackage ../build-support/release { };
 
@@ -1670,11 +1671,6 @@ with pkgs;
     charles5
     ;
 
-  quaternion-qt6 =
-    qt6Packages.callPackage ../applications/networking/instant-messengers/quaternion
-      { };
-  quaternion = quaternion-qt6;
-
   tensor = libsForQt5.callPackage ../applications/networking/instant-messengers/tensor { };
 
   libtensorflow = python3.pkgs.tensorflow-build.libtensorflow;
@@ -2185,15 +2181,9 @@ with pkgs;
   circus = with python310Packages; toPythonApplication circus;
 
   inherit (callPackage ../applications/networking/remote/citrix-workspace { })
-    citrix_workspace_23_11_0
-    citrix_workspace_24_02_0
-    citrix_workspace_24_05_0
-    citrix_workspace_24_08_0
-    citrix_workspace_24_11_0
-    citrix_workspace_25_03_0
-    citrix_workspace_25_05_0
+    citrix_workspace_25_08_10
     ;
-  citrix_workspace = citrix_workspace_25_05_0;
+  citrix_workspace = citrix_workspace_25_08_10;
 
   colord-gtk4 = colord-gtk.override { withGtk4 = true; };
 
@@ -3228,8 +3218,6 @@ with pkgs;
 
   minijail = callPackage ../tools/system/minijail { };
 
-  minijail-tools = python3.pkgs.callPackage ../tools/system/minijail/tools.nix { };
-
   mir-qualia = callPackage ../tools/text/mir-qualia {
     pythonPackages = python3Packages;
   };
@@ -3373,8 +3361,6 @@ with pkgs;
   };
 
   nwdiag = with python3Packages; toPythonApplication nwdiag;
-
-  nxdomain = python3.pkgs.callPackage ../tools/networking/nxdomain { };
 
   ofono-phonesim = libsForQt5.callPackage ../development/tools/ofono-phonesim { };
 
@@ -3682,6 +3668,8 @@ with pkgs;
 
   reuse = with python3.pkgs; toPythonApplication reuse;
 
+  rmate = rubyPackages.rmate;
+
   rmlint = callPackage ../tools/misc/rmlint {
     inherit (python3Packages) sphinx;
   };
@@ -3716,8 +3704,6 @@ with pkgs;
       fmt = fmt_11;
     };
   };
-
-  scfbuild = python3.pkgs.callPackage ../tools/misc/scfbuild { };
 
   segger-jlink-headless = callPackage ../by-name/se/segger-jlink/package.nix { headless = true; };
 
@@ -4010,7 +3996,7 @@ with pkgs;
   # https://github.com/NixOS/nixpkgs/issues/227327
   wafHook = waf.hook;
 
-  web-eid-app = libsForQt5.callPackage ../tools/security/web-eid-app { };
+  web-eid-app = qt6Packages.callPackage ../tools/security/web-eid-app { };
 
   wio = callPackage ../by-name/wi/wio/package.nix {
     wlroots = wlroots_0_19;
@@ -5237,7 +5223,6 @@ with pkgs;
   # prolog
   yosys-bluespec = callPackage ../development/compilers/yosys/plugins/bluespec.nix { };
   yosys-ghdl = callPackage ../development/compilers/yosys/plugins/ghdl.nix { };
-  yosys-synlig = callPackage ../development/compilers/yosys/plugins/synlig.nix { };
   yosys-symbiflow = callPackage ../development/compilers/yosys/plugins/symbiflow.nix { };
 
   inherit
@@ -5807,10 +5792,6 @@ with pkgs;
 
   ### DEVELOPMENT / TOOLS / LANGUAGE-SERVERS
 
-  fortran-language-server =
-    python3.pkgs.callPackage ../development/tools/language-servers/fortran-language-server
-      { };
-
   inherit (callPackages ../development/tools/language-servers/nixd { }) nixf nixt nixd;
 
   antlr2 = callPackage ../development/tools/parsing/antlr/2.7.7.nix { };
@@ -6201,14 +6182,6 @@ with pkgs;
   fffuu = haskell.lib.compose.justStaticExecutables (
     haskellPackages.callPackage ../tools/misc/fffuu { }
   );
-
-  flow = callPackage ../development/tools/analysis/flow {
-    ocamlPackages = ocaml-ng.ocamlPackages.overrideScope (
-      self: super: {
-        ppxlib = super.ppxlib.override { version = "0.33.0"; };
-      }
-    );
-  };
 
   gede = libsForQt5.callPackage ../development/tools/misc/gede { };
 
@@ -6780,13 +6753,21 @@ with pkgs;
     factor-unwrapped = callPackage ../development/compilers/factor-lang/0.99.nix { };
   };
   factorPackages-0_100 = callPackage ./factor-packages.nix {
-    factor-unwrapped = callPackage ../development/compilers/factor-lang/0.100.nix { };
+    factor-unwrapped = callPackage ../development/compilers/factor-lang/0.100.nix {
+      stdenv = clangStdenv;
+    };
+  };
+  factorPackages-0_101 = callPackage ./factor-packages.nix {
+    factor-unwrapped = callPackage ../development/compilers/factor-lang/0.101.nix {
+      stdenv = clangStdenv;
+    };
   };
   factorPackages = factorPackages-0_100;
 
   factor-lang-0_99 = factorPackages-0_99.factor-lang;
   factor-lang-0_100 = factorPackages-0_100.factor-lang;
-  factor-lang = factor-lang-0_100;
+  factor-lang-0_101 = factorPackages-0_101.factor-lang;
+  factor-lang = factor-lang-0_101;
 
   farstream = callPackage ../development/libraries/farstream {
     inherit (gst_all_1)
@@ -6979,7 +6960,7 @@ with pkgs;
     else if libc == "bionic" then
       bionic
     else if libc == "uclibc" then
-      uclibc
+      uclibc-ng
     else if libc == "avrlibc" then
       avrlibc
     else if libc == "newlib" && stdenv.hostPlatform.isMsp430 then
@@ -7889,7 +7870,6 @@ with pkgs;
   openexr_2 = callPackage ../development/libraries/openexr/2.nix { };
 
   opencolorio = callPackage ../development/libraries/opencolorio { };
-  opencolorio_1 = callPackage ../development/libraries/opencolorio/1.x.nix { };
 
   openstackclient = with python313Packages; toPythonApplication python-openstackclient;
   openstackclient-full = openstackclient.overridePythonAttrs (oldAttrs: {
@@ -8201,8 +8181,6 @@ with pkgs;
     };
   };
 
-  rshell = python3.pkgs.callPackage ../development/embedded/rshell { };
-
   SDL = SDL_compat;
   SDL2 = sdl2-compat;
 
@@ -8432,8 +8410,6 @@ with pkgs;
 
   xcb-util-cursor = xorg.xcbutilcursor;
   xcb-util-cursor-HEAD = callPackage ../development/libraries/xcb-util-cursor/HEAD.nix { };
-
-  xcbutilxrm = callPackage ../servers/x11/xorg/xcb-util-xrm.nix { };
 
   xgboostWithCuda = xgboost.override { cudaSupport = true; };
 
@@ -9037,8 +9013,6 @@ with pkgs;
 
   mkchromecast = libsForQt5.callPackage ../applications/networking/mkchromecast { };
 
-  mtprotoproxy = python3.pkgs.callPackage ../servers/mtprotoproxy { };
-
   moodle = callPackage ../servers/web-apps/moodle { };
 
   moodle-utils = callPackage ../servers/web-apps/moodle/moodle-utils.nix { };
@@ -9367,8 +9341,6 @@ with pkgs;
 
   public-inbox = perlPackages.callPackage ../servers/mail/public-inbox { };
 
-  spf-engine = python3.pkgs.callPackage ../servers/mail/spf-engine { };
-
   pypiserver = with python3Packages; toPythonApplication pypiserver;
 
   qremotecontrol-server = libsForQt5.callPackage ../servers/misc/qremotecontrol-server { };
@@ -9439,10 +9411,6 @@ with pkgs;
   virtualenv = with python3Packages; toPythonApplication virtualenv;
 
   virtualenv-clone = with python3Packages; toPythonApplication virtualenv-clone;
-
-  quartz-wm = callPackage ../servers/x11/quartz-wm {
-    stdenv = clangStdenv;
-  };
 
   xorg =
     let
@@ -10051,8 +10019,6 @@ with pkgs;
     useQt6 = true;
   };
 
-  androguard = with python3.pkgs; toPythonApplication androguard;
-
   dejavu_fonts = lowPrio (callPackage ../data/fonts/dejavu-fonts { });
 
   # solve collision for nix-env before https://github.com/NixOS/nix/pull/815
@@ -10353,8 +10319,6 @@ with pkgs;
   blackbox = callPackage ../applications/version-management/blackbox {
     pinentry = pinentry-curses;
   };
-
-  blender-hip = blender.override { hipSupport = true; };
 
   blucontrol = callPackage ../applications/misc/blucontrol/wrapper.nix {
     inherit (haskellPackages) ghcWithPackages;
@@ -10947,8 +10911,6 @@ with pkgs;
 
   i3-wk-switch = callPackage ../applications/window-managers/i3/wk-switch.nix { };
 
-  kitti3 = python3.pkgs.callPackage ../applications/window-managers/i3/kitti3.nix { };
-
   waybox = callPackage ../by-name/wa/waybox/package.nix {
     wlroots = wlroots_0_17;
   };
@@ -11089,6 +11051,7 @@ with pkgs;
     k3s_1_32
     k3s_1_33
     k3s_1_34
+    k3s_1_35
     ;
   k3s = k3s_1_34;
 
@@ -11234,14 +11197,6 @@ with pkgs;
 
   luddite = with python3Packages; toPythonApplication luddite;
 
-  lutris-unwrapped = python3.pkgs.callPackage ../applications/misc/lutris {
-    inherit (pkgs) meson;
-  };
-  lutris = callPackage ../applications/misc/lutris/fhsenv.nix { };
-  lutris-free = lutris.override {
-    steamSupport = false;
-  };
-
   lxi-tools = callPackage ../tools/networking/lxi-tools { };
   lxi-tools-gui = callPackage ../tools/networking/lxi-tools { withGui = true; };
 
@@ -11342,9 +11297,6 @@ with pkgs;
     withConplay = false;
   };
 
-  # a somewhat more maintained fork of ympd
-  memento = qt6Packages.callPackage ../applications/video/memento { };
-
   mplayer = callPackage ../applications/video/mplayer (
     {
       libdvdnav = libdvdnav_4_2_1;
@@ -11383,8 +11335,6 @@ with pkgs;
 
   ninja_1_11 = callPackage ../by-name/ni/ninja/package.nix { ninjaRelease = "1.11"; };
 
-  opcua-client-gui = libsForQt5.callPackage ../misc/opcua-client-gui { };
-
   ostinato = libsForQt5.callPackage ../applications/networking/ostinato {
     protobuf = protobuf_21;
   };
@@ -11400,8 +11350,6 @@ with pkgs;
   pinegrow = callPackage ../applications/editors/pinegrow { };
 
   pipe-viewer = perlPackages.callPackage ../applications/video/pipe-viewer { };
-
-  playonlinux = callPackage ../applications/misc/playonlinux { stdenv = stdenv_32bit; };
 
   pleroma-bot = python3Packages.callPackage ../development/python-modules/pleroma-bot { };
 
@@ -11712,10 +11660,6 @@ with pkgs;
     fltk = fltk13;
   };
 
-  radiotray-ng = callPackage ../applications/audio/radiotray-ng {
-    wxGTK = wxGTK32;
-  };
-
   rawtherapee = callPackage ../applications/graphics/rawtherapee {
     fftw = fftwSinglePrec;
   };
@@ -11890,10 +11834,6 @@ with pkgs;
     waylandSupport = true;
   };
 
-  syncplay = python3.pkgs.callPackage ../applications/networking/syncplay { };
-
-  syncplay-nogui = syncplay.override { enableGUI = false; };
-
   inherit
     (callPackages ../applications/networking/syncthing {
       inherit (darwin) autoSignDarwinBinariesHook;
@@ -11906,13 +11846,6 @@ with pkgs;
   syncthingtray = kdePackages.callPackage ../applications/misc/syncthingtray {
     # renamed in KF5 -> KF6
     plasma-framework = kdePackages.libplasma;
-  };
-  syncthingtray-minimal = syncthingtray.override {
-    webviewSupport = false;
-    jsSupport = false;
-    kioPluginSupport = false;
-    plasmoidSupport = false;
-    systemdSupport = true;
   };
 
   synergyWithoutGUI = synergy.override { withGUI = false; };
@@ -12687,12 +12620,6 @@ with pkgs;
     pythonSupport = true;
   };
 
-  liquidwar = callPackage ../games/liquidwar {
-    guile = guile_2_0;
-  };
-
-  liquidwar5 = callPackage ../games/liquidwar/5.nix { };
-
   mindustry-wayland = callPackage ../by-name/mi/mindustry/package.nix {
     enableWayland = true;
   };
@@ -12804,8 +12731,6 @@ with pkgs;
 
   steam-run = steam.run;
   steam-run-free = steam.run-free;
-
-  steamback = python3.pkgs.callPackage ../tools/games/steamback { };
 
   protonup-ng = with python3Packages; toPythonApplication protonup-ng;
 
@@ -13729,8 +13654,6 @@ with pkgs;
       haskellPackages.nix-serve-ng
     else
       haskell.lib.compose.justStaticExecutables haskellPackages.nix-serve-ng;
-
-  nix-visualize = python3.pkgs.callPackage ../tools/package-management/nix-visualize { };
 
   nixpkgs-manual = callPackage ../../doc/doc-support/package.nix { };
 

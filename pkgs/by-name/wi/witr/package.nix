@@ -6,13 +6,13 @@
 }:
 buildGoModule (finalAttrs: {
   pname = "witr";
-  version = "0.1.1";
+  version = "0.2.0";
 
   src = fetchFromGitHub {
     owner = "pranshuparmar";
     repo = "witr";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-U93fdcJ6Xdo2Z9WMVCFR2wxo1dhXVFd5MWGTF8B9a3M=";
+    hash = "sha256-gxfoqa7Q1kb9sIN3zwxmjAHQeWdoGNg0yxc5j8unp5g=";
     # populate values that require us to use git. By doing this in postFetch we
     # can delete .git afterwards and maintain better reproducibility of the src.
     leaveDotGit = true;
@@ -37,8 +37,12 @@ buildGoModule (finalAttrs: {
 
   nativeBuildInputs = [ installShellFiles ];
 
+  subPackages = [
+    "cmd/witr"
+  ];
+
   postInstall = ''
-    installManPage docs/witr.1
+    installManPage docs/cli/witr.1
   '';
 
   meta = {
