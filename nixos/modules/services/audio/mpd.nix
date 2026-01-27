@@ -27,7 +27,7 @@ let
       )
     ) a;
   nonBlockSettings = lib.filterAttrs (n: v: !(builtins.isAttrs v || builtins.isList v)) cfg.settings;
-  pureBlockSettings = builtins.removeAttrs cfg.settings (builtins.attrNames nonBlockSettings);
+  pureBlockSettings = removeAttrs cfg.settings (builtins.attrNames nonBlockSettings);
   blocks =
     pureBlockSettings
     // lib.optionalAttrs cfg.fluidsynth {
@@ -411,7 +411,7 @@ in
         lib.concatStringsSep "\n" (
           lib.imap0 (
             i: c:
-            ''${pkgs.replace-secret}/bin/replace-secret '{{password-${toString i}}}' '${c.passwordFile}' /run/mpd/mpd.conf''
+            "${pkgs.replace-secret}/bin/replace-secret '{{password-${toString i}}}' '${c.passwordFile}' /run/mpd/mpd.conf"
           ) cfg.credentials
         )
       );

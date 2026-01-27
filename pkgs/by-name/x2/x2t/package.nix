@@ -9,6 +9,7 @@
   harfbuzz,
   libheif,
   nixosTests,
+  optipng,
   x265,
   libde265,
   icu,
@@ -119,7 +120,9 @@ let
   qmakeFlags = [ ];
   dontStrip = false;
 
-  # Revisions that correspond to onlyoffice-documentserver 9.2.1
+  # x2t is not 'directly' versioned, so we version it after the version
+  # of documentserver it's pulled into as a submodule
+  version = "9.2.1";
   core-rev = "a22f0bfb6032e91f218951ef1c0fc29f6d1ceb36";
   core = fetchFromGitHub {
     owner = "ONLYOFFICE";
@@ -134,8 +137,6 @@ let
     # workaround for https://github.com/NixOS/nixpkgs/issues/477803
     nodejs = nodejs_22;
 
-    #src = /home/aengelen/d/onlyoffice/documentserver/web-apps;
-    #sourceRoot = "/build/web-apps/build";
     src = fetchFromGitHub {
       owner = "ONLYOFFICE";
       repo = "web-apps";
@@ -155,14 +156,23 @@ let
       autoconf
       automake
       grunt-cli
+      optipng
     ];
 
     dontNpmBuild = true;
+
+    preBuild = ''
+      export PRODUCT_VERSION=${version}
+    '';
 
     postBuild = ''
       chmod u+w ..
       mkdir ../deploy
       chmod u+w -R ../apps
+
+      mkdir -p ./node_modules/optipng-bin/vendor
+      ln -s ${optipng}/bin/optipng ./node_modules/optipng-bin/vendor/optipng
+
       grunt --force
     '';
 
@@ -345,6 +355,7 @@ let
   graphics = buildCoreComponent "DesktopEditor/graphics/pro" {
     patches = [
       ./cximage-types.patch
+      ./core-fontengine-custom-fonts-paths.patch
     ];
     buildInputs = [
       unicodeConverter
@@ -452,12 +463,6 @@ let
         --replace-fail "is_tree_valid" "valid_tree"
       chmod u+w $BUILDRT/Common/3dParty/apple/libetonyek/src/lib
       cp $BUILDRT/Common/3dParty/apple/headers/* $BUILDRT/Common/3dParty/apple/libetonyek/src/lib
-    '';
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/lib
-      mv ../build/lib/*/* $out/lib
-      runHook postInstall
     '';
     doCheck = true;
     passthru.tests = buildCoreTests "Apple/test" {
@@ -584,7 +589,6 @@ let
     patches = [
       # https://github.com/ONLYOFFICE/core/pull/1631
       ./doctrenderer-format-security.patch
-      ./doctrenderer-config-dir.patch
       ./doctrenderer-v8-iterator.patch
       ./fontengine-format-security.patch
       ./v8_updates.patch
@@ -714,7 +718,33 @@ let
       runHook preInstall
 
       mkdir -p $out/bin
-      cp $BUILDRT/build/bin/*/* $BUILDRT/build/bin/*/*/* $out/bin
+      find $BUILDRT/build -type f -exec cp {} $out/bin \;
+
+      runHook postInstall
+    '';
+  };
+  allthemesgen = buildCoreComponent "DesktopEditor/allthemesgen" {
+    buildInputs = [
+      unicodeConverter
+      kernel
+      graphics
+      network
+      doctrenderer
+      docxrenderer
+      pdffile
+      xpsfile
+      djvufile
+    ];
+    qmakeFlags = qmakeFlags ++ icuQmakeFlags;
+    preConfigure = ''
+      source ${fixIcu}
+    '';
+    dontStrip = true;
+    installPhase = ''
+      runHook preInstall
+
+      mkdir -p $out/bin
+      find $BUILDRT/build -type f -exec cp {} $out/bin \;
 
       runHook postInstall
     '';
@@ -741,9 +771,7 @@ let
 in
 buildCoreComponent "X2tConverter/build/Qt" {
   pname = "x2t";
-  # x2t is not 'directly' versioned, so we version it after the version
-  # of documentserver it's pulled into as a submodule
-  version = "9.2.1";
+  inherit version;
 
   buildInputs = [
     unicodeConverter
@@ -794,16 +822,15 @@ buildCoreComponent "X2tConverter/build/Qt" {
     mkdir -p $out/bin
     find $BUILDRT/build -type f -exec cp {} $out/bin \;
 
-    mkdir -p $out/etc
-    cat >$out/etc/DoctRenderer.config <<EOF
-          <Settings>
-            <file>${sdkjs}/common/Native/native.js</file>
-            <file>${sdkjs}//common/Native/jquery_native.js</file>
-            <allfonts>${allfonts}/converter/AllFonts.js</allfonts>
-            <file>${web-apps}/vendor/xregexp/xregexp-all-min.js</file>
-            <sdkjs>${sdkjs}</sdkjs>
-            <dictionaries>${dictionaries}</dictionaries>
-          </Settings>
+    cat >$out/bin/DoctRenderer.config <<EOF
+      <Settings>
+        <file>${sdkjs}/common/Native/native.js</file>
+        <file>${sdkjs}/common/Native/jquery_native.js</file>
+        <allfonts>${allfonts}/converter/AllFonts.js</allfonts>
+        <file>${web-apps}/vendor/xregexp/xregexp-all-min.js</file>
+        <sdkjs>${sdkjs}</sdkjs>
+        <dictionaries>${dictionaries}</dictionaries>
+      </Settings>
     EOF
 
     runHook postInstall
@@ -824,7 +851,9 @@ buildCoreComponent "X2tConverter/build/Qt" {
   passthru.components = {
     inherit
       allfontsgen
+      allthemesgen
       allfonts
+      core-fonts
       unicodeConverter
       kernel
       graphics

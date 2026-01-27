@@ -1632,7 +1632,7 @@ let
       {
         exporterConfig = {
           enable = true;
-          metrics-file = "${pkgs.writeText "test.json" ''{}''}";
+          metrics-file = "${pkgs.writeText "test.json" "{}"}";
         };
         exporterTest = ''
           wait_for_unit("prometheus-shelly-exporter.service")
@@ -1733,6 +1733,7 @@ let
               community = "public";
               version = 2;
             };
+            modules.test = { };
           };
         };
         exporterTest = ''
