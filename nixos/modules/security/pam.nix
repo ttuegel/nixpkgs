@@ -1446,7 +1446,7 @@ let
                 control = "optional";
                 modulePath = "${package}/lib/security/pam_xauth.so";
                 settings = {
-                  xauthpath = "${pkgs.xorg.xauth}/bin/xauth";
+                  xauthpath = "${pkgs.xauth}/bin/xauth";
                   systemuser = 99;
                 };
               }
@@ -2249,7 +2249,7 @@ in
       };
     };
 
-    security.pam.enableUMask = lib.mkEnableOption "umask PAM module";
+    security.pam.enableUMask = lib.mkEnableOption "the umask PAM module";
 
     security.pam.enableFscrypt = lib.mkEnableOption ''
       fscrypt, to automatically unlock directories with the user's login password.

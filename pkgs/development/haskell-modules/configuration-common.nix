@@ -713,10 +713,14 @@ with haskellLib;
     hash = "sha256-feGEuALVJ0Zl8zJPIfgEFry9eH/MxA0Aw7zlDq0PC/s=";
   }) super.algebraic-graphs;
 
-  # Relies on DWARF <-> register mappings in GHC, not available for every arch & ABI
-  # (check dwarfReturnRegNo in compiler/GHC/CmmToAsm/Dwarf/Constants.hs, that's where ppc64 elfv1 gives up)
   inspection-testing = overrideCabal (drv: {
-    broken = with pkgs.stdenv.hostPlatform; !(isx86 || (isPower64 && isAbiElfv2) || isAarch64);
+    broken =
+      with pkgs.stdenv.hostPlatform;
+      # Relies on DWARF <-> register mappings in GHC, not available for every arch & ABI
+      # (check dwarfReturnRegNo in compiler/GHC/CmmToAsm/Dwarf/Constants.hs, that's where ppc64 elfv1 gives up)
+      !(isx86 || (isPower64 && isAbiElfv2) || isAarch64)
+      # We compile static with -fexternal-interpreter which is incompatible with plugins
+      || (isStatic && lib.versionAtLeast self.ghc.version "9.10");
   }) super.inspection-testing;
 
   # Too strict bounds on filepath, hpsec, tasty, tasty-quickcheck, transformers
@@ -1854,7 +1858,6 @@ with haskellLib;
       # PATH.
       deps = [
         pkgs.git
-        pkgs.nix
         pkgs.nix-prefetch-git
       ];
     in
@@ -1868,7 +1871,9 @@ with haskellLib;
           wrapProgram "$out/bin/update-nix-fetchgit" --prefix 'PATH' ':' "${lib.makeBinPath deps}"
         '';
       }))
-      (addTestToolDepends deps)
+      # pkgs.nix is not added to the wrapper since we can resonably expect it to be installed
+      # and we don't know which implementation the eventual user prefers
+      (addTestToolDepends (deps ++ [ pkgs.nix ]))
       # Patch for hnix compat.
       (appendPatches [
         (fetchpatch {
@@ -2038,6 +2043,7 @@ with haskellLib;
   cli-git = addBuildTool pkgs.git super.cli-git;
 
   cli-nix = addBuildTools [
+    # Required due to https://github.com/obsidiansystems/cli-nix/issues/11
     pkgs.nix
     pkgs.nix-prefetch-git
   ] super.cli-nix;
@@ -2597,22 +2603,6 @@ with haskellLib;
   lucid-htmx = doJailbreak super.lucid-htmx;
 
   clash-prelude = dontCheck super.clash-prelude;
-
-  krank = appendPatches [
-    # Deal with removed exports in base
-    (pkgs.fetchpatch {
-      name = "krank-issue-97.patch";
-      url = "https://github.com/guibou/krank/commit/f6b676774537f8e2357115fd8cd3c93fb68e8a85.patch";
-      sha256 = "0d85q2x37yhjwp17wmqvblkna7p7vnl7rwdqr3kday46wvdgblgl";
-      excludes = [ ".envrc" ];
-    })
-    # Fix build of tests with http-client >=0.7.16
-    (pkgs.fetchpatch {
-      name = "krank-http-client-0.7.16.patch";
-      url = "https://github.com/guibou/krank/commit/50fd3d08526f3ed6add3352460d3d1ce9dc15f6d.patch";
-      sha256 = "0h15iir2v4pli2b72gv69amxs277xmmzw3wavrix74h9prbs4pms";
-    })
-  ] super.krank;
 
   # 2025-08-06: Upper bounds on containers <0.7 and hedgehog < 1.5 too strict.
   hermes-json = doJailbreak super.hermes-json;

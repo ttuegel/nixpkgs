@@ -19,7 +19,7 @@
   libxkbcommon,
   wayland,
   libglvnd,
-  xorg,
+  libxcb,
   stdenv,
   makeFontsConf,
   vulkan-loader,
@@ -106,7 +106,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "zed-editor";
-  version = "0.220.3";
+  version = "0.221.5";
 
   outputs = [
     "out"
@@ -119,7 +119,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "zed-industries";
     repo = "zed";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-BxGNgJxwX7qY4chi5xaJ8RZnmo80v+9QeZOPTUpsHBc=";
+    hash = "sha256-1q0nwNsPbckGivm9MAXvGX8/SC0ioQVEB93W7Zpobcs=";
   };
 
   postPatch = ''
@@ -139,7 +139,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     rm -r $out/git/*/candle-book/
   '';
 
-  cargoHash = "sha256-pjHJkvdZn5JoL9LSdnmpov8/mGZQKzM5lC4u7MZEsQ4=";
+  cargoHash = "sha256-vmG90W+MNUZ+3IiLltr5ok7h6fP7WfS7gwy3LloIAIw=";
 
   nativeBuildInputs = [
     cmake
@@ -170,7 +170,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     alsa-lib
     libxkbcommon
     wayland
-    xorg.libxcb
+    libxcb
     # required by livekit:
     libGL
     libX11
