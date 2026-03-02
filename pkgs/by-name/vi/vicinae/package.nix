@@ -22,13 +22,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "vicinae";
-  version = "0.19.7";
+  version = "0.20.2";
 
   src = fetchFromGitHub {
     owner = "vicinaehq";
     repo = "vicinae";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-jJhGzVLu8QgMQrhZgJxRYcYwzrG+dKUdo9qWX8KBwnk=";
+    hash = "sha256-mUHV5wFbtNt00XnghklltvJ/LRi+17fluGuFebQ0HEw=";
   };
 
   apiDeps = fetchNpmDeps {
@@ -70,6 +70,7 @@ stdenv.mkDerivation (finalAttrs: {
     glaze
     kdePackages.layer-shell-qt
     kdePackages.qtkeychain
+    kdePackages.syntax-highlighting
     libqalculate
     minizip
     nodejs
