@@ -3,7 +3,6 @@
   stdenv,
 
   buildGoModule,
-  go_1_26,
   fetchFromGitHub,
 
   makeWrapper,
@@ -23,9 +22,9 @@
   tailscale-nginx-auth,
 }:
 
-buildGoModule.override { go = go_1_26; } (finalAttrs: {
+buildGoModule (finalAttrs: {
   pname = "tailscale";
-  version = "1.96.2";
+  version = "1.96.4";
 
   outputs = [
     "out"
@@ -36,7 +35,7 @@ buildGoModule.override { go = go_1_26; } (finalAttrs: {
     owner = "tailscale";
     repo = "tailscale";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-6taTRKYFxCNK7BUnNZ3lljqVS7AeYEfm46gmilf6eEk=";
+    hash = "sha256-VnAEfY8W+2QPnQLvVFJA7/XyvSnppSdRvgAOgpmRFGM=";
   };
 
   vendorHash = "sha256-rhuWEEN+CtumVxOw6Dy/IRxWIrZ2x6RJb6ULYwXCQc4=";
