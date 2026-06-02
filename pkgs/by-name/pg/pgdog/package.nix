@@ -14,16 +14,16 @@ let
 in
 rustPlatform.buildRustPackage.override { inherit stdenv; } (finalAttrs: {
   pname = "pgdog";
-  version = "0.1.39";
+  version = "0.1.42";
 
   src = fetchFromGitHub {
     owner = "pgdogdev";
     repo = "pgdog";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-E12+K9AW5yUuklnCN4v2fK6e1+O7zkThkrHMmTxqsJk=";
+    hash = "sha256-X0UsaToKHWAZzDA/xBoBqtpFSlFdso3tMwci3SD80/I=";
   };
 
-  cargoHash = "sha256-Qnjh9u0DGzA44fIjuNGT7UONNCx+2j3z389tvllbQxM=";
+  cargoHash = "sha256-6iWmNqlUoRLi9HxsX7Vhpu+KIsNrakzG97/Orwt3LOU=";
 
   # Hardcoded paths for C compiler and linker
   postPatch = ''

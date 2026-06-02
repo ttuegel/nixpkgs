@@ -286,6 +286,7 @@
   ./programs/noisetorch.nix
   ./programs/npm.nix
   ./programs/ns-usbloader.nix
+  ./programs/nxdumpclient.nix
   ./programs/oblogout.nix
   ./programs/obs-studio.nix
   ./programs/oddjobd.nix
@@ -295,7 +296,6 @@
   ./programs/pay-respects.nix
   ./programs/plotinus.nix
   ./programs/pmount.nix
-  ./programs/pqos-wrapper.nix
   ./programs/projecteur.nix
   ./programs/proxychains.nix
   ./programs/pulseview.nix
@@ -394,7 +394,6 @@
   ./security/ca.nix
   ./security/chromium-suid-sandbox.nix
   ./security/default.nix
-  ./security/dhparams.nix
   ./security/doas.nix
   ./security/duosec.nix
   ./security/google_oslogin.nix
@@ -687,6 +686,7 @@
   ./services/hardware/lcd.nix
   ./services/hardware/libinput.nix
   ./services/hardware/lirc.nix
+  ./services/hardware/logiops.nix
   ./services/hardware/monado.nix
   ./services/hardware/nvidia-container-toolkit
   ./services/hardware/nvidia-optimus.nix
@@ -732,6 +732,7 @@
   ./services/home-automation/home-assistant.nix
   ./services/home-automation/homebridge.nix
   ./services/home-automation/matter-server.nix
+  ./services/home-automation/matterjs-server.nix
   ./services/home-automation/openthread-border-router.nix
   ./services/home-automation/wyoming/faster-whisper.nix
   ./services/home-automation/wyoming/openwakeword.nix
@@ -1116,7 +1117,6 @@
   ./services/network-filesystems/u9fs.nix
   ./services/network-filesystems/webdav-server-rs.nix
   ./services/network-filesystems/webdav.nix
-  ./services/network-filesystems/xtreemfs.nix
   ./services/network-filesystems/yandex-disk.nix
   ./services/networking/3proxy.nix
   ./services/networking/acme-dns.nix
@@ -1366,6 +1366,7 @@
   ./services/networking/rdnssd.nix
   ./services/networking/realm.nix
   ./services/networking/redsocks.nix
+  ./services/networking/reframe.nix
   ./services/networking/resilio.nix
   ./services/networking/robustirc-bridge.nix
   ./services/networking/rosenpass.nix
@@ -1696,6 +1697,7 @@
   ./services/web-apps/komga.nix
   ./services/web-apps/lanraragi.nix
   ./services/web-apps/lasuite-docs.nix
+  ./services/web-apps/lasuite-drive.nix
   ./services/web-apps/lasuite-meet.nix
   ./services/web-apps/lauti.nix
   ./services/web-apps/lemmy.nix
@@ -1768,6 +1770,7 @@
   ./services/web-apps/rimgo.nix
   ./services/web-apps/rss-bridge.nix
   ./services/web-apps/rsshub.nix
+  ./services/web-apps/rustical.nix
   ./services/web-apps/rutorrent.nix
   ./services/web-apps/screego.nix
   ./services/web-apps/selfoss.nix
@@ -1789,6 +1792,7 @@
   ./services/web-apps/suwayomi-server.nix
   ./services/web-apps/szurubooru.nix
   ./services/web-apps/tabbyapi.nix
+  ./services/web-apps/tranquil-pds.nix
   ./services/web-apps/trilium.nix
   ./services/web-apps/tt-rss.nix
   ./services/web-apps/tuliprox.nix
@@ -1855,7 +1859,6 @@
   ./services/x11/display-managers/xpra.nix
   ./services/x11/extra-layouts.nix
   ./services/x11/fractalart.nix
-  ./services/x11/hardware/cmt.nix
   ./services/x11/hardware/digimend.nix
   ./services/x11/hardware/synaptics.nix
   ./services/x11/hardware/wacom.nix
@@ -1896,6 +1899,7 @@
   ./system/activation/switchable-system.nix
   ./system/activation/top-level.nix
   ./system/boot/binfmt.nix
+  ./system/boot/clevis-luks-askpass.nix
   ./system/boot/clevis.nix
   ./system/boot/emergency-mode.nix
   ./system/boot/grow-partition.nix

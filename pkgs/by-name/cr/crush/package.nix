@@ -11,16 +11,16 @@
 
 buildGo126Module (finalAttrs: {
   pname = "crush";
-  version = "0.62.1";
+  version = "0.70.0";
 
   src = fetchFromGitHub {
     owner = "charmbracelet";
     repo = "crush";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-kPG7NZEZ/uHhyx9GYbIkTmybfvTPuD+TTlWbRFQ0HzA=";
+    hash = "sha256-rLLgGes902mZvya2rcTCNji0FR2AlMzA4vdYieHZIoc=";
   };
 
-  vendorHash = "sha256-XlSHxR10ov0uvnqvu99Ax0kq/R/gnkX8fLaG98tTpe4=";
+  vendorHash = "sha256-3fYDFzBN5lDDnc2rziHOc7SMvesdAevsxIY2xUU3hms=";
 
   ldflags = [
     "-s"
@@ -39,6 +39,7 @@ buildGo126Module (finalAttrs: {
         "TestOpenAIClientStreamChoices"
         "TestGrepWithIgnoreFiles"
         "TestSearchImplementations"
+        "TestDispatch_BinaryPassthroughExecutes"
       ];
     in
     [ "-skip=^${builtins.concatStringsSep "$|^" skippedTests}$" ];

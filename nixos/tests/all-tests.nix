@@ -245,6 +245,7 @@ in
   authelia = runTest ./authelia.nix;
   auto-cpufreq = runTest ./auto-cpufreq.nix;
   autobrr = runTest ./autobrr.nix;
+  autopush-rs = runTest ./autopush-rs.nix;
   autosuspend = runTest ./autosuspend.nix;
   avahi = runTest {
     imports = [ ./avahi.nix ];
@@ -378,6 +379,7 @@ in
   collectd = runTest ./collectd.nix;
   commafeed = runTest ./commafeed.nix;
   connman = runTest ./connman.nix;
+  console = runTest ./console.nix;
   console-xkb-and-i18n = runTest ./console-xkb-and-i18n.nix;
   consul = runTest ./consul.nix;
   consul-template = runTest ./consul-template.nix;
@@ -385,6 +387,7 @@ in
   containers-custom-pkgs = runTest ./containers-custom-pkgs.nix;
   containers-ephemeral = runTest ./containers-ephemeral.nix;
   containers-extra_veth = runTest ./containers-extra_veth.nix;
+  containers-gateway = runTest ./containers-gateway.nix;
   containers-hosts = runTest ./containers-hosts.nix;
   containers-imperative = runTest ./containers-imperative.nix;
   containers-ip = runTest ./containers-ip.nix;
@@ -452,7 +455,6 @@ in
   dependency-track = runTest ./dependency-track.nix;
   devpi-server = runTest ./devpi-server.nix;
   dex-oidc = runTest ./dex-oidc.nix;
-  dhparams = runTest ./dhparams.nix;
   dictd = runTest ./dictd.nix;
   disable-installer-tools = runTest ./disable-installer-tools.nix;
   discourse = runTest {
@@ -467,6 +469,7 @@ in
   dnsdist = import ./dnsdist.nix { inherit pkgs runTest; };
   doas = runTest ./doas.nix;
   docker = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./docker.nix;
+  docker-autoprune = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./docker-autoprune.nix;
   docker-registry = runTest ./docker-registry.nix;
   docker-rootless = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./docker-rootless.nix;
   docker-tools = runTestOn [ "x86_64-linux" ] ./docker-tools.nix;
@@ -491,6 +494,7 @@ in
   drupal = runTest ./drupal.nix;
   dublin-traceroute = runTest ./dublin-traceroute.nix;
   dwl = runTestOn [ "x86_64-linux" "aarch64-linux" ] ./dwl.nix;
+  e57inspector = runTest ./e57inspector.nix;
   early-mount-options = runTest ./early-mount-options.nix;
   earlyoom = runTestOn [ "x86_64-linux" ] ./earlyoom.nix;
   easytier = runTest ./easytier.nix;
@@ -726,6 +730,7 @@ in
     imports = [ ./hbase.nix ];
     _module.args.getPackage = pkgs: pkgs.hbase_2_5;
   };
+  headplane = runTest ./headplane.nix;
   headscale = runTest ./headscale.nix;
   healthchecks = runTest ./web-apps/healthchecks.nix;
   hedgedoc = runTest ./hedgedoc.nix;
@@ -815,8 +820,12 @@ in
   jool = import ./jool.nix { inherit pkgs runTest; };
   jotta-cli = runTest ./jotta-cli.nix;
   k3s = import ./rancher {
-    inherit pkgs runTest;
+    inherit pkgs;
     inherit (pkgs) lib;
+    runTest = runTestOn [
+      "aarch64-linux"
+      "x86_64-linux"
+    ];
     rancherDistro = "k3s";
   };
   kafka = handleTest ./kafka { };
@@ -863,6 +872,7 @@ in
   languagetool = runTest ./languagetool.nix;
   lanraragi = runTest ./lanraragi.nix;
   lasuite-docs = runTest ./web-apps/lasuite-docs.nix;
+  lasuite-drive = runTest ./web-apps/lasuite-drive.nix;
   lasuite-meet = runTest ./web-apps/lasuite-meet.nix;
   latestKernel.login = runTest {
     imports = [ ./login.nix ];
@@ -907,6 +917,7 @@ in
   llama-swap = runTest ./web-servers/llama-swap.nix;
   lldap = runTest ./lldap.nix;
   local-content-share = runTest ./local-content-share.nix;
+  locale = runTest ./locale.nix;
   localsend = runTest ./localsend.nix;
   locate = runTest ./locate.nix;
   login = runTest ./login.nix;
@@ -955,6 +966,7 @@ in
   matrix-synapse-workers = runTest ./matrix/synapse-workers.nix;
   matrix-tuwunel = runTest ./matrix/tuwunel.nix;
   matter-server = runTest ./matter-server.nix;
+  matterjs-server = runTest ./matterjs-server.nix;
   mattermost = handleTest ./mattermost { };
   mautrix-discord = runTest ./matrix/mautrix-discord.nix;
   mautrix-meta-postgres = runTest ./matrix/mautrix-meta-postgres.nix;
@@ -1173,15 +1185,27 @@ in
   octoprint = runTest ./octoprint.nix;
   oddjobd = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./oddjobd.nix { };
   odoo17 = runTest {
-    imports = [ ./odoo.nix ];
+    imports = [ ./odoo/single-process.nix ];
+    _module.args.package = pkgs.odoo17;
+  };
+  odoo17-multiprocess = runTest {
+    imports = [ ./odoo/multi-process.nix ];
     _module.args.package = pkgs.odoo17;
   };
   odoo18 = runTest {
-    imports = [ ./odoo.nix ];
+    imports = [ ./odoo/single-process.nix ];
+    _module.args.package = pkgs.odoo18;
+  };
+  odoo18-multiprocess = runTest {
+    imports = [ ./odoo/multi-process.nix ];
     _module.args.package = pkgs.odoo18;
   };
   odoo19 = runTest {
-    imports = [ ./odoo.nix ];
+    imports = [ ./odoo/single-process.nix ];
+    _module.args.package = pkgs.odoo19;
+  };
+  odoo19-multiprocess = runTest {
+    imports = [ ./odoo/multi-process.nix ];
     _module.args.package = pkgs.odoo19;
   };
   oh-my-zsh = runTest ./oh-my-zsh.nix;
@@ -1369,7 +1393,7 @@ in
   pulseaudio-tcp = runTest ./pulseaudio-tcp.nix;
   pykms = runTest ./pykms.nix;
   qbittorrent = runTest ./qbittorrent.nix;
-  qboot = handleTestOn [ "x86_64-linux" "i686-linux" ] ./qboot.nix { };
+  qboot = runTestOn [ "x86_64-linux" "i686-linux" ] ./qboot.nix;
   qemu-vm-credentials-fwcfg = runTest {
     imports = [ ./qemu-vm-credentials.nix ];
     _module.args.mechanism = "fw_cfg";
@@ -1397,7 +1421,6 @@ in
   radicale = runTest ./radicale.nix;
   radicle = runTest ./radicle.nix;
   radicle-ci-broker = runTest ./radicle-ci-broker.nix;
-  ragnarwm = runTestOn [ "x86_64-linux" "aarch64-linux" ] ./ragnarwm.nix;
   rasdaemon = runTest ./rasdaemon.nix;
   rathole = runTest ./rathole.nix;
   rauc = runTest ./rauc.nix;
@@ -1453,6 +1476,7 @@ in
   rtkit = runTest ./rtkit.nix;
   rtorrent = runTest ./rtorrent.nix;
   rush = runTest ./rush.nix;
+  rustical = runTest ./web-apps/rustical.nix;
   rustls-libssl = runTest ./rustls-libssl.nix;
   rxe = runTest ./rxe.nix;
   sabnzbd = runTest ./sabnzbd.nix;
@@ -1488,7 +1512,8 @@ in
   shoko = import ./shoko.nix { inherit runTest; };
   signal-desktop = runTest ./signal-desktop.nix;
   silverbullet = runTest ./silverbullet.nix;
-  simple = runTest ./simple.nix;
+  simple-container = runTest ./simple-container.nix;
+  simple-vm = runTest ./simple-vm.nix;
   sing-box = runTest ./sing-box.nix;
   sks = runTest ./sks.nix;
   slimserver = runTest ./slimserver.nix;
@@ -1683,6 +1708,7 @@ in
   tracee = handleTestOn [ "x86_64-linux" ] ./tracee.nix { };
   traefik = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./traefik.nix;
   trafficserver = runTest ./trafficserver.nix;
+  tranquil-pds = runTest ./tranquil-pds.nix;
   transfer-sh = runTest ./transfer-sh.nix;
   transmission_4 = runTest ./transmission.nix;
   trezord = runTest ./trezord.nix;
@@ -1737,10 +1763,6 @@ in
     imports = [ ./varnish.nix ];
     _module.args.package = pkgs.varnish60;
   };
-  varnish77 = runTest {
-    imports = [ ./varnish.nix ];
-    _module.args.package = pkgs.varnish77;
-  };
   varnish80 = runTest {
     imports = [ ./varnish.nix ];
     _module.args.package = pkgs.varnish80;
@@ -1754,6 +1776,7 @@ in
   vector = import ./vector { inherit runTest; };
   velocity = runTest ./velocity.nix;
   vengi-tools = runTest ./vengi-tools.nix;
+  veroroute = runTest ./veroroute.nix;
   victorialogs = import ./victorialogs { inherit runTest; };
   victoriametrics = import ./victoriametrics { inherit runTest; };
   victoriatraces = import ./victoriatraces { inherit runTest; };
@@ -1813,6 +1836,7 @@ in
   xterm = runTest ./xterm.nix;
   xxh = runTest ./xxh.nix;
   yarr = runTest ./yarr.nix;
+  yb = pkgs.callPackage ./yb.nix { inherit (pkgs.yb.passthru) ybPivHarnessTests testFixtures; };
   ydotool = import ./ydotool.nix {
     inherit (pkgs) lib;
     inherit runTest;

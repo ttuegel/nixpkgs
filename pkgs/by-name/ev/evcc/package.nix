@@ -17,32 +17,20 @@
 }:
 
 let
-  version = "0.306.0";
+  version = "0.307.2";
 
   src = fetchFromGitHub {
     owner = "evcc-io";
     repo = "evcc";
     tag = version;
-    hash = "sha256-zg/DIh/HKJZraMIGcB2KKxiRQhuSrRDDcAEoL2prhFg=";
+    hash = "sha256-c9SbPF3JCngd4/j8lVS6lGTonj2qdIrTy34+WBsAk0I=";
   };
 
-  vendorHash = "sha256-0X8rzETUgLa83EA/GQnZUrWXUYnAm8H60kk6ZKsH9Yo=";
+  vendorHash = "sha256-sOyx1Ev0UfoI6mOQAWide19Sg/MWJ8VUVftN9psNq5U=";
 
   commonMeta = {
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ hexa ];
-  };
-
-  decorate = buildGo126Module {
-    pname = "evcc-decorate";
-    inherit version src vendorHash;
-
-    subPackages = "cmd/decorate";
-
-    meta = commonMeta // {
-      description = "EVCC decorate helper";
-      homepage = "https://github.com/evcc-io/evcc/tree/master/cmd/decorate";
-    };
   };
 in
 
@@ -52,7 +40,7 @@ buildGo126Module rec {
 
   npmDeps = fetchNpmDeps {
     inherit src;
-    hash = "sha256-PL16KEA5XaJjE5SvziMxdjlG2j7fQutfOoSvruxGJHQ=";
+    hash = "sha256-U7gcAkfw7a0skM91mSAZJIPUPBRfSkyJYVjjVyEyZ4E=";
   };
 
   nativeBuildInputs = [
@@ -62,7 +50,6 @@ buildGo126Module rec {
 
   overrideModAttrs = _: {
     nativeBuildInputs = [
-      decorate
       enumer
       go_1_26
       gokrazy
@@ -97,15 +84,15 @@ buildGo126Module rec {
     let
       skippedTests = [
         # network access
-        "TestOctopusConfigParse"
-        "TestTemplates"
         "TestOcpp"
+        "TestOctopusConfigParse"
+        "TestSessionHandlerTimezoneFilter"
+        "TestTemplates"
       ];
     in
     [ "-skip=^${lib.concatStringsSep "$|^" skippedTests}$" ];
 
   passthru = {
-    inherit decorate;
     tests = {
       inherit (nixosTests) evcc;
     };

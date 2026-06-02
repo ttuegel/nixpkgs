@@ -427,7 +427,7 @@ stdenv.mkDerivation (finalAttrs: {
     # backport fix for https://github.com/python/cpython/issues/95855
     ./platform-triplet-detection.patch
   ]
-  ++ optionals (pythonAtLeast "3.14") [
+  ++ optionals (pythonAtLeast "3.14" && pythonOlder "3.15") [
     # https://github.com/python/cpython/issues/146264
     # https://github.com/python/cpython/pull/146265
     ./3.14/hacl-static-ldeps-for-static-modules.patch
@@ -861,6 +861,7 @@ stdenv.mkDerivation (finalAttrs: {
         "https://docs.python.org/release/${version}/whatsnew/changelog.html"
       else
         "https://docs.python.org/${majorMinor}/whatsnew/changelog.html#python-${dashedVersion}";
+    donationPage = "https://www.python.org/psf/donations/";
     description = "High-level dynamically-typed programming language";
     longDescription = ''
       Python is a remarkably powerful dynamic programming language that

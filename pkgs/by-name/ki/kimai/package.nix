@@ -7,13 +7,13 @@
 
 php.buildComposerProject2 (finalAttrs: {
   pname = "kimai";
-  version = "2.55.0";
+  version = "2.57.0";
 
   src = fetchFromGitHub {
     owner = "kimai";
     repo = "kimai";
     tag = finalAttrs.version;
-    hash = "sha256-p4Y5hCWr5BVOGYUJtFJhhDftm+A/CWxbdBhPgOR1TcY=";
+    hash = "sha256-WbZivDI5xU/pM52yFvG6vMK3LaCjbLoJGNFP3Exb8qc=";
   };
 
   php = php.buildEnv {
@@ -38,7 +38,7 @@ php.buildComposerProject2 (finalAttrs: {
     '';
   };
 
-  vendorHash = "sha256-Vlaqe3FTItRZDiYWzOVDL+q7HZ8TgpiLPFTDzUyL4LY=";
+  vendorHash = "sha256-6WthU0w8V69sDlBjtz2MIavkmyYXWQ+5NflZLGQCLJs=";
 
   composerNoPlugins = false;
   postInstall = ''

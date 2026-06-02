@@ -4,6 +4,7 @@
   callPackage,
   rustPlatform,
   fetchFromGitLab,
+  fetchpatch,
 
   versionCheckHook,
   installShellFiles,
@@ -13,22 +14,22 @@
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "reaction";
-  version = "2.3.0";
+  version = "2.4.0";
 
   src = fetchFromGitLab {
     domain = "framagit.org";
     owner = "ppom";
     repo = "reaction";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-OvNJsR9W5MlicqUpr1aOLJ7pI7H7guq1vAlC/hh1Q2o=";
+    hash = "sha256-Y6scgbcwhg56SQ1DefNtdja+n89Gc5bJUHKHKn2EYwQ=";
   };
 
   patches = [
-    # remove patch in next tagged version
-    ./add-support-for-macos.patch
+    # nftables: fix compilation on aarch64-linux; remove in 2.4.1
+    ./nftables-aarch64-linux-compat.patch
   ];
 
-  cargoHash = "sha256-BOFZlVBKf6fjW1L1J8u7Vf+fzNJHlEtQI6YafDjlZ4U=";
+  cargoHash = "sha256-NAcMpASvphAqjBjbAPWLG5qZbSgdaFC3GvU25exCS3g=";
 
   nativeBuildInputs = [ installShellFiles ];
 
@@ -71,7 +72,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
   passthru = {
     inherit (callPackage ./plugins { }) mkReactionPlugin plugins;
     updateScript = nix-update-script { };
-    tests = nixosTests.reaction;
+    tests = {
+      inherit (nixosTests) reaction;
+    }
+    // finalAttrs.passthru.plugins;
   };
 
   meta = {
