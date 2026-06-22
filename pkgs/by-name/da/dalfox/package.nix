@@ -6,13 +6,13 @@
 
 buildGoModule (finalAttrs: {
   pname = "dalfox";
-  version = "3.0.0";
+  version = "3.1.0";
 
   src = fetchFromGitHub {
     owner = "hahwul";
     repo = "dalfox";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-EYX+nag7aaqm9Saa9w4fbuxyuHxx1TIIgIj/yTKfE98=";
+    hash = "sha256-QV2+eKTMuvt//krGrPrjViIsLiog5i4bzhgq8lgHvR0=";
   };
 
   vendorHash = null;
