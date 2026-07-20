@@ -8,6 +8,7 @@ binaryheap,,,,,,vcunat
 bit32,,,,,5.1,lblasc
 busted,,,,,,
 busted-htest,,,,,,mrcjkb
+canola.nvim,,,,,,saadndm
 cassowary,,,,,,alerque
 cldr,,,,,,alerque
 commons.nvim,,,,,5.1,mrcjkb
@@ -136,6 +137,7 @@ mpack,,,,,,
 neorg,,,,,5.1,GaetanLepage
 neorg-interim-ls,,,,,,
 neotest,,,,,5.1,mrcjkb
+neotest-nix,,,,,,khaneliman
 nginx-lua-prometheus,,,,,,ulysseszhan
 nlua,,,,,,teto
 nui.nvim,,,,,5.1,mrcjkb
