@@ -402,6 +402,21 @@ final: prev: {
     meta.hydraPlatforms = [ ];
   };
 
+  R-nvim = buildVimPlugin {
+    pname = "R.nvim";
+    version = "1.0.0";
+    src = fetchFromGitHub {
+      owner = "R-nvim";
+      repo = "R.nvim";
+      tag = "v1.0.0";
+      hash = "sha256-RWEDjiHOGYULfTvfz8cSdFQREW23xtan9nKfGXD4bJk=";
+      fetchSubmodules = true;
+    };
+    meta.homepage = "https://github.com/R-nvim/R.nvim/";
+    meta.license = getLicenseFromSpdxId "GPL-3.0-only";
+    meta.hydraPlatforms = [ ];
+  };
+
   Recover-vim = buildVimPlugin {
     pname = "Recover.vim";
     version = "0-unstable-2022-09-07";
@@ -3538,6 +3553,20 @@ final: prev: {
     meta.hydraPlatforms = [ ];
   };
 
+  cocci-syntax = buildVimPlugin {
+    pname = "cocci-syntax";
+    version = "0-unstable-2025-03-19";
+    src = fetchFromGitHub {
+      owner = "ahf";
+      repo = "cocci-syntax";
+      rev = "7399561a3e4a08e0f1dfa5288e2ebf112482816c";
+      hash = "sha256-Oah+00qd5MzTfNOi4daP3ibqtb6PflBaMzn0+QDqsj0=";
+    };
+    meta.homepage = "https://github.com/ahf/cocci-syntax/";
+    meta.license = unfree;
+    meta.hydraPlatforms = [ ];
+  };
+
   coconut-vim = buildVimPlugin {
     pname = "coconut.vim";
     version = "0-unstable-2017-10-10";
@@ -4543,6 +4572,20 @@ final: prev: {
       hash = "sha256-fzk/ThE6F0ssfeXTuVyO6KiMQSZz7YLxXwB4lbDz3CA=";
     };
     meta.homepage = "https://github.com/nvimdev/dashboard-nvim/";
+    meta.license = getLicenseFromSpdxId "MIT";
+    meta.hydraPlatforms = [ ];
+  };
+
+  dataform-nvim = buildVimPlugin {
+    pname = "dataform.nvim";
+    version = "0-unstable-2025-06-16";
+    src = fetchFromGitHub {
+      owner = "magal1337";
+      repo = "dataform.nvim";
+      rev = "43a5f9e17275325ae32e5248c6f21636418e2018";
+      hash = "sha256-HA6E9L6U37Btb/dDgtm7du97/fae5IawCSg/nmB/tqg=";
+    };
+    meta.homepage = "https://github.com/magal1337/dataform.nvim/";
     meta.license = getLicenseFromSpdxId "MIT";
     meta.hydraPlatforms = [ ];
   };
@@ -8300,6 +8343,20 @@ final: prev: {
     };
     meta.homepage = "https://github.com/JuliaEditorSupport/julia-vim/";
     meta.license = unfree;
+    meta.hydraPlatforms = [ ];
+  };
+
+  jupynium-nvim = buildVimPlugin {
+    pname = "jupynium.nvim";
+    version = "0.2.7";
+    src = fetchFromGitHub {
+      owner = "kiyoon";
+      repo = "jupynium.nvim";
+      tag = "v0.2.7";
+      hash = "sha256-YLM1XaWeUx4twqaIDDxASP94CYIEf3iT78zmexzRZos=";
+    };
+    meta.homepage = "https://github.com/kiyoon/jupynium.nvim/";
+    meta.license = getLicenseFromSpdxId "MIT";
     meta.hydraPlatforms = [ ];
   };
 
