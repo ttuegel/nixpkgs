@@ -1,0 +1,153 @@
+From b26cabfb26393830282a463fb919c0bd58ed157a Mon Sep 17 00:00:00 2001
+From: Thomas Tuegel <ttuegel@mailbox.org>
+Date: Fri, 14 Aug 2026 14:02:08 -0500
+Subject: [PATCH] fix(coding-agent): in-session model and thinking changes no
+ longer write global defaults
+
+Remove the automatic setDefaultModelAndProvider and setDefaultThinkingLevel calls from setModel, model cycling, and setThinkingLevel so an in-session change only affects that session. Drop the now-dead settingsManager from the model selector. Add a regression test asserting the global defaults stay unchanged.
+---
+ .../coding-agent/src/core/agent-session.ts    |  6 ----
+ .../interactive/components/model-selector.ts  |  6 ----
+ .../src/modes/interactive/interactive-mode.ts |  1 -
+ .../agent-session-model-extension.test.ts     | 30 +++++++++++++++++++
+ 4 files changed, 30 insertions(+), 13 deletions(-)
+
+diff --git a/packages/coding-agent/src/core/agent-session.ts b/packages/coding-agent/src/core/agent-session.ts
+index 1a1228d00..f326a7a63 100644
+--- a/packages/coding-agent/src/core/agent-session.ts
++++ b/packages/coding-agent/src/core/agent-session.ts
+@@ -1592,7 +1592,6 @@ export class AgentSession {
+ 		const thinkingLevel = this._getThinkingLevelForModelSwitch();
+ 		this.agent.state.model = model;
+ 		this.sessionManager.appendModelChange(model.provider, model.id);
+-		this.settingsManager.setDefaultModelAndProvider(model.provider, model.id);
+ 
+ 		// Re-clamp thinking level for new model's capabilities
+ 		this.setThinkingLevel(thinkingLevel);
+@@ -1634,7 +1633,6 @@ export class AgentSession {
+ 		// Apply model
+ 		this.agent.state.model = next.model;
+ 		this.sessionManager.appendModelChange(next.model.provider, next.model.id);
+-		this.settingsManager.setDefaultModelAndProvider(next.model.provider, next.model.id);
+ 
+ 		// Apply thinking level.
+ 		// - Explicit scoped model thinking level overrides current session level
+@@ -1662,7 +1660,6 @@ export class AgentSession {
+ 		const thinkingLevel = this._getThinkingLevelForModelSwitch();
+ 		this.agent.state.model = nextModel;
+ 		this.sessionManager.appendModelChange(nextModel.provider, nextModel.id);
+-		this.settingsManager.setDefaultModelAndProvider(nextModel.provider, nextModel.id);
+ 
+ 		// Re-clamp thinking level for new model's capabilities
+ 		this.setThinkingLevel(thinkingLevel);
+@@ -1693,9 +1690,6 @@ export class AgentSession {
+ 
+ 		if (isChanging) {
+ 			this.sessionManager.appendThinkingLevelChange(effectiveLevel);
+-			if (this.supportsThinking() || effectiveLevel !== "off") {
+-				this.settingsManager.setDefaultThinkingLevel(effectiveLevel);
+-			}
+ 			this._emit({ type: "thinking_level_changed", level: effectiveLevel });
+ 			void this._extensionRunner.emit({
+ 				type: "thinking_level_select",
+diff --git a/packages/coding-agent/src/modes/interactive/components/model-selector.ts b/packages/coding-agent/src/modes/interactive/components/model-selector.ts
+index 1d5e58b12..efa96ffa4 100644
+--- a/packages/coding-agent/src/modes/interactive/components/model-selector.ts
++++ b/packages/coding-agent/src/modes/interactive/components/model-selector.ts
+@@ -10,7 +10,6 @@ import {
+ 	type TUI,
+ } from "@earendil-works/pi-tui";
+ import type { ModelRuntime } from "../../../core/model-runtime.ts";
+-import type { SettingsManager } from "../../../core/settings-manager.ts";
+ import { refreshModelCatalogs } from "../model-catalog-refresh.ts";
+ import { getModelSelectorSearchText } from "../model-search.ts";
+ import { theme } from "../theme/theme.ts";
+@@ -52,7 +51,6 @@ export class ModelSelectorComponent extends Container implements Focusable {
+ 	private filteredModels: ModelItem[] = [];
+ 	private selectedIndex: number = 0;
+ 	private currentModel?: Model<any>;
+-	private settingsManager: SettingsManager;
+ 	private modelRuntime: ModelRuntime;
+ 	private onSelectCallback: (model: Model<any>) => void;
+ 	private onCancelCallback: () => void;
+@@ -71,7 +69,6 @@ export class ModelSelectorComponent extends Container implements Focusable {
+ 	constructor(
+ 		tui: TUI,
+ 		currentModel: Model<any> | undefined,
+-		settingsManager: SettingsManager,
+ 		modelRuntime: ModelRuntime,
+ 		scopedModels: ReadonlyArray<ScopedModelItem>,
+ 		onSelect: (model: Model<any>) => void,
+@@ -82,7 +79,6 @@ export class ModelSelectorComponent extends Container implements Focusable {
+ 
+ 		this.tui = tui;
+ 		this.currentModel = currentModel;
+-		this.settingsManager = settingsManager;
+ 		this.modelRuntime = modelRuntime;
+ 		this.scopedModels = scopedModels;
+ 		this.scope = scopedModels.length > 0 ? "scoped" : "all";
+@@ -363,8 +359,6 @@ export class ModelSelectorComponent extends Container implements Focusable {
+ 
+ 	private handleSelect(model: Model<any>): void {
+ 		this.dispose();
+-		// Save as new default
+-		this.settingsManager.setDefaultModelAndProvider(model.provider, model.id);
+ 		this.onSelectCallback(model);
+ 	}
+ 
+diff --git a/packages/coding-agent/src/modes/interactive/interactive-mode.ts b/packages/coding-agent/src/modes/interactive/interactive-mode.ts
+index 6d5e6b884..f41c70fad 100644
+--- a/packages/coding-agent/src/modes/interactive/interactive-mode.ts
++++ b/packages/coding-agent/src/modes/interactive/interactive-mode.ts
+@@ -4784,7 +4784,6 @@ export class InteractiveMode {
+ 			const selector = new ModelSelectorComponent(
+ 				this.ui,
+ 				this.session.model,
+-				this.settingsManager,
+ 				this.session.modelRuntime,
+ 				this.session.scopedModels,
+ 				async (model) => {
+diff --git a/packages/coding-agent/test/suite/agent-session-model-extension.test.ts b/packages/coding-agent/test/suite/agent-session-model-extension.test.ts
+index b334b1232..98ef6153d 100644
+--- a/packages/coding-agent/test/suite/agent-session-model-extension.test.ts
++++ b/packages/coding-agent/test/suite/agent-session-model-extension.test.ts
+@@ -44,6 +44,36 @@ describe("AgentSession model and extension characterization", () => {
+ 		).toEqual([`${nextModel.provider}/${nextModel.id}`]);
+ 	});
+ 
++	it("setModel and setThinkingLevel do not change the global default settings", async () => {
++		const harness = await createHarness({
++			models: [
++				{ id: "faux-1", name: "One", reasoning: true },
++				{ id: "faux-2", name: "Two", reasoning: true },
++			],
++		});
++		harnesses.push(harness);
++		const nextModel = harness.getModel("faux-2")!;
++
++		expect(harness.settingsManager.getDefaultModel()).toBeUndefined();
++		expect(harness.settingsManager.getDefaultProvider()).toBeUndefined();
++		expect(harness.settingsManager.getDefaultThinkingLevel()).toBeUndefined();
++
++		await harness.session.setModel(nextModel);
++		harness.session.setThinkingLevel("high");
++
++		// Session-local state and session entries DID change.
++		expect(harness.session.model?.id).toBe("faux-2");
++		expect(harness.session.thinkingLevel).toBe("high");
++		const entries = harness.sessionManager.getEntries();
++		expect(entries.some((entry) => entry.type === "model_change")).toBe(true);
++		expect(entries.some((entry) => entry.type === "thinking_level_change")).toBe(true);
++
++		// Global defaults are UNCHANGED.
++		expect(harness.settingsManager.getDefaultModel()).toBeUndefined();
++		expect(harness.settingsManager.getDefaultProvider()).toBeUndefined();
++		expect(harness.settingsManager.getDefaultThinkingLevel()).toBeUndefined();
++	});
++
+ 	it("cycles through scoped models and preserves the scoped thinking preference", async () => {
+ 		const harness = await createHarness({
+ 			models: [
+-- 
+2.55.0
+
