@@ -582,6 +582,8 @@ self: super: with self; {
 
   aiotedee = callPackage ../development/python-modules/aiotedee { };
 
+  aiothreads = callPackage ../development/python-modules/aiothreads { };
+
   aiotools = callPackage ../development/python-modules/aiotools { };
 
   aiotractive = callPackage ../development/python-modules/aiotractive { };
@@ -1998,6 +2000,10 @@ self: super: with self; {
     callPackage ../development/python-modules/azure-mgmt-resource-deploymentstacks
       { };
 
+  azure-mgmt-resource-subscriptions =
+    callPackage ../development/python-modules/azure-mgmt-resource-subscriptions
+      { };
+
   azure-mgmt-resource-templatespecs =
     callPackage ../development/python-modules/azure-mgmt-resource-templatespecs
       { };
@@ -2228,6 +2234,8 @@ self: super: with self; {
   bayespy = callPackage ../development/python-modules/bayespy { };
 
   bbox = callPackage ../development/python-modules/bbox { };
+
+  bbpb = callPackage ../development/python-modules/bbpb { };
 
   bc-detect-secrets = callPackage ../development/python-modules/bc-detect-secrets { };
 
@@ -3760,8 +3768,6 @@ self: super: with self; {
   croniter = callPackage ../development/python-modules/croniter { };
 
   cronsim = callPackage ../development/python-modules/cronsim { };
-
-  crontab = callPackage ../development/python-modules/crontab { };
 
   cross-web = callPackage ../development/python-modules/cross-web { };
 
@@ -5739,6 +5745,8 @@ self: super: with self; {
 
   explorerscript = callPackage ../development/python-modules/explorerscript { };
 
+  expression = callPackage ../development/python-modules/expression { };
+
   exrex = callPackage ../development/python-modules/exrex { };
 
   extension-helpers = callPackage ../development/python-modules/extension-helpers { };
@@ -6002,6 +6010,8 @@ self: super: with self; {
   fenics-ufl = callPackage ../development/python-modules/fenics-ufl { };
 
   ffcv = callPackage ../development/python-modules/ffcv { };
+
+  ffmpeg-normalize = callPackage ../development/python-modules/ffmpeg-normalize { };
 
   ffmpeg-progress-yield = callPackage ../development/python-modules/ffmpeg-progress-yield { };
 
@@ -8088,8 +8098,6 @@ self: super: with self; {
 
   hypothesis-jsonschema = callPackage ../development/python-modules/hypothesis-jsonschema { };
 
-  hypothesis_6_136 = callPackage ../development/python-modules/hypothesis/hypothesis_6_136.nix { };
-
   hypothesmith = callPackage ../development/python-modules/hypothesmith { };
 
   hyppo = callPackage ../development/python-modules/hyppo { };
@@ -8317,6 +8325,8 @@ self: super: with self; {
 
   infinity = callPackage ../development/python-modules/infinity { };
 
+  infisicalsdk = callPackage ../development/python-modules/infisicalsdk { };
+
   inflate64 = callPackage ../development/python-modules/inflate64 { };
 
   inflect = callPackage ../development/python-modules/inflect { };
@@ -8534,6 +8544,8 @@ self: super: with self; {
   iso3166 = callPackage ../development/python-modules/iso3166 { };
 
   iso4217 = callPackage ../development/python-modules/iso4217 { };
+
+  iso639-lang = callPackage ../development/python-modules/iso639-lang { };
 
   iso8601 = callPackage ../development/python-modules/iso8601 { };
 
@@ -10822,6 +10834,8 @@ self: super: with self; {
 
   miniupnpc = callPackage ../development/python-modules/miniupnpc { };
 
+  mintotp = callPackage ../development/python-modules/mintotp { };
+
   mip = callPackage ../development/python-modules/mip { };
 
   mir-eval = callPackage ../development/python-modules/mir-eval { };
@@ -11882,6 +11896,8 @@ self: super: with self; {
 
   nest-asyncio = callPackage ../development/python-modules/nest-asyncio { };
 
+  nest-asyncio2 = callPackage ../development/python-modules/nest-asyncio2 { };
+
   nested-lookup = callPackage ../development/python-modules/nested-lookup { };
 
   nested-multipart-parser = callPackage ../development/python-modules/nested-multipart-parser { };
@@ -11893,50 +11909,6 @@ self: super: with self; {
   netapp-lib = callPackage ../development/python-modules/netapp-lib { };
 
   netapp-ontap = callPackage ../development/python-modules/netapp-ontap { };
-
-  netbox-attachments =
-    callPackage ../by-name/ne/netbox_4_5/plugins/netbox-attachments/package.nix
-      { };
-
-  netbox-bgp = callPackage ../by-name/ne/netbox_4_5/plugins/netbox-bgp/package.nix { };
-
-  netbox-contextmenus =
-    callPackage ../by-name/ne/netbox_4_5/plugins/netbox-contextmenus/package.nix
-      { };
-
-  netbox-contract = callPackage ../by-name/ne/netbox_4_5/plugins/netbox-contract/package.nix { };
-
-  netbox-dns = callPackage ../by-name/ne/netbox_4_5/plugins/netbox-dns/package.nix { };
-
-  netbox-documents = callPackage ../by-name/ne/netbox_4_5/plugins/netbox-documents/package.nix { };
-
-  netbox-floorplan-plugin =
-    callPackage ../by-name/ne/netbox_4_5/plugins/netbox-floorplan-plugin/package.nix
-      { };
-
-  netbox-interface-synchronization =
-    callPackage ../by-name/ne/netbox_4_5/plugins/netbox-interface-synchronization/package.nix
-      { };
-
-  netbox-napalm-plugin =
-    callPackage ../by-name/ne/netbox_4_5/plugins/netbox-napalm-plugin/package.nix
-      { };
-
-  netbox-plugin-prometheus-sd =
-    callPackage ../by-name/ne/netbox_4_5/plugins/netbox-plugin-prometheus-sd/package.nix
-      { };
-
-  netbox-qrcode = callPackage ../by-name/ne/netbox_4_5/plugins/netbox-qrcode/package.nix { };
-
-  netbox-reorder-rack =
-    callPackage ../by-name/ne/netbox_4_5/plugins/netbox-reorder-rack/package.nix
-      { };
-
-  netbox-routing = callPackage ../by-name/ne/netbox_4_5/plugins/netbox-routing/package.nix { };
-
-  netbox-topology-views =
-    callPackage ../by-name/ne/netbox_4_5/plugins/netbox-topology-views/package.nix
-      { };
 
   netcdf4 = callPackage ../development/python-modules/netcdf4 { };
 
@@ -12175,8 +12147,6 @@ self: super: with self; {
   npe2 = callPackage ../development/python-modules/npe2 { };
 
   nplusone = callPackage ../development/python-modules/nplusone { };
-
-  nptyping = callPackage ../development/python-modules/nptyping { };
 
   npyscreen = callPackage ../development/python-modules/npyscreen { };
 
@@ -13432,6 +13402,8 @@ self: super: with self; {
 
   pgspecial = callPackage ../development/python-modules/pgspecial { };
 
+  pgsrip = callPackage ../development/python-modules/pgsrip { };
+
   pgvector = callPackage ../development/python-modules/pgvector { };
 
   phart = callPackage ../development/python-modules/phart { };
@@ -13714,7 +13686,7 @@ self: super: with self; {
   };
 
   plover_5 = callPackage ../development/python-modules/plover/5.nix {
-    inherit (pkgs.qt6) qtbase wrapQtAppsHook;
+    inherit (pkgs.qt6) qtbase wrapQtAppsHook qtsvg;
   };
 
   pluggy = callPackage ../development/python-modules/pluggy { };
@@ -14427,6 +14399,8 @@ self: super: with self; {
 
   pyasn1 = callPackage ../development/python-modules/pyasn1 { };
 
+  pyasn1-alt-modules = callPackage ../development/python-modules/pyasn1-alt-modules { };
+
   pyasn1-modules = callPackage ../development/python-modules/pyasn1-modules { };
 
   pyasuswrt = callPackage ../development/python-modules/pyasuswrt { };
@@ -14695,6 +14669,8 @@ self: super: with self; {
 
   pydantic-settings = callPackage ../development/python-modules/pydantic-settings { };
 
+  pydantic-xml = callPackage ../development/python-modules/pydantic-xml { };
+
   pydantic-zarr = callPackage ../development/python-modules/pydantic-zarr { };
 
   pydantic_1 = callPackage ../development/python-modules/pydantic/1.nix { };
@@ -14878,6 +14854,8 @@ self: super: with self; {
   pyexcel-xls = callPackage ../development/python-modules/pyexcel-xls { };
 
   pyexiftool = callPackage ../development/python-modules/pyexiftool { };
+
+  pyexiv2 = callPackage ../development/python-modules/pyexiv2 { };
 
   pyexpect = callPackage ../development/python-modules/pyexpect { };
 
@@ -16644,6 +16622,8 @@ self: super: with self; {
 
   pytest-shutil = callPackage ../development/python-modules/pytest-shutil { };
 
+  pytest-skip-slow = callPackage ../development/python-modules/pytest-skip-slow { };
+
   pytest-smtpd = callPackage ../development/python-modules/pytest-smtpd { };
 
   pytest-snapshot = callPackage ../development/python-modules/pytest-snapshot { };
@@ -17197,8 +17177,6 @@ self: super: with self; {
   python-uinput = callPackage ../development/python-modules/python-uinput { };
 
   python-ulid = callPackage ../development/python-modules/python-ulid { };
-
-  python-unrar = callPackage ../development/python-modules/python-unrar { inherit (pkgs) unrar; };
 
   python-utils = callPackage ../development/python-modules/python-utils { };
 
@@ -18073,6 +18051,8 @@ self: super: with self; {
   retrying = callPackage ../development/python-modules/retrying { };
 
   returns = callPackage ../development/python-modules/returns { };
+
+  reusables = callPackage ../development/python-modules/reusables { };
 
   reuse = callPackage ../development/python-modules/reuse { };
 
@@ -18952,6 +18932,8 @@ self: super: with self; {
 
   simber = callPackage ../development/python-modules/simber { };
 
+  simp-sexp = callPackage ../development/python-modules/simp-sexp { };
+
   simpful = callPackage ../development/python-modules/simpful { };
 
   simple-dftd3 = callPackage ../development/libraries/science/chemistry/simple-dftd3/python.nix {
@@ -19430,6 +19412,8 @@ self: super: with self; {
 
   specfile = callPackage ../development/python-modules/specfile { };
 
+  specialized-turbo = callPackage ../development/python-modules/specialized-turbo { };
+
   spectra = callPackage ../development/python-modules/spectra { };
 
   spectral-cube = callPackage ../development/python-modules/spectral-cube { };
@@ -19823,6 +19807,8 @@ self: super: with self; {
   stackit-objectstorage = callPackage ../development/python-modules/stackit-objectstorage { };
 
   stackit-resourcemanager = callPackage ../development/python-modules/stackit-resourcemanager { };
+
+  stackit-ske = callPackage ../development/python-modules/stackit-ske { };
 
   stackprinter = callPackage ../development/python-modules/stackprinter { };
 
@@ -20758,8 +20744,8 @@ self: super: with self; {
         # Tcl/Tk 9.0 support in Tkinter is not quite ready yet:
         # - https://github.com/python/cpython/issues/124111
         # - https://github.com/python/cpython/issues/104568
-        tcl = pkgs.tcl-8_6;
-        tk = pkgs.tk-8_6;
+        tcl = if pythonAtLeast "3.14" then pkgs.tcl-9_0 else pkgs.tcl-8_6;
+        tk = if pythonAtLeast "3.14" then pkgs.tk-9_0 else pkgs.tk-8_6;
       };
 
   tkinter-gl = callPackage ../development/python-modules/tkinter-gl { };
@@ -20964,6 +20950,8 @@ self: super: with self; {
   trackpy = callPackage ../development/python-modules/trackpy { };
 
   trafilatura = callPackage ../development/python-modules/trafilatura { };
+
+  trailbase = callPackage ../development/python-modules/trailbase { inherit (pkgs) trailbase; };
 
   trailrunner = callPackage ../development/python-modules/trailrunner { };
 
@@ -21943,6 +21931,8 @@ self: super: with self; {
   unix-ar = callPackage ../development/python-modules/unix-ar { };
 
   unpaddedbase64 = callPackage ../development/python-modules/unpaddedbase64 { };
+
+  unrar = callPackage ../development/python-modules/unrar { inherit (pkgs) unrar; };
 
   unrardll = callPackage ../development/python-modules/unrardll { };
 
