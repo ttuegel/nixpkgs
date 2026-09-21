@@ -967,7 +967,6 @@
   ./services/misc/paisa.nix
   ./services/misc/paperless.nix
   ./services/misc/persistent-evdev.nix
-  ./services/misc/pghero.nix
   ./services/misc/pinchflat.nix
   ./services/misc/pinnwand.nix
   ./services/misc/plex.nix
@@ -1002,7 +1001,6 @@
   ./services/misc/serviio.nix
   ./services/misc/shelfmark.nix
   ./services/misc/shoko.nix
-  ./services/misc/sickbeard.nix
   ./services/misc/snapper.nix
   ./services/misc/soft-serve.nix
   ./services/misc/spice-autorandr.nix
@@ -1354,6 +1352,7 @@
   ./services/networking/nebula-lighthouse-service.nix
   ./services/networking/nebula.nix
   ./services/networking/netbird.nix
+  ./services/networking/netbird/netbird-relay.nix
   ./services/networking/netbird/server.nix
   ./services/networking/netclient.nix
   ./services/networking/netfoil.nix
@@ -1546,6 +1545,7 @@
   ./services/search/manticore.nix
   ./services/search/meilisearch.nix
   ./services/search/nominatim.nix
+  ./services/search/opensearch-dashboards.nix
   ./services/search/opensearch.nix
   ./services/search/qdrant.nix
   ./services/search/quickwit.nix
