@@ -333,7 +333,7 @@ let
         lib.mapAttrsToList (tag: share: ''
           ${lib.getExe hostPkgs.virtiofsd} \
             --socket-path="$NIX_VIRTIOFS_DIR"/"${tag}" \
-            --shared-dir="${share.source}" \
+            --shared-dir="$(readlink -f "${share.source}")" \
             ${if share.writable then "--writeback" else "--readonly"} \
             --sandbox=none \
             --seccomp=none \
@@ -754,6 +754,7 @@ in
       enableSharedMemory = mkOption {
         type = types.bool;
         default = useVirtiofs; # Need shared memory for virtiofs: <https://www.qemu.org/docs/master/system/devices/virtio/vhost-user.html#shared-memory-object>
+        defaultText = lib.literalExpression "hostPkgs.stdenv.hostPlatform.isLinux";
         description = "Enable shared memory";
       };
 
