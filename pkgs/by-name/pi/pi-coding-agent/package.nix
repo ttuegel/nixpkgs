@@ -70,7 +70,10 @@ buildNpmPackage (finalAttrs: {
 
   # npm workspace symlinks in the output point into packages/ which
   # doesn't exist there. Replace runtime deps with built content and
-  # delete the rest.
+  # delete the rest. The bundled CLI (dist/bundle/) inlines these, but the
+  # unbundled dist/index.js that extensions and subagent runners import
+  # resolves them from node_modules, so every runtime workspace dependency
+  # of packages/coding-agent must be listed here.
   postInstall = ''
     local nm="$out/lib/node_modules/pi-monorepo/node_modules"
 
@@ -79,6 +82,8 @@ buildNpmPackage (finalAttrs: {
               @earendil-works/pi-ai:packages/ai \
               @earendil-works/pi-agent-core:packages/agent \
               @earendil-works/pi-client:packages/client \
+              @earendil-works/pi-codemode:packages/codemode \
+              @earendil-works/pi-mcp:packages/mcp \
               @earendil-works/pi-protocol:packages/protocol \
               @earendil-works/pi-telemetry:packages/telemetry \
               @earendil-works/pi-tui:packages/tui; do
