@@ -32,7 +32,7 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "omp";
-  version = "18.5.1";
+  version = "18.8.9";
 
   strictDeps = true;
   __structuredAttrs = true;
@@ -41,12 +41,12 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "can1357";
     repo = "oh-my-pi";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-mEJU2kBFDVNAs11Kk8QXcsZGRzCGAaXNqU4Ins54+aI=";
+    hash = "sha256-t3OZP4E0mWFJU0RW3OMcGU2G52p5uasQdVPhITHnZec=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit (finalAttrs) src;
-    hash = "sha256-TIH7yB9pOcoQohJq8l26ObGNMHKxO7o3sT/4JC3JUzM=";
+    hash = "sha256-fiKnCLgcEPZ+WtMD6oBNJfzXHW28y/NN7KOo9oIKMWE=";
   };
 
   postPatch = ''
@@ -91,7 +91,7 @@ stdenv.mkDerivation (finalAttrs: {
     # Prevents breaking symlinks in node_modules
     dontFixup = true;
 
-    outputHash = "sha256-IK2D+/Gfkd5pJx7gnFKhgoLzgG5B+K5/if58Cx0+pP4=";
+    outputHash = "sha256-t5eagYY2sg+Yf2fBadrd72+lkrF06aaoTRfvzkZHGjM=";
     outputHashMode = "recursive";
   };
 

@@ -1047,41 +1047,6 @@ with pkgs;
 
   ### APPLICATIONS/VERSION-MANAGEMENT
 
-  # The full-featured Git.
-  gitFull = git.override {
-    svnSupport = stdenv.buildPlatform == stdenv.hostPlatform;
-    guiSupport = true;
-    sendEmailSupport = stdenv.buildPlatform == stdenv.hostPlatform;
-    withSsh = true;
-    withLibsecret = !stdenv.hostPlatform.isDarwin;
-  };
-
-  # Git with SVN support, but without GUI.
-  gitSVN = lowPrio (git.override { svnSupport = true; });
-
-  git-doc =
-    # doc attribute is not present at least for pkgsLLVM
-    if (gitFull ? doc) then
-      lib.addMetaAttrs {
-        description = "Additional documentation for Git";
-        longDescription = ''
-          This package contains additional documentation (HTML and text files) that
-          is referenced in the man pages of Git.
-        '';
-      } gitFull.doc
-    else
-      throw "'git-doc' can't be evaluated as 'gitFull' does not expose 'doc' attribute";
-
-  gitMinimal = git.override {
-    withManual = false;
-    osxkeychainSupport = false;
-    pythonSupport = false;
-    perlSupport = false;
-    rustSupport = false; # Needed for bootstrap
-    withpcre2 = false;
-    curl = if stdenv.hostPlatform.isFreeBSD then curlMinimal else curl; # Needed for FreeBSD bootstrap
-  };
-
   bump2version = with python3Packages; toPythonApplication bump2version;
 
   datalad = with python3Packages; toPythonApplication datalad;
@@ -1440,8 +1405,6 @@ with pkgs;
     charles4
     charles5
     ;
-
-  libtensorflow = python3.pkgs.tensorflow-build.libtensorflow;
 
   libtorch-bin = callPackage ../development/libraries/science/math/libtorch/bin.nix { };
 
@@ -1879,7 +1842,7 @@ with pkgs;
 
   cudaPackages_13 = cudaPackages_13_4;
 
-  cudaPackages = recurseIntoAttrs cudaPackages_12;
+  cudaPackages = recurseIntoAttrs cudaPackages_13;
 
   dconf2nix = callPackage ../development/tools/haskell/dconf2nix { };
 
@@ -4378,9 +4341,6 @@ with pkgs;
     luajit_openresty
     ;
 
-  lua5 = lua5_2_compat;
-  lua = lua5;
-
   lua51Packages = recurseIntoAttrs lua5_1.pkgs;
   lua52Packages = recurseIntoAttrs lua5_2.pkgs;
   lua53Packages = recurseIntoAttrs lua5_3.pkgs;
@@ -4388,12 +4348,10 @@ with pkgs;
   lua55Packages = recurseIntoAttrs lua5_5.pkgs;
   luajitPackages = recurseIntoAttrs luajit.pkgs;
 
-  luaPackages = lua52Packages;
-
   luajit = if stdenv.hostPlatform.isRiscV64 then luajit_openresty else luajit_2_1;
 
-  luarocks = luaPackages.luarocks;
-  luarocks-nix = luaPackages.luarocks-nix;
+  luarocks = lua52Packages.luarocks;
+  luarocks-nix = lua52Packages.luarocks-nix;
 
   ### END OF LUA
 
@@ -4606,8 +4564,16 @@ with pkgs;
   };
 
   tcl = tcl-8_6;
-  tcl-8_6 = callPackage ../development/interpreters/tcl/8.6.nix { };
-  tcl-9_0 = callPackage ../development/interpreters/tcl/9.0.nix { };
+  inherit
+    ({
+      tcl-8_6 = callPackage ../development/interpreters/tcl/8.6.nix { };
+      tcl-9_0 = callPackage ../development/interpreters/tcl/9.0.nix { };
+      tcl-9_1 = callPackage ../development/interpreters/tcl/9.1.nix { };
+    })
+    tcl-8_6
+    tcl-9_0
+    tcl-9_1
+    ;
 
   tclPackages = dontRecurseIntoAttrs tcl8Packages;
   # We don't need minor-versioned package sets thanks to the tcl stubs mechanism.
@@ -5196,7 +5162,7 @@ with pkgs;
 
   radare2 = callPackage ../development/tools/analysis/radare2 (
     {
-      lua = lua5;
+      lua = lua5_2_compat;
     }
     // (config.radare or { })
   );
@@ -5385,6 +5351,7 @@ with pkgs;
     boost189
     boost190
     boost191
+    boost192
     ;
 
   boost = boost191;
@@ -6620,9 +6587,16 @@ with pkgs;
   tinyxml = callPackage ../development/libraries/tinyxml/2.6.2.nix { };
 
   tk = tk-8_6;
-
-  tk-9_0 = callPackage ../development/libraries/tk/9.0.nix { tcl = tcl-9_0; };
-  tk-8_6 = callPackage ../development/libraries/tk/8.6.nix { };
+  inherit
+    ({
+      tk-8_6 = callPackage ../development/libraries/tk/8.6.nix { };
+      tk-9_0 = callPackage ../development/libraries/tk/9.0.nix { tcl = tcl-9_0; };
+      tk-9_1 = callPackage ../development/libraries/tk/9.1.nix { tcl = tcl-9_1; };
+    })
+    tk-8_6
+    tk-9_0
+    tk-9_1
+    ;
 
   tpm2-tss = callPackage ../development/libraries/tpm2-tss {
     autoreconfHook = buildPackages.autoreconfHook269;
@@ -7487,6 +7461,8 @@ with pkgs;
   virtualenv = with python3Packages; toPythonApplication virtualenv;
 
   virtualenv-clone = with python3Packages; toPythonApplication virtualenv-clone;
+
+  whisparr = whisparr_2;
 
   mkfontdir = mkfontscale;
   xcbproto = xcb-proto;
@@ -9166,9 +9142,6 @@ with pkgs;
   thunderbird-153-unwrapped = thunderbirdPackages.thunderbird-153;
   thunderbird-153 = wrapThunderbird thunderbirdPackages.thunderbird-153 { };
 
-  thunderbird-140-unwrapped = thunderbirdPackages.thunderbird-140;
-  thunderbird-140 = wrapThunderbird thunderbirdPackages.thunderbird-140 { };
-
   thunderbird-bin = thunderbird-latest-bin;
   thunderbird-latest-bin = wrapThunderbird thunderbird-latest-bin-unwrapped {
     pname = "thunderbird-bin";
@@ -9576,7 +9549,7 @@ with pkgs;
     withGui = false;
   };
 
-  napari = with python312Packages; toPythonApplication napari;
+  napari = with python3Packages; toPythonApplication napari;
 
   pycoin = with python3Packages; toPythonApplication pycoin;
 
@@ -9763,9 +9736,7 @@ with pkgs;
 
   openraPackages = recurseIntoAttrs (callPackage ../by-name/op/openra/engines { });
 
-  papermcServers = callPackages ../games/papermc { };
-
-  papermc = papermcServers.papermc;
+  papermcServers = callPackage ../by-name/pa/papermc/versions.nix { };
 
   pokerth-server = pokerth.override { target = "server"; };
 
