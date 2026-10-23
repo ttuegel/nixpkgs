@@ -24,9 +24,6 @@
   pytestCheckHook,
   util-linux,
   pyglet,
-
-  # passthru
-  cuda-bindings,
 }:
 
 let
@@ -34,13 +31,13 @@ let
 
   cudaLibPaths = {
     libcuda =
-      # Use cuda_compat to provide libcuda.so on pre-Thor Jetsons
+      # Use cuda_compat to provide libcuda.so from its `compat` directory
       if (cudaPackages.cuda_compat.meta.available or false) then
-        cudaPackages.cuda_compat
+        "${cudaPackages.cuda_compat}/compat"
 
       # Else, use the host CUDA driver library
       else
-        addDriverRunpath.driverLink;
+        "${addDriverRunpath.driverLink}/lib";
     libcudart = lib.getLib cudaPackages.cuda_cudart;
     # libcudla is only available on Xavier and Orin Jetson devices
     libcudla =
@@ -87,6 +84,16 @@ buildPythonPackage (finalAttrs: {
     owner = "NVIDIA";
     repo = "cuda-python";
     tag = "v${finalAttrs.version}";
+    # GitHub expands the export-subst'd .git_archival.txt when generating the tarball. Its ref-names line lists every
+    # branch pointing at the tagged commit, so the hash changes when e.g. a release branch moves on, even though the tag
+    # did not. Keep only the tag, which setuptools-scm still resolves to the right version. 13.0 and 13.1 ship no
+    # .git_archival.txt.
+    postFetch = ''
+      if [[ -f "$out/.git_archival.txt" ]]; then
+        sed -i 's/^ref-names: .*$/ref-names: tag: v${finalAttrs.version}/' "$out/.git_archival.txt"
+        grep -qx 'ref-names: tag: v${finalAttrs.version}' "$out/.git_archival.txt"
+      fi
+    '';
     hash = versionSpecificAttrs.sourceHash;
   };
 
@@ -105,12 +112,12 @@ buildPythonPackage (finalAttrs: {
       substituteInPlace cuda/bindings/_internal/nvjitlink_linux.pyx \
         --replace-fail \
           "handle = dlopen('libcuda.so.1'" \
-          "handle = dlopen('${cudaLibPaths.libcuda}/lib/libcuda.so.1'"
+          "handle = dlopen('${cudaLibPaths.libcuda}/libcuda.so.1'"
 
       substituteInPlace cuda/bindings/_bindings/cydriver.pyx.in \
         --replace-fail \
           "path = 'libcuda.so.1'" \
-          "path = '${cudaLibPaths.libcuda}/lib/libcuda.so.1'"
+          "path = '${cudaLibPaths.libcuda}/libcuda.so.1'"
     ''
     + (versionSpecificAttrs.postPatch or "");
 
@@ -215,9 +222,13 @@ buildPythonPackage (finalAttrs: {
 
   # Tests need access to a GPU
   doCheck = false;
-  passthru.gpuCheck = cuda-bindings.overridePythonAttrs {
-    requiredSystemFeatures = [ "cuda" ];
-    doCheck = true;
+  passthru = {
+    gpuCheck = finalAttrs.finalPackage.overrideAttrs {
+      requiredSystemFeatures = [ "cuda" ];
+      doInstallCheck = true;
+    };
+    # bulk updater uses wrong tag
+    skipBulkUpdate = true;
   };
 
   meta = {

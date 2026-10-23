@@ -193,6 +193,7 @@ in
     extra-python-packages = runTest ./nixos-test-driver/extra-python-packages.nix;
     lib-extend = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./nixos-test-driver/lib-extend.nix { };
     node-name = runTest ./nixos-test-driver/node-name.nix;
+    qmp-api-error = runTest ./nixos-test-driver/qmp-api-error.nix;
     busybox = runTest ./nixos-test-driver/busybox.nix;
     ssh-backdoor = runTestOn [ "x86_64-linux" ] ./nixos-test-driver/ssh-backdoor.nix;
     console-log = runTest ./nixos-test-driver/console-log.nix;
@@ -522,6 +523,7 @@ in
   cri-o = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./cri-o.nix;
   croc = runTest ./croc.nix;
   cross-seed = runTest ./cross-seed.nix;
+  crowdsec = import ./crowdsec/default.nix { inherit runTest; };
   cryptpad = runTest ./cryptpad.nix;
   cups-pdf = runTest ./cups-pdf.nix;
   curl-impersonate = runTest ./curl-impersonate.nix;
@@ -581,6 +583,7 @@ in
   druid = handleTestOn [ "x86_64-linux" ] ./druid { };
   drupal = runTest ./drupal.nix;
   dublin-traceroute = runTest ./dublin-traceroute.nix;
+  dufs = runTest ./dufs.nix;
   duplicity = runTest ./duplicity.nix;
   dwl = runTestOn [ "x86_64-linux" "aarch64-linux" ] ./dwl.nix;
   e57inspector = import ./e57inspector.nix { inherit pkgs runTest; };
@@ -688,7 +691,14 @@ in
   flannel = runTestOn [ "x86_64-linux" ] ./flannel.nix;
   flap-alerted = runTest ./flap-alerted.nix;
   flaresolverr = runTest ./flaresolverr.nix;
-  flarum = runTest ./flarum.nix;
+  flarum_1 = runTest {
+    imports = [ ./flarum.nix ];
+    _module.args.package = pkgs.flarum_1;
+  };
+  flarum_2 = runTest {
+    imports = [ ./flarum.nix ];
+    _module.args.package = pkgs.flarum_2;
+  };
   flood = runTest ./flood.nix;
   fluent-bit = runTest ./fluent-bit.nix;
   fluentd = runTest ./fluentd.nix;
@@ -975,6 +985,11 @@ in
   };
   kernel-generic = handleTest ./kernel-generic { };
   kernel-latest-ath-user-regd = runTest ./kernel-latest-ath-user-regd.nix;
+  kernel-module-verification = runTest ./kernel-module-verification.nix;
+  kernel-module-verification-latest = runTest {
+    imports = [ ./kernel-module-verification.nix ];
+    _module.args.latestKernel = true;
+  };
   kernel-rust = handleTest ./kernel-rust.nix { };
   keter = runTest ./keter.nix;
   kexec = runTest ./kexec.nix;
@@ -1030,6 +1045,7 @@ in
   libinput = runTest ./libinput.nix;
   librechat = runTest ./librechat.nix;
   librenms = runTest ./librenms.nix;
+  libreqos = runTest ./libreqos.nix;
   libresprite = runTest ./libresprite.nix;
   libreswan = runTest ./libreswan.nix;
   libreswan-nat = runTest ./libreswan-nat.nix;
@@ -1134,7 +1150,7 @@ in
   minecraft-server = runTest ./minecraft-server.nix;
   minidlna = runTest ./minidlna.nix;
   miniflux = runTest ./miniflux.nix;
-  minio = runTest ./minio.nix;
+  minuspod = runTest ./minuspod.nix;
   miracle-wm = runTest ./miracle-wm.nix;
   miriway = runTest ./miriway.nix;
   misc = runTest ./misc.nix;
@@ -1397,7 +1413,16 @@ in
   openarena = runTest ./openarena.nix;
   openbao = runTest ./openbao.nix;
   openbao-agent = runTest ./openbao-agent.nix;
-  opencloud = runTest ./opencloud.nix;
+  opencloud = runTest {
+    imports = [ ./opencloud.nix ];
+    _module.args.opencloudPackage = pkgs.opencloud;
+    _module.args.name = "opencloud";
+  };
+  opencloud-production = runTest {
+    imports = [ ./opencloud.nix ];
+    _module.args.opencloudPackage = pkgs.opencloud-production;
+    _module.args.name = "opencloud-production";
+  };
   openldap = runTest ./openldap.nix;
   openresty-lua = runTest ./openresty-lua.nix;
   opensearch = discoverTests (import ./opensearch.nix);
@@ -1490,6 +1515,10 @@ in
   php85 = import ./php/default.nix {
     inherit runTest;
     php = pkgs.php85;
+  };
+  php86 = import ./php/default.nix {
+    inherit runTest;
+    php = pkgs.php86;
   };
   phylactery = runTest ./web-apps/phylactery.nix;
   pict-rs = runTest ./pict-rs.nix;
@@ -1665,6 +1694,7 @@ in
   rxe = runTest ./rxe.nix;
   sabnzbd = runTest ./sabnzbd.nix;
   sabnzbd-module = runTest ./sabnzbd-module.nix;
+  salt = runTest ./salt.nix;
   samba = runTest ./samba.nix;
   samba-wsdd = runTest ./samba-wsdd.nix;
   sane = runTest ./sane.nix;
@@ -1744,6 +1774,7 @@ in
   stash = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./stash.nix { };
   static-web-server = runTest ./web-servers/static-web-server.nix;
   step-ca = handleTestOn [ "x86_64-linux" ] ./step-ca.nix { };
+  stirling-pdf = runTest ./stirling-pdf.nix;
   stirling-pdf-desktop = runTest ./stirling-pdf-desktop.nix;
   stratis = handleTest ./stratis { };
   strichliste = runTest ./web-apps/strichliste.nix;
@@ -1867,6 +1898,7 @@ in
   systemd-no-tainted = runTest ./systemd-no-tainted.nix;
   systemd-nspawn = runTest ./systemd-nspawn.nix;
   systemd-nspawn-configfile = runTest ./systemd-nspawn-configfile.nix;
+  systemd-nsresourced-mountfsd = runTest ./systemd-nsresourced-mountfsd.nix;
   systemd-oomd = runTest ./systemd-oomd.nix;
   systemd-portabled = runTest ./systemd-portabled.nix;
   systemd-pstore = runTest ./systemd-pstore.nix;
@@ -1922,6 +1954,7 @@ in
   tinyproxy = runTest ./tinyproxy.nix;
   tinywl = runTest ./tinywl.nix;
   tlshd = runTest ./tlshd.nix;
+  tlsrouter = runTest ./tlsrouter.nix;
   tlsrpt = runTest ./tlsrpt.nix;
   tmate-ssh-server = runTest ./tmate-ssh-server.nix;
   tomcat = runTest ./tomcat.nix;
@@ -2029,7 +2062,6 @@ in
   wakapi = runTest ./wakapi.nix;
   warpgate = runTest ./warpgate.nix;
   warzone2100 = runTest ./warzone2100.nix;
-  wasabibackend = runTest ./wasabibackend.nix;
   wastebin = runTest ./wastebin.nix;
   watchdogd = runTest ./watchdogd.nix;
   watt = runTest ./watt.nix;
@@ -2082,7 +2114,7 @@ in
   xterm = runTest ./xterm.nix;
   xxh = runTest ./xxh.nix;
   yarr = runTest ./yarr.nix;
-  yb = pkgs.callPackage ./yb.nix { inherit (pkgs.yb.passthru) ybPivHarnessTests testFixtures; };
+  yb = pkgs.callPackage ./yb.nix { inherit (pkgs.yb.passthru) ybPivHarnessTests; };
   ydotool = import ./ydotool.nix {
     inherit lib runTest;
   };

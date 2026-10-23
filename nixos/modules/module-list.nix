@@ -204,6 +204,7 @@
   ./programs/cpu-energy-meter.nix
   ./programs/criu.nix
   ./programs/dconf.nix
+  ./programs/devenv.nix
   ./programs/digitalbitbox/default.nix
   ./programs/direnv.nix
   ./programs/dmrconfig.nix
@@ -302,6 +303,7 @@
   ./programs/oblogout.nix
   ./programs/obs-studio.nix
   ./programs/oddjobd.nix
+  ./programs/onlyoffice.nix
   ./programs/opengamepadui.nix
   ./programs/openvpn3.nix
   ./programs/partition-manager.nix
@@ -356,7 +358,6 @@
   ./programs/unifi-endpoint.nix
   ./programs/upki.nix
   ./programs/usbtop.nix
-  ./programs/vellum.nix
   ./programs/vim.nix
   ./programs/virt-manager.nix
   ./programs/vivid.nix
@@ -472,6 +473,7 @@
   ./services/audio/roon-server.nix
   ./services/audio/slimserver.nix
   ./services/audio/snapserver.nix
+  ./services/audio/soloist.nix
   ./services/audio/spotifyd.nix
   ./services/audio/squeezelite.nix
   ./services/audio/tts.nix
@@ -949,6 +951,7 @@
   ./services/misc/mediatomb.nix
   ./services/misc/memos.nix
   ./services/misc/metabase.nix
+  ./services/misc/minuspod.nix
   ./services/misc/mollysocket.nix
   ./services/misc/moonraker.nix
   ./services/misc/mqtt2influxdb.nix
@@ -1143,6 +1146,7 @@
   ./services/network-filesystems/davfs2.nix
   ./services/network-filesystems/diod.nix
   ./services/network-filesystems/drbd.nix
+  ./services/network-filesystems/dufs.nix
   ./services/network-filesystems/glusterfs.nix
   ./services/network-filesystems/ipfs-cluster.nix
   ./services/network-filesystems/kbfs.nix
@@ -1312,6 +1316,7 @@
   ./services/networking/krill.nix
   ./services/networking/lambdabot.nix
   ./services/networking/legit.nix
+  ./services/networking/libreqos.nix
   ./services/networking/libreswan.nix
   ./services/networking/livekit-ingress.nix
   ./services/networking/livekit.nix
@@ -1487,6 +1492,7 @@
   ./services/networking/tinc.nix
   ./services/networking/tinydns.nix
   ./services/networking/tinyproxy.nix
+  ./services/networking/tlsrouter.nix
   ./services/networking/tmate-ssh-server.nix
   ./services/networking/tox-bootstrapd.nix
   ./services/networking/tox-node.nix
@@ -1505,7 +1511,6 @@
   ./services/networking/veilid.nix
   ./services/networking/vsftpd.nix
   ./services/networking/vwifi.nix
-  ./services/networking/wasabibackend.nix
   ./services/networking/webhook.nix
   ./services/networking/websockify.nix
   ./services/networking/wg-access-server.nix
@@ -1564,8 +1569,8 @@
   ./services/security/certmgr.nix
   ./services/security/cfssl.nix
   ./services/security/clamav.nix
+  ./services/security/crowdsec
   ./services/security/crowdsec-firewall-bouncer.nix
-  ./services/security/crowdsec.nix
   ./services/security/e-imzo.nix
   ./services/security/endlessh-go.nix
   ./services/security/endlessh.nix
@@ -1668,6 +1673,7 @@
   ./services/video/wivrn.nix
   ./services/wayland/cage.nix
   ./services/wayland/hypridle.nix
+  ./services/wayland/vellum.nix
   ./services/web-apps/actual.nix
   ./services/web-apps/agorakit.nix
   ./services/web-apps/akkoma.nix
@@ -1908,7 +1914,6 @@
   ./services/web-servers/lighttpd/gitweb.nix
   ./services/web-servers/merecat.nix
   ./services/web-servers/mighttpd2.nix
-  ./services/web-servers/minio.nix
   ./services/web-servers/molly-brown.nix
   ./services/web-servers/nginx/default.nix
   ./services/web-servers/nginx/tailscale-auth.nix

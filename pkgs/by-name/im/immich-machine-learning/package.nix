@@ -1,6 +1,8 @@
 {
   lib,
   immich,
+  ocl-icd,
+  openvino,
   python3,
   nixosTests,
   stdenv,
@@ -17,6 +19,12 @@ python.pkgs.buildPythonApplication (finalAttrs: {
   pyproject = true;
 
   __structuredAttrs = true;
+
+  postPatch = ''
+    substituteInPlace immich_ml/sessions/ort.py \
+      --replace-fail 'Path(ort.__file__).parent / "capi" / "libopenvino_c.so"' '"${lib.getLib openvino}/lib/libopenvino_c.so"' \
+      --replace-fail '"libOpenCL.so.1"' '"${lib.getLib ocl-icd}/lib/libOpenCL.so.1"'
+  '';
 
   pythonRelaxDeps = [
     "onnx"
@@ -46,7 +54,7 @@ python.pkgs.buildPythonApplication (finalAttrs: {
       uvicorn
       rapidocr
 
-      finalAttrs.passthru.immich-models
+      finalAttrs.passthru.immich-model
     ]
     ++ uvicorn.optional-dependencies.standard;
 
@@ -85,7 +93,7 @@ python.pkgs.buildPythonApplication (finalAttrs: {
     tests = {
       inherit (nixosTests) immich;
     };
-    immich-models = python.pkgs.callPackage ./immich-models.nix { };
+    immich-model = python.pkgs.callPackage ./immich-model.nix { };
   };
 
   meta = {

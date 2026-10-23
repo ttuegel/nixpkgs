@@ -1045,8 +1045,6 @@ with pkgs;
 
   winbox = winbox4;
 
-  ### APPLICATIONS/VERSION-MANAGEMENT
-
   bump2version = with python3Packages; toPythonApplication bump2version;
 
   datalad = with python3Packages; toPythonApplication datalad;
@@ -2093,8 +2091,6 @@ with pkgs;
 
   gvm-tools = with python3.pkgs; toPythonApplication gvm-tools;
 
-  gzip = callPackage ../tools/compression/gzip { };
-
   haskell-language-server =
     callPackage ../development/tools/haskell/haskell-language-server/withWrapper.nix
       { };
@@ -2260,10 +2256,6 @@ with pkgs;
 
   md2gemini = with python3.pkgs; toPythonApplication md2gemini;
 
-  mdcat = callPackage ../tools/text/mdcat {
-    inherit (python3Packages) ansi2html;
-  };
-
   mhonarc = perlPackages.MHonArc;
 
   nanoemoji = with python3Packages; toPythonApplication nanoemoji;
@@ -2282,7 +2274,10 @@ with pkgs;
     )
   );
 
-  netdata = callPackage ../tools/system/netdata { };
+  netdata = callPackage ../tools/system/netdata {
+    go = go_1_27;
+    buildGoModule = buildGo127Module;
+  };
   netdataCloud = netdata.override {
     withCloudUi = true;
   };
@@ -2788,6 +2783,8 @@ with pkgs;
     isDesktopVariant = true;
   };
 
+  stirling-pdf-free = stirling-pdf.override { withAdditionalFeatures = false; };
+
   stm32loader = with python3Packages; toPythonApplication stm32loader;
 
   solc-select = with python3Packages; toPythonApplication solc-select;
@@ -2949,10 +2946,6 @@ with pkgs;
 
   xorriso = libisoburn;
 
-  xvfb-run = callPackage ../tools/misc/xvfb-run {
-    inherit (texFunctions) fontsConf;
-  };
-
   yapf = with python3Packages; toPythonApplication yapf;
 
   yarn-berry_4 = yarn-berry.override { berryVersion = 4; };
@@ -3086,7 +3079,7 @@ with pkgs;
     ocamlPackages = ocaml-ng.ocamlPackages_4_14;
   };
 
-  inherit (coqPackages_9_2) compcert;
+  inherit (rocqPackages_9_2) compcert;
 
   corretto11 = javaPackages.compiler.corretto11;
   corretto17 = javaPackages.compiler.corretto17;
@@ -3100,6 +3093,8 @@ with pkgs;
     crystal_1_17
     crystal_1_18
     crystal_1_19
+    crystal_1_20
+    crystal_1_21
     crystal
     ;
 
@@ -3350,84 +3345,99 @@ with pkgs;
     }
   );
 
-  gnat14 = wrapCC (
-    gcc14.cc.override {
-      name = "gnat";
-      langC = true;
-      langCC = false;
-      langAda = true;
-      profiledCompiler = false;
-      # As per upstream instructions building a cross compiler
-      # should be done with a (native) compiler of the same version.
-      # If we are cross-compiling GNAT, we may as well do the same.
-      gnat-bootstrap =
-        if stdenv.hostPlatform == stdenv.targetPlatform && stdenv.buildPlatform == stdenv.hostPlatform then
-          buildPackages.gnat-bootstrap14
-        else
-          buildPackages.gnat14;
-      stdenv =
-        if
-          stdenv.hostPlatform == stdenv.targetPlatform
-          && stdenv.buildPlatform == stdenv.hostPlatform
-          && stdenv.buildPlatform.isDarwin
-        then
-          overrideCC gccStdenv gnat-bootstrap14
-        else
-          stdenv;
+  gnat14 = wrapCCWith (
+    {
+      cc = gcc14.cc.override {
+        name = "gnat";
+        langC = true;
+        langCC = false;
+        langAda = true;
+        profiledCompiler = false;
+        # As per upstream instructions building a cross compiler
+        # should be done with a (native) compiler of the same version.
+        # If we are cross-compiling GNAT, we may as well do the same.
+        gnat-bootstrap =
+          if stdenv.hostPlatform == stdenv.targetPlatform && stdenv.buildPlatform == stdenv.hostPlatform then
+            buildPackages.gnat-bootstrap14
+          else
+            buildPackages.gnat14;
+        stdenv =
+          if
+            stdenv.hostPlatform == stdenv.targetPlatform
+            && stdenv.buildPlatform == stdenv.hostPlatform
+            && stdenv.buildPlatform.isDarwin
+          then
+            overrideCC gccStdenv gnat-bootstrap14
+          else
+            stdenv;
+      };
+    }
+    // lib.optionalAttrs stdenv.targetPlatform.isDarwin {
+      apple-sdk = apple-sdk_15;
     }
   );
 
-  gnat15 = wrapCC (
-    gcc15.cc.override {
-      name = "gnat";
-      langC = true;
-      langCC = false;
-      langAda = true;
-      profiledCompiler = false;
-      # As per upstream instructions building a cross compiler
-      # should be done with a (native) compiler of the same version.
-      # If we are cross-compiling GNAT, we may as well do the same.
-      gnat-bootstrap =
-        if stdenv.hostPlatform == stdenv.targetPlatform && stdenv.buildPlatform == stdenv.hostPlatform then
-          buildPackages.gnat-bootstrap15
-        else
-          buildPackages.gnat15;
-      stdenv =
-        if
-          stdenv.hostPlatform == stdenv.targetPlatform
-          && stdenv.buildPlatform == stdenv.hostPlatform
-          && stdenv.buildPlatform.isDarwin
-        then
-          overrideCC gccStdenv gnat-bootstrap15
-        else
-          stdenv;
+  gnat15 = wrapCCWith (
+    {
+      cc = gcc15.cc.override {
+        name = "gnat";
+        langC = true;
+        langCC = false;
+        langAda = true;
+        profiledCompiler = false;
+        # As per upstream instructions building a cross compiler
+        # should be done with a (native) compiler of the same version.
+        # If we are cross-compiling GNAT, we may as well do the same.
+        gnat-bootstrap =
+          if stdenv.hostPlatform == stdenv.targetPlatform && stdenv.buildPlatform == stdenv.hostPlatform then
+            buildPackages.gnat-bootstrap15
+          else
+            buildPackages.gnat15;
+        stdenv =
+          if
+            stdenv.hostPlatform == stdenv.targetPlatform
+            && stdenv.buildPlatform == stdenv.hostPlatform
+            && stdenv.buildPlatform.isDarwin
+          then
+            overrideCC gccStdenv gnat-bootstrap15
+          else
+            stdenv;
+      };
+    }
+    // lib.optionalAttrs stdenv.targetPlatform.isDarwin {
+      apple-sdk = apple-sdk_15;
     }
   );
 
-  gnat16 = wrapCC (
-    gcc16.cc.override {
-      name = "gnat";
-      langC = true;
-      langCC = false;
-      langAda = true;
-      profiledCompiler = false;
-      # As per upstream instructions building a cross compiler
-      # should be done with a (native) compiler of the same version.
-      # If we are cross-compiling GNAT, we may as well do the same.
-      gnat-bootstrap =
-        if stdenv.hostPlatform == stdenv.targetPlatform && stdenv.buildPlatform == stdenv.hostPlatform then
-          buildPackages.gnat-bootstrap16
-        else
-          buildPackages.gnat16;
-      stdenv =
-        if
-          stdenv.hostPlatform == stdenv.targetPlatform
-          && stdenv.buildPlatform == stdenv.hostPlatform
-          && stdenv.buildPlatform.isDarwin
-        then
-          overrideCC gccStdenv gnat-bootstrap16
-        else
-          stdenv;
+  gnat16 = wrapCCWith (
+    {
+      cc = gcc16.cc.override {
+        name = "gnat";
+        langC = true;
+        langCC = false;
+        langAda = true;
+        profiledCompiler = false;
+        # As per upstream instructions building a cross compiler
+        # should be done with a (native) compiler of the same version.
+        # If we are cross-compiling GNAT, we may as well do the same.
+        gnat-bootstrap =
+          if stdenv.hostPlatform == stdenv.targetPlatform && stdenv.buildPlatform == stdenv.hostPlatform then
+            buildPackages.gnat-bootstrap16
+          else
+            buildPackages.gnat16;
+        stdenv =
+          if
+            stdenv.hostPlatform == stdenv.targetPlatform
+            && stdenv.buildPlatform == stdenv.hostPlatform
+            && stdenv.buildPlatform.isDarwin
+          then
+            overrideCC gccStdenv gnat-bootstrap16
+          else
+            stdenv;
+      };
+    }
+    // lib.optionalAttrs stdenv.targetPlatform.isDarwin {
+      apple-sdk = apple-sdk_15;
     }
   );
 
@@ -3941,15 +3951,15 @@ with pkgs;
   wrapRustcWith = { rustc-unwrapped, ... }@args: callPackage ../build-support/rust/rustc-wrapper args;
   wrapRustc = rustc-unwrapped: wrapRustcWith { inherit rustc-unwrapped; };
 
-  rust_1_98 = callPackage ../development/compilers/rust/1_98.nix { };
-  rust = rust_1_98;
+  rust_1_99 = callPackage ../development/compilers/rust/1_99.nix { };
+  rust = rust_1_99;
 
   mrustc = callPackage ../development/compilers/mrustc { };
   mrustc-minicargo = callPackage ../development/compilers/mrustc/minicargo.nix { };
   mrustc-bootstrap = callPackage ../development/compilers/mrustc/bootstrap.nix { };
 
-  rustPackages_1_98 = rust_1_98.packages.stable;
-  rustPackages = rustPackages_1_98;
+  rustPackages_1_99 = rust_1_99.packages.stable;
+  rustPackages = rustPackages_1_99;
 
   inherit (rustPackages)
     cargo
@@ -4038,6 +4048,7 @@ with pkgs;
   swiftPackages = recurseIntoAttrs (callPackage ./swift-packages.nix { });
   inherit (swiftPackages)
     fetchSwiftPMDeps
+    prefetch-swiftpm-deps
     sourcekit-lsp
     swift
     swift-corelibs-libdispatch
@@ -4383,7 +4394,7 @@ with pkgs;
   # PHP interpreters, packages and extensions.
   #
   # Set default PHP interpreter, extensions and packages
-  php = php84;
+  php = php85;
   phpExtensions = recurseIntoAttrs php.extensions;
   phpPackages = recurseIntoAttrs php.packages;
 
@@ -4393,6 +4404,7 @@ with pkgs;
     php83
     php84
     php85
+    php86
     ;
 
   # PHP Extensions and Packages
@@ -4407,6 +4419,9 @@ with pkgs;
 
   php85Extensions = recurseIntoAttrs php85.extensions;
   php85Packages = recurseIntoAttrs php85.packages;
+
+  php86Extensions = recurseIntoAttrs php86.extensions;
+  php86Packages = recurseIntoAttrs php86.packages;
 
   # Python interpreters. All standard library modules are included except for tkinter, which is
   # available as `pythonPackages.tkinter` and can be used as any other Python package.
@@ -4439,6 +4454,11 @@ with pkgs;
     pythonAttr = "python315FreeThreading";
     enableGIL = false;
   };
+  python316FreeThreading = python315.override {
+    self = python316FreeThreading;
+    pythonAttr = "python316FreeThreading";
+    enableGIL = false;
+  };
 
   pythonInterpreters = callPackage ./../development/interpreters/python { };
   inherit (pythonInterpreters)
@@ -4447,6 +4467,7 @@ with pkgs;
     python313
     python314
     python315
+    python316
     python3Minimal
     pypy27
     pypy310
@@ -4462,6 +4483,7 @@ with pkgs;
   python313Packages = recurseIntoAttrs python313.pkgs;
   python314Packages = recurseIntoAttrs python314.pkgs;
   python315Packages = python315.pkgs;
+  python316Packages = python316.pkgs;
   pypyPackages = pypy.pkgs;
   pypy2Packages = pypy2.pkgs;
   pypy27Packages = pypy27.pkgs;
@@ -4513,7 +4535,6 @@ with pkgs;
     })
     mkRubyVersion
     mkRuby
-    ruby_3_3
     ruby_3_4
     ruby_4_0
     ;
@@ -4521,7 +4542,6 @@ with pkgs;
   ruby = ruby_3_4;
   rubyPackages = rubyPackages_3_4;
 
-  rubyPackages_3_3 = recurseIntoAttrs ruby_3_3.gems;
   rubyPackages_3_4 = recurseIntoAttrs ruby_3_4.gems;
   rubyPackages_4_0 = recurseIntoAttrs ruby_4_0.gems;
 
@@ -4851,8 +4871,6 @@ with pkgs;
     callPackage ../development/tools/continuous-integration/buildkite-test-collector-rust
       {
       };
-
-  libbpf = callPackage ../os-specific/linux/libbpf { };
 
   bundlewrap = with python3.pkgs; toPythonApplication bundlewrap;
 
@@ -6177,6 +6195,7 @@ with pkgs;
   nv-codec-headers-10 = nv-codec-headers.override { majorVersion = "10"; };
   nv-codec-headers-11 = nv-codec-headers.override { majorVersion = "11"; };
   nv-codec-headers-12 = nv-codec-headers.override { majorVersion = "12"; };
+  nv-codec-headers-13 = nv-codec-headers.override { majorVersion = "13"; };
 
   nvidiaCtkPackages = recurseIntoAttrs (
     callPackage ../by-name/nv/nvidia-container-toolkit/packages.nix { }
@@ -6543,6 +6562,7 @@ with pkgs;
     withFlite = false;
     withEspeak = false;
     withPico = false;
+    withPipewire = false;
     libsOnly = true;
   };
 
@@ -6685,7 +6705,7 @@ with pkgs;
     ;
 
   # If this is updated, the default zls version should also be updated to match the default zig version.
-  zig = zig_0_16;
+  zig = zig_0_17;
 
   zigStdenv = if stdenv.cc.isZig then stdenv else lowPrio zig.passthru.stdenv;
 
@@ -6693,10 +6713,11 @@ with pkgs;
     zls_0_14
     zls_0_15
     zls_0_16
+    zls_0_17
     ;
 
   # This should be kept updated to ensure the default zls version matches the default zig version.
-  zls = zls_0_16;
+  zls = zls_0_17;
 
   libzint = zint-qt.override { withGUI = false; };
 
@@ -7177,12 +7198,6 @@ with pkgs;
 
   inherit
     ({
-      kanidm_1_8 = callPackage ../servers/kanidm/1_8.nix {
-        kanidmWithSecretProvisioning = kanidmWithSecretProvisioning_1_8;
-      };
-      kanidm_1_9 = callPackage ../servers/kanidm/1_9.nix {
-        kanidmWithSecretProvisioning = kanidmWithSecretProvisioning_1_9;
-      };
       kanidm_1_10 = callPackage ../servers/kanidm/1_10.nix {
         kanidmWithSecretProvisioning = kanidmWithSecretProvisioning_1_10;
       };
@@ -7190,17 +7205,11 @@ with pkgs;
         kanidmWithSecretProvisioning = kanidmWithSecretProvisioning_1_11;
       };
 
-      kanidmWithSecretProvisioning_1_8 = kanidm_1_8.override { enableSecretProvisioning = true; };
-      kanidmWithSecretProvisioning_1_9 = kanidm_1_9.override { enableSecretProvisioning = true; };
       kanidmWithSecretProvisioning_1_10 = kanidm_1_10.override { enableSecretProvisioning = true; };
       kanidmWithSecretProvisioning_1_11 = kanidm_1_11.override { enableSecretProvisioning = true; };
     })
-    kanidm_1_8
-    kanidm_1_9
     kanidm_1_10
     kanidm_1_11
-    kanidmWithSecretProvisioning_1_8
-    kanidmWithSecretProvisioning_1_9
     kanidmWithSecretProvisioning_1_10
     kanidmWithSecretProvisioning_1_11
     ;
@@ -7296,6 +7305,8 @@ with pkgs;
   };
 
   nsdiff = perlPackages.nsdiff;
+
+  opencloud-production = callPackage ../by-name/op/opencloud/production.nix { };
 
   openresty = callPackage ../servers/http/openresty {
     zlib-ng = zlib;
@@ -7555,7 +7566,7 @@ with pkgs;
 
   conky = callPackage ../os-specific/linux/conky (
     {
-      lua = lua5_4;
+      lua = lua5_5;
       inherit (linuxPackages.nvidia_x11.settings) libXNVCtrl;
     }
     // config.conky or { }
@@ -7832,13 +7843,13 @@ with pkgs;
     withDocumentation = false;
     withEfi = false;
     withFido2 = false;
-    withGcrypt = false;
     withHostnamed = false;
     withHomed = false;
     withHwdb = false;
     withImportd = false;
     withImds = false;
     withLibBPF = false;
+    vmlinux-btf = null;
     withLibidn2 = false;
     withLocaled = false;
     withLogind = false;
@@ -7877,6 +7888,7 @@ with pkgs;
   systemdLibs = systemdMinimal.override {
     pname = "systemd-minimal-libs";
     buildLibsOnly = true;
+    withCompression = true;
   };
   # We do not want to include ukify in the normal systemd attribute as it
   # relies on Python at runtime.
@@ -8232,11 +8244,6 @@ with pkgs;
 
   arelle = with python3Packages; toPythonApplication arelle;
 
-  astroid = callPackage ../applications/networking/mailreaders/astroid {
-    vim = vim-full.override { features = "normal"; };
-    protobuf = protobuf_21;
-  };
-
   audacious = audacious-bare.override { withPlugins = true; };
 
   bambootracker-qt6 = bambootracker.override { withQt6 = true; };
@@ -8507,22 +8514,6 @@ with pkgs;
     })
     freeoffice
     ;
-
-  gimp2 = callPackage ../applications/graphics/gimp/2.0 {
-    lcms = lcms2;
-    stdenv = if stdenv.cc.isGNU then gcc14Stdenv else stdenv;
-  };
-
-  gimp2-with-plugins = callPackage ../applications/graphics/gimp/wrapper.nix {
-    gimpPlugins = gimp2Plugins;
-    plugins = null; # All packaged plugins enabled, if not explicit plugin list supplied
-  };
-
-  gimp2Plugins = recurseIntoAttrs (
-    callPackage ../applications/graphics/gimp/plugins {
-      gimp = gimp2;
-    }
-  );
 
   gimp = callPackage ../applications/graphics/gimp {
     lcms = lcms2;
@@ -8818,7 +8809,7 @@ with pkgs;
   murmur =
     (callPackages ../applications/networking/mumble {
       avahi = avahi-compat;
-      pulseSupport = config.pulseaudio or false;
+      pulseSupport = false;
       iceSupport = config.murmur.iceSupport or true;
     }).murmur;
 
@@ -8841,8 +8832,6 @@ with pkgs;
   pijuice = with python3Packages; toPythonApplication pijuice;
 
   pinegrow6 = pinegrow.override { pinegrowVersion = "6"; };
-
-  pleroma-bot = python3Packages.callPackage ../development/python-modules/pleroma-bot { };
 
   pnglatex = with python3Packages; toPythonApplication pnglatex;
 
@@ -9107,9 +9096,7 @@ with pkgs;
 
   telegram-desktop =
     kdePackages.callPackage ../applications/networking/instant-messengers/telegram/telegram-desktop
-      {
-        stdenv = if stdenv.hostPlatform.isDarwin then llvmPackages_19.stdenv else stdenv;
-      };
+      { };
 
   terminaltexteffects = with python3Packages; toPythonApplication terminaltexteffects;
 
@@ -9467,7 +9454,7 @@ with pkgs;
           ;
       };
 
-  xpdf = libsForQt5.callPackage ../applications/misc/xpdf { };
+  xpdf = qt6.callPackage ../applications/misc/xpdf { };
 
   xmobar = haskellPackages.xmobar.bin;
 
@@ -10078,20 +10065,6 @@ with pkgs;
     rocqPackages
     rocq-core
     ;
-
-  inherit (rocqPackages) coq;
-
-  # Deprecated aliases
-
-  coqPackages = rocqPackages;
-  coqPackages_9_0 = rocqPackages_9_0;
-  coq_9_0 = rocqPackages_9_0.coq;
-  coqPackages_9_1 = rocqPackages_9_1;
-  coq_9_1 = rocqPackages_9_1.coq;
-  coqPackages_9_2 = rocqPackages_9_2;
-  coq_9_2 = rocqPackages_9_2.coq;
-  coqPackages_9_3 = rocqPackages_9_3;
-  coq_9_3 = rocqPackages_9_3.coq;
 
   inherit
     (callPackage ./coq-packages.nix {

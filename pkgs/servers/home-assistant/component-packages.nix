@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2026.10.1";
+  version = "2026.10.2";
   components = {
     "3_day_blinds" =
       ps: with ps; [
@@ -885,8 +885,7 @@
       ];
     "broadlink" =
       ps: with ps; [
-        python-broadlink
-      ];
+      ]; # missing inputs: broadlink-async
     "brother" =
       ps: with ps; [
         brother
@@ -6973,7 +6972,8 @@
       ];
     "sunsynk" =
       ps: with ps; [
-      ]; # missing inputs: sunsynk-api-client
+        sunsynk-api-client
+      ];
     "sunweg" =
       ps: with ps; [
       ];
@@ -8069,7 +8069,8 @@
       ];
     "willow" =
       ps: with ps; [
-      ]; # missing inputs: pywillow
+        pywillow
+      ];
     "window" =
       ps: with ps; [
       ];
@@ -8540,7 +8541,6 @@
     "brands"
     "braviatv"
     "bring"
-    "broadlink"
     "brother"
     "brottsplatskartan"
     "brunt"
@@ -9398,6 +9398,7 @@
     "suez_water"
     "sun"
     "sunricher_dali"
+    "sunsynk"
     "sunweg"
     "supla"
     "surepetcare"
@@ -9565,6 +9566,7 @@
     "wiffi"
     "wiim"
     "wilight"
+    "willow"
     "window"
     "wirelesstag"
     "withings"
