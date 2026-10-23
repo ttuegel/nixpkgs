@@ -672,8 +672,8 @@
       },
       "src/third_party/search_engines_data/resources": {
         "url": "https://chromium.googlesource.com/external/search_engines_data.git",
-        "rev": "effde84e73491653b245b68ac65835ad2fc4e1de",
-        "hash": "sha256-sKX/08z9vFKCyNTDgdUT95qbkaKYyM2J9LcwJYzTkpc="
+        "rev": "5dc9f1afd38a8ac2b26b1972eb4fc1bbd5754e8c",
+        "hash": "sha256-+C9i8ofKLb+kMFISQbpB/+hZuAL1dlrwc4QhlpL9OW8="
       },
       "src/third_party/sframe/src": {
         "url": "https://chromium.googlesource.com/external/github.com/cisco/sframe",
@@ -1534,8 +1534,8 @@
       },
       "src/third_party/search_engines_data/resources": {
         "url": "https://chromium.googlesource.com/external/search_engines_data.git",
-        "rev": "effde84e73491653b245b68ac65835ad2fc4e1de",
-        "hash": "sha256-sKX/08z9vFKCyNTDgdUT95qbkaKYyM2J9LcwJYzTkpc="
+        "rev": "5dc9f1afd38a8ac2b26b1972eb4fc1bbd5754e8c",
+        "hash": "sha256-+C9i8ofKLb+kMFISQbpB/+hZuAL1dlrwc4QhlpL9OW8="
       },
       "src/third_party/sframe/src": {
         "url": "https://chromium.googlesource.com/external/github.com/cisco/sframe",
